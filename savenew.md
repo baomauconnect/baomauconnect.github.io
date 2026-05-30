@@ -1,9 +1,11 @@
-# 1. Đi vào thư mục code (nếu chưa đứng ở đây)
+# 1. Di chuyển vào thư mục code trên máy của bạn
 cd ~/Documents/baomau-connect
 
-# 2. Ghi nhận sự thay đổi của file vừa sửa link
-git add .
-git commit -m "Tich hop link Google Apps Script chuan"
+# 2. Xóa bỏ liên kết cũ kết nối với tài khoản cá nhân
+git remote remove origin
 
-# 3. Đẩy bản cập nhật lên GitHub
-git push origin main
+# 3. Kết nối với kho chứa mới của tổ chức bằng đường SSH siêu tốc
+git remote add origin git@github.com:baomauconnect/baomauconnect.github.io.git
+
+# 4. Đẩy toàn bộ code lên mạng
+git push -u origin main
