@@ -12,8 +12,11 @@
         body { color: var(--text-color); background-color: var(--bg-light); line-height: 1.6; }
         header { text-align: center; padding: 30px 20px; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: relative; }
         header h1 { color: #2c3e50; font-size: 2.5rem; margin-bottom: 5px; }
+        
+        /* Liên kết chuyển sang trang quản trị viên thực tế */
         .admin-link { position: absolute; top: 15px; right: 20px; font-size: 0.85rem; color: #95a5a6; text-decoration: none; padding: 5px 10px; border: 1px solid #eee; border-radius: 20px; transition: all 0.2s; }
         .admin-link:hover { color: var(--primary-color); border-color: var(--primary-color); background: #f0f7ff; }
+        
         .hero-banner { width: 100%; height: 350px; background-image: linear-gradient(to right, rgba(255,255,255,0.75) 40%, rgba(255,255,255,0.1)), url('https://i.pinimg.com/736x/b9/07/05/b907055121f3ff371e7ccce39688c773.jpg'); background-size: cover; background-position: center; display: flex; align-items: center; margin-bottom: 30px; }
         .hero-content { max-width: 1000px; margin: 0 auto; width: 100%; padding: 0 40px; }
         .hero-content h2 { font-size: 2.2rem; color: #2c3e50; margin-bottom: 10px; max-width: 500px; }
@@ -23,7 +26,7 @@
         .filter-section h3 { margin-bottom: 15px; color: #2c3e50; font-size: 1.4rem; }
         .filter-select { padding: 14px 20px; font-size: 1.05rem; border-radius: 8px; border: 2px solid #ddd; width: 100%; max-width: 600px; outline: none; font-weight: 600; color: #444; }
         
-        /* Form styling */
+        /* Khung hiển thị mẫu Form */
         .form-section { max-width: 750px; margin: 30px auto; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); display: none; animation: fadeInUp 0.4s ease forwards; }
         .form-section h3 { margin-bottom: 25px; text-align: center; color: #2c3e50; font-size: 1.6rem; border-bottom: 2px solid #f4f7f6; padding-bottom: 15px; }
         .form-group { margin-bottom: 20px; }
@@ -48,7 +51,7 @@
 <body>
 
     <header>
-        <a href="admin_2.html" class="admin-link">⚙️ Quản trị viên</a>
+        <a href="admin.html" class="admin-link">⚙️ Quản trị viên</a>
         <h1>🌟 BaomauConnect</h1>
         <p>Hệ thống kết nối và phân luồng nhu cầu bảo mẫu trực tuyến</p>
     </header>
@@ -61,7 +64,6 @@
     </div>
 
     <div class="container">
-        <!-- Khu vực khoanh đỏ tối giản từ edited-image.png -->
         <section class="filter-section">
             <h3>⚡ Bạn đăng ký với vai trò nào?</h3>
             <select class="filter-select" id="roleFilter" onchange="switchRoleForm()">
@@ -71,13 +73,11 @@
             </select>
         </section>
 
-        <!-- Khối thông báo thành công -->
         <section id="liveResponse" class="result-container">
             <h4 style="color: #117a65; font-size: 1.3rem;">🔒 Gửi Thông Tin Thành Công!</h4>
             <p id="responseMessage" style="margin-top: 10px; color: #555; font-size: 1.05rem;"></p>
         </section>
 
-        <!-- FORM BẢO MẪU -->
         <section id="form-bao-mau" class="form-section" style="border-top: 6px solid var(--primary-color);">
             <h3>📝 HỒ SƠ ỨNG TUYỂN BẢO MẪU</h3>
             <form onsubmit="sendToDatabase(event, 'Bảo mẫu')">
@@ -86,7 +86,6 @@
                 <div class="form-group"><label>Số điện thoại / Zalo liên hệ *</label><input type="tel" id="bm-phone" required placeholder="Ví dụ: 0912345xxx"></div>
                 <div class="form-group"><label>Khu vực bạn đang sống (Địa chỉ cư trú) *</label><input type="text" id="bm-location" required placeholder="Ví dụ: Thị trấn Chúc Sơn, Chương Mỹ"></div>
                 
-                <!-- Cuộn bánh lăn chọn thời gian từ... đến... -->
                 <div class="form-group">
                     <label>Khung giờ bạn có thể làm việc nhận việc *</label>
                     <div class="time-range-row">
@@ -97,7 +96,6 @@
                     </div>
                 </div>
 
-                <!-- Tích chọn chăm sóc trẻ sơ sinh -->
                 <div class="form-group checkbox-group">
                     <input type="checkbox" id="bm-neonatal">
                     <label for="bm-neonatal" style="margin-bottom:0; cursor:pointer; color:#1b4f72; font-weight: bold;">👶 Tôi tự tin và có thể nhận chăm sóc được BÉ SƠ SINH</label>
@@ -110,7 +108,6 @@
             </form>
         </section>
 
-        <!-- FORM PHỤ HUYNH -->
         <section id="form-phu-huynh" class="form-section" style="border-top: 6px solid var(--secondary-color);">
             <h3>🏡 PHIẾU YÊU CẦU TÌM BẢO MẪU TẠI GIA</h3>
             <form onsubmit="sendToDatabase(event, 'Phụ huynh')">
@@ -120,7 +117,6 @@
                 <div class="form-group"><label>Độ tuổi hiện tại của bé nhà mình *</label><input type="text" id="ph-child-age" required placeholder="Ví dụ: 3 tháng tuổi, hoặc 2 tuổi"></div>
                 <div class="form-group"><label>Yêu cầu mong muốn về độ tuổi bảo mẫu *</label><input type="text" id="ph-bm-age-req" required placeholder="Ví dụ: Thích bảo mẫu trung tuổi từ 35 - 50 tuổi"></div>
                 
-                <!-- Cuộn bánh lăn chọn thời gian thuê từ... đến... -->
                 <div class="form-group">
                     <label>Khung giờ gia đình cần bảo mẫu trông bé *</label>
                     <div class="time-range-row">
@@ -140,13 +136,12 @@
     </div>
 
     <footer>
-        <p>© BaomauConnect - Hệ thống xử lý dữ liệu nội bộ | <a href="admin_2.html" style="color: #bbb; text-decoration: none;">Quản lý</a></p>
+        <p>© BaomauConnect - Hệ thống xử lý dữ liệu nội bộ | <a href="admin.html" style="color: #bbb; text-decoration: none;">Quản lý</a></p>
     </footer>
 
     <script>
         const CLOUD_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxxDJxrCCky-oQpbH1ZgRznlSdkOALuJyN4aR4jnqQI3DDV2QbgIRvHSZHN7PR9nsdi/exec";
 
-        // Tạo vòng lặp nhúng tùy chọn 0h -> 24h vào thanh cuộn lăn thả xuống
         function generateHoursOptions() {
             const selects = ['bm-time-start', 'bm-time-end', 'ph-time-start', 'ph-time-end'];
             selects.forEach(id => {
@@ -159,7 +154,6 @@
                         option.value = hourStr + ':00';
                         option.innerText = hourStr + ':00';
                         
-                        // Định vị sẵn mốc mặc định thực tế cho người dùng dễ chọn (8:00 - 17:00)
                         if(id.includes('start') && i === 8) option.selected = true;
                         if(id.includes('end') && i === 17) option.selected = true;
                         selectEl.appendChild(option);
@@ -170,7 +164,6 @@
 
         window.addEventListener('DOMContentLoaded', generateHoursOptions);
 
-        // Chuyển đổi hiển thị trực tiếp form tương ứng dựa trên Menu chọn 2 mục lớn
         function switchRoleForm() {
             const selectBox = document.getElementById('roleFilter');
             document.getElementById('form-bao-mau').style.display = 'none';
@@ -206,7 +199,6 @@
                 targetData.childAge = "";
                 targetData.bmAgeReq = "";
                 targetData.workTime = document.getElementById('bm-time-start').value + " - " + document.getElementById('bm-time-end').value;
-                // Chuẩn hóa dữ liệu dấu tích sơ sinh
                 targetData.careNeonatal = document.getElementById('bm-neonatal').checked ? "CÓ SƠ SINH" : "Không nhận sơ sinh";
                 targetData.detail = document.getElementById('bm-skills').value;
             } else {
@@ -231,7 +223,7 @@
             .then(() => {
                 document.getElementById('form-bao-mau').style.display = 'none';
                 document.getElementById('form-phu-huynh').style.display = 'none';
-                document.getElementById('roleFilter').value = ""; // reset thanh chọn chính
+                document.getElementById('roleFilter').value = "";
                 
                 const resBlock = document.getElementById('liveResponse');
                 document.getElementById('responseMessage').innerHTML = `Hồ sơ đăng ký của đối tác <b>${targetData.name}</b> đã được lưu trữ thông suốt theo thời gian thực!`;
