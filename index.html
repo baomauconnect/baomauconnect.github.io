@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BaomauConnect - Đăng Ký Nhu Cầu Bảo Mẫu</title>
+    <style>
+        :root {
+            --primary-color: #4A90E2;
+            --secondary-color: #F5A623;
+            --success-color: #2ecc71;
+            --text-color: #333; 
+            --bg-light: #f4f7f6;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { color: var(--text-color); background-color: var(--bg-light); line-height: 1.6; }
+        
+        header {
+            text-align: center; padding: 30px 20px;
+            background: #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        header h1 { color: #2c3e50; font-size: 2.5rem; margin-bottom: 5px; }
+
+        /* NÚT VÀO TRANG ADMIN */
+        .admin-link {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 0.85rem;
+            color: #95a5a6;
+            text-decoration: none;
+            padding: 5px 10px;
+            border: 1px solid #eee;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+        .admin-link:hover {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            background: #f0f7ff;
+        }
+
+        /* HERO BANNER */
+        .hero-banner {
+            width: 100%;
+            height: 380px;
+            background-image: linear-gradient(to right, rgba(255,255,255,0.75) 40%, rgba(255,255,255,0.1)), 
+                              url('https://i.pinimg.com/736x/b9/07/05/b907055121f3ff371e7ccce39688c773.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            box-shadow: inset 0 -4px 10px rgba(0,0,0,0.05);
+        }
+
+        .hero-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 0 40px;
+        }
+
+        .hero-content h2 {
+            font-size: 2.2rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            max-width: 500px;
+            line-height: 1.3;
+        }
+
+        .hero-content p {
+            font-size: 1.1rem;
+            color: #555;
+            max-width: 450px;
+            font-weight: 500;
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px 40px 20px; }
+
+        .filter-section {
+            background: white; padding: 30px; border-radius: 16px;
+            margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); text-align: center;
+        }
+        .filter-section h3 { margin-bottom: 15px; color: #2c3e50; font-size: 1.4rem; }
+        .filter-select {
+            padding: 14px 20px; font-size: 1.05rem; border-radius: 8px;
+            border: 2px solid #ddd; width: 100%; max-width: 600px; outline: none; font-weight: 600; color: #444;
+        }
+
+        .live-app-display { margin-top: 25px; }
+        .app-live-card { display: none; background: white; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); overflow: hidden; animation: fadeInUp 0.5s ease forwards; }
+        .app-grid { display: flex; flex-direction: row; }
+        .app-image-side { flex: 1; min-height: 400px; background-size: cover; background-position: center; background-color: #eee; }
+        .app-content-side { flex: 1.2; padding: 40px; display: flex; flex-direction: column; justify-content: space-between; }
+        .app-content-side h2 { font-size: 1.7rem; margin-bottom: 15px; line-height: 1.4; }
+        .app-content-side ul { list-style: none; margin-bottom: 25px; }
+        .app-content-side ul li { margin-bottom: 12px; position: relative; padding-left: 25px; font-size: 1.05rem; }
+        .app-content-side ul li::before { content: "✦"; position: absolute; left: 0; font-weight: bold; }
+
+        .baomau-theme h2 { color: var(--primary-color); }
+        .baomau-theme ul li::before { color: var(--primary-color); }
+        .phuhuynh-theme h2 { color: var(--secondary-color); }
+        .phuhuynh-theme ul li::before { color: var(--secondary-color); }
+
+        .btn { display: inline-block; text-align: center; padding: 15px 30px; color: white; font-weight: bold; border-radius: 8px; cursor: pointer; border: none; font-size: 1.1rem; transition: background 0.2s; }
+        .btn-baomau { background-color: var(--primary-color); }
+        .btn-baomau:hover { background-color: #357ABD; }
+        .btn-phuhuynh { background-color: var(--secondary-color); }
+        .btn-phuhuynh:hover { background-color: #E09216; }
+
+        .form-section { max-width: 750px; margin: 30px auto; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); display: none; }
+        .form-section h3 { margin-bottom: 20px; text-align: center; color: #2c3e50; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary-color); }
+
+        .submit-btn { width: 100%; padding: 15px; background: var(--success-color); color: white; border: none; border-radius: 8px; font-size: 1.2rem; font-weight: bold; cursor: pointer; }
+        .submit-btn:disabled { background-color: #bdc3c7; cursor: not-allowed; }
+
+        .result-container { max-width: 750px; margin: 20px auto; padding: 25px; border-radius: 12px; background-color: #e8f8f5; border: 2px solid var(--success-color); display: none; }
+
+        footer { text-align: center; padding: 20px; color: #bbb; font-size: 0.85rem; margin-top: 40px; }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        
+        @media (max-width: 768px) { 
+            .admin-link { top: 10px; right: 10px; font-size: 0.75rem; }
+            .hero-banner { height: 250px; background-image: linear-gradient(to top, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0.3)), url('https://i.pinimg.com/736x/b9/07/05/b907055121f3ff371e7ccce39688c773.jpg'); align-items: flex-end; padding-bottom: 20px; }
+            .hero-content { padding: 0 20px; }
+            .hero-content h2 { font-size: 1.5rem; }
+            .app-grid { flex-direction: column; } 
+            .app-image-side { min-height: 250px; } 
+            .app-content-side { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="admin.html" class="admin-link">⚙️ Quản trị viên</a>
+        <h1>🌟 BaomauConnect</h1>
+        <p>Hệ thống kết nối và phân luồng nhu cầu bảo mẫu trực tuyến</p>
+    </header>
+
+    <div class="hero-banner">
+        <div class="hero-content">
+            <h2>Vòng Tay Yêu Thương, Gửi Trao Trọn Vẹn</h2>
+            <p>Nơi kết nối những bảo mẫu tận tâm, giàu kinh nghiệm với các gia đình đang cần sự hỗ trợ tốt nhất cho con yêu.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <section class="filter-section">
+            <h3>⚡ Bạn đang tìm kiếm điều gì?</h3>
+            <select class="filter-select" id="needFilter" onchange="matchUserNeed()">
+                <option value="">-- Vui lòng chọn nhu cầu thực tế tại đây --</option>
+                <option value="live-bm-ss">1. Tôi là BẢO MẪU muốn tìm việc chăm trẻ SƠ SINH</option>
+                <option value="live-bm-tg">2. Tôi là BẢO MẪU muốn tìm việc làm THEO GIỜ</option>
+                <option value="live-ph-ss">3. Tôi là PHỤ HUYNH muốn thuê bảo mẫu chăm con SƠ SINH</option>
+                <option value="live-ph-tg">4. Tôi là PHỤ HUYNH muốn tìm người trông trẻ THEO GIỜ</option>
+            </select>
+        </section>
+
+        <div class="live-app-display">
+            <div id="live-bm-ss" class="app-live-card baomau-theme">
+                <div class="app-grid">
+                    <div class="app-image-side" style="background-image: url('https://i.pinimg.com/736x/7a/55/a4/7a55a4fef1dcfa22283c557ed46452d9.jpg');"></div>
+                    <div class="app-content-side">
+                        <h2>Hồ Sơ Vàng - Thu Hút Phụ Huynh Cần Chăm Bé Sơ Sinh</h2>
+                        <ul>
+                            <li><b>Tuyệt đối An Tâm:</b> Đưa chứng chỉ sơ cấp cứu, kỹ năng xử lý sặc sữa lên đầu hồ sơ để ghi điểm tối đa.</li>
+                            <li><b>Mức Lương Cao (10M - 15M):</b> Khẳng định am hiểu phương pháp khoa học chuẩn quốc tế (EASY, Ăn dặm).</li>
+                        </ul>
+                        <button class="btn btn-baomau" onclick="openTargetForm('form-bao-mau', 'Bảo mẫu chăm bé sơ sinh')">Bắt Đầu Tạo CV Sơ Sinh Ngay</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="live-bm-tg" class="app-live-card baomau-theme">
+                <div class="app-grid">
+                    <div class="app-image-side" style="background-image: url('https://i.pinimg.com/1200x/b6/a3/bc/b6a3bc497fe50edf16e4794a6b24b8dd.jpg');"></div>
+                    <div class="app-content-side">
+                        <h2>Tối Ưu Hồ Sơ - Nhận Việc Theo Giờ Gần Nhà Nhất</h2>
+                        <ul>
+                            <li><b>Linh Hoạt Thời Gian:</b> Ghi rõ khung giờ rảnh để hệ thống tự động khớp với lịch đón trẻ của phụ huynh.</li>
+                            <li><b>Cam Kết Lối Sống:</b> Tuyệt đối tập trung vào trẻ, không bấm điện thoại cá nhân trong giờ làm việc.</li>
+                        </ul>
+                        <button class="btn btn-baomau" onclick="openTargetForm('form-bao-mau', 'Bảo mẫu làm việc theo giờ')">Tạo Lịch Rảnh & Nhận Việc Ngay</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="live-ph-ss" class="app-live-card phuhuynh-theme">
+                <div class="app-grid">
+                    <div class="app-image-side" style="background-image: url('https://i.pinimg.com/1200x/8c/9c/23/8c9c23a2560f4679c6bd0ab75391db0f.jpg');"></div>
+                    <div class="app-content-side">
+                        <h2>Tiện Ích Cao Cấp Khi Thuê Bảo Mẫu Sơ Sinh Tại Gia</h2>
+                        <ul>
+                            <li><b>Chăm Sóc 1 Đổi 1:</b> Bé được theo dõi sát sao từng giấc ngủ, cữ sữa tại ngôi nhà an toàn của bạn.</li>
+                            <li><b>Hòa Thuận Gia Đình:</b> Giảm tải áp lực cho ông bà, tránh bất đồng quan điểm nuôi dạy giữa các thế hệ.</li>
+                        </ul>
+                        <button class="btn btn-phuhuynh" onclick="openTargetForm('form-phu-huynh', 'Thuê bảo mẫu sơ sinh')">Đăng Tin Tìm Bảo Mẫu Sơ Sinh</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="live-ph-tg" class="app-live-card phuhuynh-theme">
+                <div class="app-grid">
+                    <div class="app-image-side" style="background-image: url('https://i.pinimg.com/1200x/1b/e3/1b/1be31b2a7d4484410c66a477989c4688.jpg');"></div>
+                    <div class="app-content-side">
+                        <h2>Thuê Bảo Mẫu Theo Giờ - Giải Pháp Cân Bằng Cuộc Sống</h2>
+                        <ul>
+                            <li><b>Xóa Bỏ Áp Lực Đón Con:</b> Bảo mẫu đón bé đúng giờ tan học, tắm rửa chu đáo trước khi bố mẹ đi làm về.</li>
+                            <li><b>Tiết Kiệm Chi Phí:</b> Chỉ chi trả chính xác dựa trên số giờ làm việc thực tế, không tốn tiền ăn ở lại.</li>
+                        </ul>
+                        <button class="btn btn-phuhuynh" onclick="openTargetForm('form-phu-huynh', 'Thuê bảo mẫu làm theo giờ')">Đăng Tin Tìm Người Theo Giờ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section id="liveResponse" class="result-container">
+            <h4 style="color: #117a65;">🔒 Đăng Ký Thành Công! Thông tin đã được gửi lên hệ thống đám mây</h4>
+            <p id="responseMessage" style="margin-top: 10px; color: #555;"></p>
+        </section>
+
+        <section id="form-bao-mau" class="form-section">
+            <h3 id="title-form-baomau">📝 HỒ SƠ ỨNG TUYỂN BẢO MẪU</h3>
+            <form onsubmit="sendToDatabase(event, 'Bảo mẫu')">
+                <div class="form-group"><label>Họ và Tên *</label><input type="text" id="bm-name" required></div>
+                <div class="form-group"><label>Số điện thoại / Zalo *</label><input type="tel" id="bm-phone" required></div>
+                <div class="form-group"><label>Khu vực bạn đang sống (Tại Chương Mỹ) *</label><input type="text" id="bm-location" required></div>
+                <div class="form-group"><label>Kỹ năng đặc biệt tự tin nhất *</label><textarea id="bm-skills" rows="3" required></textarea></div>
+                <button type="submit" class="submit-btn" id="btn-submit-bm">Nộp Hồ Sơ Lên Hệ Thống</button>
+            </form>
+        </section>
+
+        <section id="form-phu-huynh" class="form-section">
+            <h3 id="title-form-phuhuynh">🏡 PHIẾU YÊU CẦU TÌM BẢO MẪU TẠI GIA</h3>
+            <form onsubmit="sendToDatabase(event, 'Phụ huynh')">
+                <div class="form-group"><label>Tên phụ huynh / Người liên hệ *</label><input type="text" id="ph-name" required></div>
+                <div class="form-group"><label>Số điện thoại liên hệ *</label><input type="tel" id="ph-phone" required></div>
+                <div class="form-group"><label>Địa chỉ nhà cụ thể (Nơi làm việc) *</label><input type="text" id="ph-address" required></div>
+                <div class="form-group"><label>Yêu cầu độ tuổi của bé và công việc *</label><input type="text" id="ph-jobs" required></div>
+                <div class="form-group"><label>Mức lương đề xuất (VNĐ) *</label><input type="text" id="ph-salary" required></div>
+                <button type="submit" class="submit-btn" id="btn-submit-ph" style="background-color: var(--secondary-color);">Phát Tin Tìm Kiếm Ngay</button>
+            </form>
+        </section>
+    </div>
+
+    <footer>
+        <p>© BaomauConnect - Hệ thống xử lý dữ liệu nội bộ | <a href="admin.html" style="color: #bbb; text-decoration: none;">Quản lý</a></p>
+    </footer>
+
+    <script>
+        // === CHỈ CẦN THAY ĐƯỜNG LINK APPS SCRIPT CỦA BẠN VÀO GIỮA HAI DẤU NHÁY DƯỚI ĐÂY ===
+        const CLOUD_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby97xNgU68tjV2sVPNod5sKuri_M0l3o2fy6YE5DvfkzYNMUTyDJShwKH3EfmLcWXNE/exec";
+
+        function matchUserNeed() {
+            const selectBox = document.getElementById('needFilter');
+            document.querySelectorAll('.app-live-card').forEach(card => card.style.display = 'none');
+            document.getElementById('form-bao-mau').style.display = 'none';
+            document.getElementById('form-phu-huynh').style.display = 'none';
+            document.getElementById('liveResponse').style.display = 'none';
+            if (selectBox.value) document.getElementById(selectBox.value).style.display = 'block';
+        }
+
+        let globalDetailType = ""; 
+        function openTargetForm(formId, detailType) {
+            document.getElementById('form-bao-mau').style.display = 'none';
+            document.getElementById('form-phu-huynh').style.display = 'none';
+            document.getElementById('liveResponse').style.display = 'none';
+            globalDetailType = detailType;
+
+            if (formId === 'form-bao-mau') {
+                document.getElementById('title-form-baomau').innerText = "📝 ĐĂNG KÝ NỘP HỒ SƠ: " + detailType.toUpperCase();
+            } else {
+                document.getElementById('title-form-phuhuynh').innerText = "🏡 ĐĂNG TIN TUYỂN DỤNG: " + detailType.toUpperCase();
+            }
+            const targetForm = document.getElementById(formId);
+            targetForm.style.display = 'block';
+            targetForm.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function sendToDatabase(event, role) {
+            event.preventDefault();
+            
+            // Tìm nút bấm để chuyển trạng thái chờ gửi nhằm tránh người dùng bấm liên tiếp
+            const submitBtn = event.target.querySelector('.submit-btn');
+            const originalBtnText = submitBtn.innerText;
+            submitBtn.disabled = true;
+            submitBtn.innerText = "⏳ Đang gửi dữ liệu lên vệ tinh...";
+
+            // Thu thập dữ liệu từ giao diện
+            let targetData = {
+                role: role, 
+                category: globalDetailType
+            };
+
+            if (role === 'Bảo mẫu') {
+                targetData.name = document.getElementById('bm-name').value;
+                targetData.phone = document.getElementById('bm-phone').value;
+                targetData.address = document.getElementById('bm-location').value;
+                targetData.detail = document.getElementById('bm-skills').value;
+            } else {
+                targetData.name = document.getElementById('ph-name').value;
+                targetData.phone = document.getElementById('ph-phone').value;
+                targetData.address = document.getElementById('ph-address').value;
+                targetData.detail = "Yêu cầu: " + document.getElementById('ph-jobs').value + " | Lương: " + document.getElementById('ph-salary').value;
+            }
+
+            // GỬI DATA TRỰC TIẾP LÊN GOOGLE SHEETS QUA KHÔNG TRUNG
+            fetch(CLOUD_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Chế độ đẩy dữ liệu nhanh, bảo mật cấu trúc cho Apps Script
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(targetData)
+            })
+            .then(() => {
+                // Đóng biểu mẫu, hiện màn hình thông báo thành công
+                document.getElementById('form-bao-mau').style.display = 'none';
+                document.getElementById('form-phu-huynh').style.display = 'none';
+                
+                const resBlock = document.getElementById('liveResponse');
+                document.getElementById('responseMessage').innerHTML = `Cảm ơn <b>${targetData.name}</b>. Hệ thống đã tiếp nhận dữ liệu thời gian thực của bạn để chuẩn bị ghép cặp lớp thích hợp.`;
+                resBlock.style.display = 'block';
+                resBlock.scrollIntoView({ behavior: 'smooth' });
+                
+                // Khôi phục lại trạng thái form ban đầu
+                event.target.reset();
+                submitBtn.disabled = false;
+                submitBtn.innerText = originalBtnText;
+            })
+            .catch(error => {
+                alert('❌ Gặp sự cố kết nối dữ liệu: ' + error);
+                submitBtn.disabled = false;
+                submitBtn.innerText = originalBtnText;
+            });
+        }
+    </script>
+</body>
+</html>
