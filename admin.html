@@ -20,7 +20,7 @@
         header { background: #fff; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
         header h1 { color: #2c3e50; font-size: 1.8rem; }
         .back-btn { text-decoration: none; padding: 10px 20px; background-color: #fff; border: 2px solid #ddd; color: #555; font-weight: bold; border-radius: 8px; }
-        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .container { max-width: 1300px; margin: 30px auto; padding: 0 20px; }
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; }
         .stat-card { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border-left: 5px solid #ccc; }
         .stat-card.all { border-left-color: #7f8c8d; }
@@ -35,18 +35,19 @@
         .action-buttons { display: flex; gap: 10px; }
         .table-responsive { background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); overflow: hidden; }
         table { width: 100%; border-collapse: collapse; text-align: left; }
-        th { background-color: #f8f9fa; color: #333; font-weight: 600; padding: 15px 20px; border-bottom: 2px solid #edf2f7; }
-        td { padding: 15px 20px; border-bottom: 1px solid #edf2f7; font-size: 0.95rem; }
-        .badge { display: inline-block; padding: 4px 10px; font-size: 0.8rem; font-weight: bold; border-radius: 20px; text-transform: uppercase; }
+        th { background-color: #f8f9fa; color: #333; font-weight: 600; padding: 15px 15px; border-bottom: 2px solid #edf2f7; font-size: 0.9rem; }
+        td { padding: 12px 15px; border-bottom: 1px solid #edf2f7; font-size: 0.9rem; vertical-align: top; }
+        .badge { display: inline-block; padding: 4px 10px; font-size: 0.75rem; font-weight: bold; border-radius: 20px; text-transform: uppercase; }
         .badge-baomau { background-color: #e1f0fe; color: var(--primary-color); }
         .badge-phuhuynh { background-color: #fef3e3; color: var(--secondary-color); }
         .no-data { text-align: center; padding: 40px; color: #999; font-style: italic; }
         .loading { font-weight: bold; color: var(--primary-color); text-align: center; padding: 20px; }
         
-        /* Checkbox custom style */
         input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
         .btn-delete-single { padding: 4px 8px; background: var(--danger-color); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
         .btn-delete-single:hover { opacity: 0.9; }
+        .avatar-preview { width: 45px; height: 45px; object-fit: cover; border-radius: 50%; border: 1px solid #ddd; }
+        .info-sub { font-size: 0.8rem; color: #7f8c8d; display: block; margin-top: 2px; }
     </style>
 </head>
 <body>
@@ -92,12 +93,12 @@
                         <tr>
                             <th style="width: 40px;"><input type="checkbox" id="check-all" onclick="toggleSelectAll(this)"></th>
                             <th>Thời gian</th>
-                            <th>Vai trò</th>
-                            <th>Phân loại</th>
-                            <th>Họ và Tên</th>
-                            <th>Số Điện Thoại</th>
+                            <th>Vai trò / Loại</th>
+                            <th>Thông Tin Đối Tác</th>
+                            <th>Tuổi / Ảnh (Bảo mẫu)</th>
+                            <th>Yêu Cầu (Phụ huynh)</th>
                             <th>Địa chỉ</th>
-                            <th>Chi tiết</th>
+                            <th>Mô tả chi tiết</th>
                             <th style="text-align: center;">Hành động</th>
                         </tr>
                     </thead>
@@ -110,7 +111,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script>
-        // DÁN URL GOOGLE APPS SCRIPT CỦA BẠN VÀO ĐÂY
         const CLOUD_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxxDJxrCCky-oQpbH1ZgRznlSdkOALuJyN4aR4jnqQI3DDV2QbgIRvHSZHN7PR9nsdi/exec";
         const TARGET_HASH = "79525d41efbf16d3363c138f713d2417"; 
         
@@ -144,8 +144,6 @@
             fetch(CLOUD_SCRIPT_URL)
             .then(res => res.json())
             .then(data => {
-                // Gán thêm index gốc từ Google Sheet (Hàng đầu tiên của data tương ứng với dòng 2 trong Sheet nếu có tiêu đề)
-                // Giả định Apps Script trả về mảng, vị trí thực tế trong Sheet = index + 2
                 globalData = data.map((item, index) => ({...item, sheetRow: index + 2}));
                 document.getElementById('loading-msg').style.display = 'none';
                 renderData();
@@ -174,19 +172,41 @@
                 noDataMsg.style.display = 'none';
             }
 
-            // Đảo đơn mới lên đầu
             [...filteredData].reverse().forEach(item => {
                 const tr = document.createElement('tr');
                 const badgeClass = item.role === 'Bảo mẫu' ? 'badge-baomau' : 'badge-phuhuynh';
+                
+                // Xử lý hiển thị phần tuổi & ảnh chân dung bảo mẫu
+                let bmInfoCol = "<span style='color:#ccc;'>-</span>";
+                if(item.role === 'Bảo mẫu') {
+                    let avatarTag = (item.avatar && item.avatar.startsWith('http')) 
+                        ? `<br><img src="${item.avatar}" class="avatar-preview" onerror="this.style.display='none'">` 
+                        : `<span class="info-sub">${item.avatar || 'Không ảnh'}</span>`;
+                    bmInfoCol = `<b>${item.age ? item.age + ' tuổi' : 'Chưa nhập'}</b>${avatarTag}`;
+                }
+
+                // Xử lý hiển thị thông tin trẻ & yêu cầu tuổi của phụ huynh
+                let phInfoCol = "<span style='color:#ccc;'>-</span>";
+                if(item.role === 'Phụ huynh') {
+                    phInfoCol = `<span class="info-sub">👶 Bé: <b>${item.childAge || 'N/A'}</b></span>
+                                 <span class="info-sub">👵 Cần BM: <b>${item.bmAgeReq || 'N/A'}</b></span>`;
+                }
+
                 tr.innerHTML = `
                     <td><input type="checkbox" class="row-checkbox" data-row="${item.sheetRow}" onclick="updateDeleteButtonVisibility()"></td>
-                    <td style="color:#666; font-size:0.85rem;">${item.time}</td>
-                    <td><span class="badge ${badgeClass}">${item.role}</span></td>
-                    <td style="font-weight:600; color:#2c3e50;">${item.category}</td>
-                    <td><b>${item.name}</b></td>
-                    <td style="color:#2980b9; font-weight:600;">${item.phone}</td>
+                    <td style="color:#666; font-size:0.8rem;">${item.time}</td>
+                    <td>
+                        <span class="badge ${badgeClass}">${item.role}</span>
+                        <span class="info-sub" style="font-weight:600; color:#2c3e50;">${item.category}</span>
+                    </td>
+                    <td>
+                        <b>${item.name}</b>
+                        <span class="info-sub" style="color:#2980b9; font-weight:600;">📞 ${item.phone}</span>
+                    </td>
+                    <td>${bmInfoCol}</td>
+                    <td>${phInfoCol}</td>
                     <td>${item.address}</td>
-                    <td style="color:#555; max-width:300px;">${item.detail}</td>
+                    <td style="color:#555; max-width:250px; font-size:0.85rem;">${item.detail}</td>
                     <td style="text-align:center;"><button class="btn-delete-single" onclick="deleteSingleRequest(${item.sheetRow})">🗑️ Xóa</button></td>
                 `;
                 tbody.appendChild(tr);
@@ -202,14 +222,12 @@
             renderData();
         }
 
-        // Chọn tất cả hoặc bỏ chọn tất cả
         function toggleSelectAll(masterCanvas) {
             const checkboxes = document.querySelectorAll('.row-checkbox');
             checkboxes.forEach(cb => cb.checked = masterCanvas.checked);
             updateDeleteButtonVisibility();
         }
 
-        // Cập nhật trạng thái hiển thị nút Xóa hàng loạt
         function updateDeleteButtonVisibility() {
             const selectedCheckboxes = document.querySelectorAll('.row-checkbox:checked');
             const deleteBtn = document.getElementById('btn-delete-selected');
@@ -223,7 +241,6 @@
             }
         }
 
-        // Gửi lệnh xóa lên Google Apps Script
         function sendDeleteRequestToCloud(rowsArray) {
             if(!CLOUD_SCRIPT_URL) {
                 alert("Vui lòng cấu hình CLOUD_SCRIPT_URL trước!");
@@ -233,10 +250,9 @@
             document.getElementById('loading-msg').style.display = 'block';
             document.getElementById('loading-msg').innerText = "⏳ Đang thực hiện xóa dữ liệu trên đám mây...";
 
-            // Gửi dữ liệu bằng phương thức POST (Sử dụng URL-encoded vì Apps Script nhận e.parameter dễ hơn)
             fetch(CLOUD_SCRIPT_URL, {
                 method: 'POST',
-                mode: 'no-cors', // Dùng no-cors để tránh lỗi bảo mật chéo miền của Apps Script khi phản hồi
+                mode: 'no-cors',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: new URLSearchParams({
                     'action': 'delete',
@@ -245,7 +261,6 @@
             })
             .then(() => {
                 alert("🎉 Đã thực hiện lệnh xóa thành công!");
-                // Tải lại dữ liệu sau khi xóa 1.5 giây để Google kịp cập nhật đồng bộ
                 setTimeout(loadDatabaseFromCloud, 1500);
             })
             .catch(err => {
@@ -254,14 +269,12 @@
             });
         }
 
-        // Xóa một hàng đơn lẻ
         function deleteSingleRequest(sheetRow) {
             if(confirm("Bạn có chắc chắn muốn xóa yêu cầu này vĩnh viễn không?")) {
                 sendDeleteRequestToCloud([sheetRow]);
             }
         }
 
-        // Xóa nhiều hàng đã chọn
         function deleteSelectedRequests() {
             const selectedCheckboxes = document.querySelectorAll('.row-checkbox:checked');
             const rowsToDelete = Array.from(selectedCheckboxes).map(cb => parseInt(cb.getAttribute('data-row')));

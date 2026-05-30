@@ -24,7 +24,6 @@
         }
         header h1 { color: #2c3e50; font-size: 2.5rem; margin-bottom: 5px; }
 
-        /* NÚT VÀO TRANG ADMIN */
         .admin-link {
             position: absolute;
             top: 15px;
@@ -43,7 +42,6 @@
             background: #f0f7ff;
         }
 
-        /* HERO BANNER */
         .hero-banner {
             width: 100%;
             height: 380px;
@@ -64,21 +62,8 @@
             padding: 0 40px;
         }
 
-        .hero-content h2 {
-            font-size: 2.2rem;
-            color: #2c3e50;
-            margin-bottom: 10px;
-            max-width: 500px;
-            line-height: 1.3;
-        }
-
-        .hero-content p {
-            font-size: 1.1rem;
-            color: #555;
-            max-width: 450px;
-            font-weight: 500;
-        }
-
+        .hero-content h2 { font-size: 2.2rem; color: #2c3e50; margin-bottom: 10px; max-width: 500px; line-height: 1.3; }
+        .hero-content p { font-size: 1.1rem; color: #555; max-width: 450px; font-weight: 500; }
         .container { max-width: 1000px; margin: 0 auto; padding: 0 20px 40px 20px; }
 
         .filter-section {
@@ -123,7 +108,6 @@
         .submit-btn:disabled { background-color: #bdc3c7; cursor: not-allowed; }
 
         .result-container { max-width: 750px; margin: 20px auto; padding: 25px; border-radius: 12px; background-color: #e8f8f5; border: 2px solid var(--success-color); display: none; }
-
         footer { text-align: center; padding: 20px; color: #bbb; font-size: 0.85rem; margin-top: 40px; }
 
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -233,8 +217,10 @@
             <h3 id="title-form-baomau">📝 HỒ SƠ ỨNG TUYỂN BẢO MẪU</h3>
             <form onsubmit="sendToDatabase(event, 'Bảo mẫu')">
                 <div class="form-group"><label>Họ và Tên *</label><input type="text" id="bm-name" required></div>
+                <div class="form-group"><label>Tuổi của bạn *</label><input type="number" id="bm-age" min="18" max="70" required></div>
                 <div class="form-group"><label>Số điện thoại / Zalo *</label><input type="tel" id="bm-phone" required></div>
                 <div class="form-group"><label>Khu vực bạn đang sống (Tại Chương Mỹ) *</label><input type="text" id="bm-location" required></div>
+                <div class="form-group"><label>Đường dẫn ảnh chân dung (Nếu có - Ví dụ link Facebook/Zalo ảnh)</label><input type="url" id="bm-avatar" placeholder="https://example.com/anh.jpg"></div>
                 <div class="form-group"><label>Kỹ năng đặc biệt tự tin nhất *</label><textarea id="bm-skills" rows="3" required></textarea></div>
                 <button type="submit" class="submit-btn" id="btn-submit-bm">Nộp Hồ Sơ Lên Hệ Thống</button>
             </form>
@@ -246,8 +232,10 @@
                 <div class="form-group"><label>Tên phụ huynh / Người liên hệ *</label><input type="text" id="ph-name" required></div>
                 <div class="form-group"><label>Số điện thoại liên hệ *</label><input type="tel" id="ph-phone" required></div>
                 <div class="form-group"><label>Địa chỉ nhà cụ thể (Nơi làm việc) *</label><input type="text" id="ph-address" required></div>
-                <div class="form-group"><label>Yêu cầu độ tuổi của bé và công việc *</label><input type="text" id="ph-jobs" required></div>
+                <div class="form-group"><label>Độ tuổi hiện tại của bé (Ví dụ: 6 tháng, 3 tuổi) *</label><input type="text" id="ph-child-age" required></div>
+                <div class="form-group"><label>Yêu cầu độ tuổi bảo mẫu muốn thuê (Ví dụ: Từ 30 - 50 tuổi) *</label><input type="text" id="ph-bm-age-req" required></div>
                 <div class="form-group"><label>Mức lương đề xuất (VNĐ) *</label><input type="text" id="ph-salary" required></div>
+                <div class="form-group"><label>Mô tả thêm công việc và yêu cầu chi tiết khác *</label><textarea id="ph-jobs-detail" rows="3" required></textarea></div>
                 <button type="submit" class="submit-btn" id="btn-submit-ph" style="background-color: var(--secondary-color);">Phát Tin Tìm Kiếm Ngay</button>
             </form>
         </section>
@@ -258,7 +246,7 @@
     </footer>
 
     <script>
-        // === CHỈ CẦN THAY ĐƯỜNG LINK APPS SCRIPT CỦA BẠN VÀO GIỮA HAI DẤU NHÁY DƯỚI ĐÂY ===
+        // Đồng bộ giữ nguyên link Apps Script cũ đang dùng ổn định của bạn
         const CLOUD_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxxDJxrCCky-oQpbH1ZgRznlSdkOALuJyN4aR4jnqQI3DDV2QbgIRvHSZHN7PR9nsdi/exec";
 
         function matchUserNeed() {
@@ -290,39 +278,44 @@
         function sendToDatabase(event, role) {
             event.preventDefault();
             
-            // Tìm nút bấm để chuyển trạng thái chờ gửi nhằm tránh người dùng bấm liên tiếp
             const submitBtn = event.target.querySelector('.submit-btn');
             const originalBtnText = submitBtn.innerText;
             submitBtn.disabled = true;
             submitBtn.innerText = "⏳ Đang gửi dữ liệu lên vệ tinh...";
 
-            // Thu thập dữ liệu từ giao diện
             let targetData = {
                 role: role, 
                 category: globalDetailType
             };
 
+            // Gom và phân tách cấu trúc biến chuẩn để Apps Script bắt đúng
             if (role === 'Bảo mẫu') {
                 targetData.name = document.getElementById('bm-name').value;
                 targetData.phone = document.getElementById('bm-phone').value;
                 targetData.address = document.getElementById('bm-location').value;
+                targetData.age = document.getElementById('bm-age').value;
+                targetData.avatar = document.getElementById('bm-avatar').value || "Không có ảnh";
+                targetData.childAge = "";
+                targetData.bmAgeReq = "";
                 targetData.detail = document.getElementById('bm-skills').value;
             } else {
                 targetData.name = document.getElementById('ph-name').value;
                 targetData.phone = document.getElementById('ph-phone').value;
                 targetData.address = document.getElementById('ph-address').value;
-                targetData.detail = "Yêu cầu: " + document.getElementById('ph-jobs').value + " | Lương: " + document.getElementById('ph-salary').value;
+                targetData.age = "";
+                targetData.avatar = "";
+                targetData.childAge = document.getElementById('ph-child-age').value;
+                targetData.bmAgeReq = document.getElementById('ph-bm-age-req').value;
+                targetData.detail = "Mức lương: " + document.getElementById('ph-salary').value + " | " + document.getElementById('ph-jobs-detail').value;
             }
 
-            // GỬI DATA TRỰC TIẾP LÊN GOOGLE SHEETS QUA KHÔNG TRUNG
             fetch(CLOUD_SCRIPT_URL, {
                 method: 'POST',
-                mode: 'no-cors', // Chế độ đẩy dữ liệu nhanh, bảo mật cấu trúc cho Apps Script
+                mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(targetData)
             })
             .then(() => {
-                // Đóng biểu mẫu, hiện màn hình thông báo thành công
                 document.getElementById('form-bao-mau').style.display = 'none';
                 document.getElementById('form-phu-huynh').style.display = 'none';
                 
@@ -331,7 +324,6 @@
                 resBlock.style.display = 'block';
                 resBlock.scrollIntoView({ behavior: 'smooth' });
                 
-                // Khôi phục lại trạng thái form ban đầu
                 event.target.reset();
                 submitBtn.disabled = false;
                 submitBtn.innerText = originalBtnText;
