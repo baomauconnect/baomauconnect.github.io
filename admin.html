@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BaomauConnect - Bảng Điều Khiển Admin đám mây</title>
+    <title>BaomauConnect - Bảng Điều Khiển Admin Đám Mây</title>
     <style>
         :root {
             --primary-color: #4A90E2; --secondary-color: #F5A623; --success-color: #2ecc71; --danger-color: #e74c3c; --text-color: #333; --bg-light: #f4f7f6;
@@ -40,7 +40,7 @@
         .badge { display: inline-block; padding: 4px 10px; font-size: 0.75rem; font-weight: bold; border-radius: 20px; text-transform: uppercase; }
         .badge-baomau { background-color: #e1f0fe; color: var(--primary-color); }
         .badge-phuhuynh { background-color: #fef3e3; color: var(--secondary-color); }
-        .badge-neonatal { background-color: #e8f8f5; color: #117a65; border: 1px solid #a3e4d7; font-size: 0.7rem; }
+        .badge-neonatal { background-color: #e8f8f5; color: #117a65; border: 1px solid #a3e4d7; font-size: 0.75rem; font-weight: bold; margin-top: 5px; }
         .no-data { text-align: center; padding: 40px; color: #999; font-style: italic; }
         .loading { font-weight: bold; color: var(--primary-color); text-align: center; padding: 20px; }
         input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
@@ -63,7 +63,7 @@
     <div id="admin-main-content">
         <header>
             <h1>🛠️ Bảng Quản Trị Đám Mây (Live Data)</h1>
-            <a href="index_2.html" class="back-btn">🏠 Xem Trang Đăng Ký</a>
+            <a href="index.html" class="back-btn">🏠 Xem Trang Đăng Ký</a>
         </header>
 
         <div class="container">
@@ -91,13 +91,13 @@
                     <thead>
                         <tr>
                             <th style="width: 40px;"><input type="checkbox" id="check-all" onclick="toggleSelectAll(this)"></th>
-                            <th>Thời gian</th>
-                            <th>Vai trò / Loại</th>
-                            <th>Thông Tin Đối Tác</th>
-                            <th>Thời Gian Đăng Ký</th>
-                            <th>Thông tin chi tiết vai trò</th>
-                            <th>Địa chỉ</th>
-                            <th>Mô tả / Lương</th>
+                            <th>Thời gian nhận</th>
+                            <th>Vai trò đối tác</th>
+                            <th>Họ và Tên liên hệ</th>
+                            <th>Khung Giờ Đăng Ký</th>
+                            <th>Chi tiết theo vai trò</th>
+                            <th>Địa chỉ cụ thể</th>
+                            <th>Mô tả / Yêu cầu chi tiết</th>
                             <th style="text-align: center;">Hành động</th>
                         </tr>
                     </thead>
@@ -130,7 +130,7 @@
                 loadDatabaseFromCloud();
             } else {
                 alert("❌ Mật khẩu hệ thống không hợp lệ!");
-                window.location.href = "index_2.html";
+                window.location.href = "index.html";
             }
         }
 
@@ -173,23 +173,24 @@
 
             [...filteredData].reverse().forEach(item => {
                 const tr = document.createElement('tr');
-                const badgeClass = item.role === 'Bảo mẫu' ? 'badge-baomau' : 'badge-phuhuynh';
+                const isBaoMau = item.role === 'Bảo mẫu';
+                const badgeClass = isBaoMau ? 'badge-baomau' : 'badge-phuhuynh';
                 
-                // Cột hiển thị Chi tiết phân tách theo vai trò
+                // Đọc đúng dữ liệu động phân tách theo 2 luồng
                 let roleSpecifcCol = "";
-                if(item.role === 'Bảo mẫu') {
+                if(isBaoMau) {
                     let avatarTag = (item.avatar && item.avatar.startsWith('http')) 
                         ? `<br><img src="${item.avatar}" class="avatar-preview" onerror="this.style.display='none'">` 
                         : `<span class="info-sub">${item.avatar || 'Không ảnh'}</span>`;
                     
                     let neoBadge = item.careNeonatal === "CÓ SƠ SINH" 
-                        ? `<br><span class="badge badge-neonatal">👶 Chăm được sơ sinh</span>` 
-                        : "";
+                        ? `<br><span class="badge badge-neonatal">👶 Nhận sơ sinh</span>` 
+                        : `<span class="info-sub" style="color: #95a5a6;">❌ Không nhận sơ sinh</span>`;
                         
                     roleSpecifcCol = `<b>${item.age ? item.age + ' tuổi' : 'N/A'}</b>${neoBadge}${avatarTag}`;
-                } else if(item.role === 'Phụ huynh') {
+                } else {
                     roleSpecifcCol = `<span class="info-sub">🍼 Tuổi bé: <b>${item.childAge || 'N/A'}</b></span>
-                                 <span class="info-sub">👵 Y/c tuổi BM: <b>${item.bmAgeReq || 'N/A'}</b></span>`;
+                                 <span class="info-sub">👵 Y/c bảo mẫu: <b>${item.bmAgeReq || 'N/A'}</b></span>`;
                 }
 
                 tr.innerHTML = `
@@ -197,7 +198,6 @@
                     <td style="color:#666; font-size:0.8rem;">${item.time}</td>
                     <td>
                         <span class="badge ${badgeClass}">${item.role}</span>
-                        <span class="info-sub" style="font-weight:600; color:#2c3e50;">${item.category}</span>
                     </td>
                     <td>
                         <b>${item.name}</b>
@@ -244,10 +244,6 @@
         }
 
         function sendDeleteRequestToCloud(rowsArray) {
-            if(!CLOUD_SCRIPT_URL) {
-                alert("Vui lòng cấu hình CLOUD_SCRIPT_URL trước!");
-                return;
-            }
             document.getElementById('loading-msg').style.display = 'block';
             fetch(CLOUD_SCRIPT_URL, {
                 method: 'POST',
