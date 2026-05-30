@@ -6,76 +6,22 @@
     <title>BaomauConnect - Đăng Ký Nhu Cầu Bảo Mẫu</title>
     <style>
         :root {
-            --primary-color: #4A90E2;
-            --secondary-color: #F5A623;
-            --success-color: #2ecc71;
-            --text-color: #333; 
-            --bg-light: #f4f7f6;
+            --primary-color: #4A90E2; --secondary-color: #F5A623; --success-color: #2ecc71; --text-color: #333; --bg-light: #f4f7f6;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
         body { color: var(--text-color); background-color: var(--bg-light); line-height: 1.6; }
-        
-        header {
-            text-align: center; padding: 30px 20px;
-            background: #fff;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            position: relative;
-        }
+        header { text-align: center; padding: 30px 20px; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: relative; }
         header h1 { color: #2c3e50; font-size: 2.5rem; margin-bottom: 5px; }
-
-        .admin-link {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 0.85rem;
-            color: #95a5a6;
-            text-decoration: none;
-            padding: 5px 10px;
-            border: 1px solid #eee;
-            border-radius: 20px;
-            transition: all 0.2s;
-        }
-        .admin-link:hover {
-            color: var(--primary-color);
-            border-color: var(--primary-color);
-            background: #f0f7ff;
-        }
-
-        .hero-banner {
-            width: 100%;
-            height: 380px;
-            background-image: linear-gradient(to right, rgba(255,255,255,0.75) 40%, rgba(255,255,255,0.1)), 
-                              url('https://i.pinimg.com/736x/b9/07/05/b907055121f3ff371e7ccce39688c773.jpg');
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: center;
-            margin-bottom: 30px;
-            box-shadow: inset 0 -4px 10px rgba(0,0,0,0.05);
-        }
-
-        .hero-content {
-            max-width: 1000px;
-            margin: 0 auto;
-            width: 100%;
-            padding: 0 40px;
-        }
-
+        .admin-link { position: absolute; top: 15px; right: 20px; font-size: 0.85rem; color: #95a5a6; text-decoration: none; padding: 5px 10px; border: 1px solid #eee; border-radius: 20px; transition: all 0.2s; }
+        .admin-link:hover { color: var(--primary-color); border-color: var(--primary-color); background: #f0f7ff; }
+        .hero-banner { width: 100%; height: 380px; background-image: linear-gradient(to right, rgba(255,255,255,0.75) 40%, rgba(255,255,255,0.1)), url('https://i.pinimg.com/736x/b9/07/05/b907055121f3ff371e7ccce39688c773.jpg'); background-size: cover; background-position: center; display: flex; align-items: center; margin-bottom: 30px; box-shadow: inset 0 -4px 10px rgba(0,0,0,0.05); }
+        .hero-content { max-width: 1000px; margin: 0 auto; width: 100%; padding: 0 40px; }
         .hero-content h2 { font-size: 2.2rem; color: #2c3e50; margin-bottom: 10px; max-width: 500px; line-height: 1.3; }
         .hero-content p { font-size: 1.1rem; color: #555; max-width: 450px; font-weight: 500; }
         .container { max-width: 1000px; margin: 0 auto; padding: 0 20px 40px 20px; }
-
-        .filter-section {
-            background: white; padding: 30px; border-radius: 16px;
-            margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); text-align: center;
-        }
+        .filter-section { background: white; padding: 30px; border-radius: 16px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); text-align: center; }
         .filter-section h3 { margin-bottom: 15px; color: #2c3e50; font-size: 1.4rem; }
-        .filter-select {
-            padding: 14px 20px; font-size: 1.05rem; border-radius: 8px;
-            border: 2px solid #ddd; width: 100%; max-width: 600px; outline: none; font-weight: 600; color: #444;
-        }
-
+        .filter-select { padding: 14px 20px; font-size: 1.05rem; border-radius: 8px; border: 2px solid #ddd; width: 100%; max-width: 600px; outline: none; font-weight: 600; color: #444; }
         .live-app-display { margin-top: 25px; }
         .app-live-card { display: none; background: white; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); overflow: hidden; animation: fadeInUp 0.5s ease forwards; }
         .app-grid { display: flex; flex-direction: row; }
@@ -85,48 +31,37 @@
         .app-content-side ul { list-style: none; margin-bottom: 25px; }
         .app-content-side ul li { margin-bottom: 12px; position: relative; padding-left: 25px; font-size: 1.05rem; }
         .app-content-side ul li::before { content: "✦"; position: absolute; left: 0; font-weight: bold; }
-
         .baomau-theme h2 { color: var(--primary-color); }
         .baomau-theme ul li::before { color: var(--primary-color); }
         .phuhuynh-theme h2 { color: var(--secondary-color); }
         .phuhuynh-theme ul li::before { color: var(--secondary-color); }
-
         .btn { display: inline-block; text-align: center; padding: 15px 30px; color: white; font-weight: bold; border-radius: 8px; cursor: pointer; border: none; font-size: 1.1rem; transition: background 0.2s; }
         .btn-baomau { background-color: var(--primary-color); }
         .btn-baomau:hover { background-color: #357ABD; }
         .btn-phuhuynh { background-color: var(--secondary-color); }
         .btn-phuhuynh:hover { background-color: #E09216; }
-
         .form-section { max-width: 750px; margin: 30px auto; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); display: none; }
         .form-section h3 { margin-bottom: 20px; text-align: center; color: #2c3e50; }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; font-weight: 600; margin-bottom: 8px; }
-        .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; }
-        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary-color); }
-
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--primary-color); }
+        .time-range-row { display: flex; gap: 15px; align-items: center; }
+        .time-range-row select { flex: 1; }
+        .checkbox-group { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+        .checkbox-group input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; }
         .submit-btn { width: 100%; padding: 15px; background: var(--success-color); color: white; border: none; border-radius: 8px; font-size: 1.2rem; font-weight: bold; cursor: pointer; }
         .submit-btn:disabled { background-color: #bdc3c7; cursor: not-allowed; }
-
         .result-container { max-width: 750px; margin: 20px auto; padding: 25px; border-radius: 12px; background-color: #e8f8f5; border: 2px solid var(--success-color); display: none; }
         footer { text-align: center; padding: 20px; color: #bbb; font-size: 0.85rem; margin-top: 40px; }
-
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        
-        @media (max-width: 768px) { 
-            .admin-link { top: 10px; right: 10px; font-size: 0.75rem; }
-            .hero-banner { height: 250px; background-image: linear-gradient(to top, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0.3)), url('https://i.pinimg.com/736x/b9/07/05/b907055121f3ff371e7ccce39688c773.jpg'); align-items: flex-end; padding-bottom: 20px; }
-            .hero-content { padding: 0 20px; }
-            .hero-content h2 { font-size: 1.5rem; }
-            .app-grid { flex-direction: column; } 
-            .app-image-side { min-height: 250px; } 
-            .app-content-side { padding: 25px; }
-        }
+        @media (max-width: 768px) { .app-grid { flex-direction: column; } .app-image-side { min-height: 250px; } .app-content-side { padding: 25px; } }
     </style>
 </head>
 <body>
 
     <header>
-        <a href="admin.html" class="admin-link">⚙️ Quản trị viên</a>
+        <a href="admin_2.html" class="admin-link">⚙️ Quản trị viên</a>
         <h1>🌟 BaomauConnect</h1>
         <p>Hệ thống kết nối và phân luồng nhu cầu bảo mẫu trực tuyến</p>
     </header>
@@ -151,6 +86,7 @@
         </section>
 
         <div class="live-app-display">
+            <!-- Đơn lẻ các thẻ dịch vụ giữ nguyên -->
             <div id="live-bm-ss" class="app-live-card baomau-theme">
                 <div class="app-grid">
                     <div class="app-image-side" style="background-image: url('https://i.pinimg.com/736x/7a/55/a4/7a55a4fef1dcfa22283c557ed46452d9.jpg');"></div>
@@ -213,6 +149,7 @@
             <p id="responseMessage" style="margin-top: 10px; color: #555;"></p>
         </section>
 
+        <!-- FORM BẢO MẪU -->
         <section id="form-bao-mau" class="form-section">
             <h3 id="title-form-baomau">📝 HỒ SƠ ỨNG TUYỂN BẢO MẪU</h3>
             <form onsubmit="sendToDatabase(event, 'Bảo mẫu')">
@@ -220,12 +157,31 @@
                 <div class="form-group"><label>Tuổi của bạn *</label><input type="number" id="bm-age" min="18" max="70" required></div>
                 <div class="form-group"><label>Số điện thoại / Zalo *</label><input type="tel" id="bm-phone" required></div>
                 <div class="form-group"><label>Khu vực bạn đang sống (Tại Chương Mỹ) *</label><input type="text" id="bm-location" required></div>
-                <div class="form-group"><label>Đường dẫn ảnh chân dung (Nếu có - Ví dụ link Facebook/Zalo ảnh)</label><input type="url" id="bm-avatar" placeholder="https://example.com/anh.jpg"></div>
+                
+                <!-- Chọn khung giờ cuộn con lăn cho bảo mẫu -->
+                <div class="form-group">
+                    <label>Khung giờ bạn có thể làm việc *</label>
+                    <div class="time-range-row">
+                        <span>Từ:</span>
+                        <select id="bm-time-start" required></select>
+                        <span>Đến:</span>
+                        <select id="bm-time-end" required></select>
+                    </div>
+                </div>
+
+                <!-- Tích chọn chăm bé sơ sinh -->
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="bm-neonatal">
+                    <label for="bm-neonatal" style="margin-bottom:0; cursor:pointer; color:#2c3e50;">Tôi có thể nhận chăm sóc được bé SƠ SINH 👶</label>
+                </div>
+
+                <div class="form-group"><label>Đường dẫn ảnh chân dung (Nếu có)</label><input type="url" id="bm-avatar" placeholder="https://example.com/anh.jpg"></div>
                 <div class="form-group"><label>Kỹ năng đặc biệt tự tin nhất *</label><textarea id="bm-skills" rows="3" required></textarea></div>
                 <button type="submit" class="submit-btn" id="btn-submit-bm">Nộp Hồ Sơ Lên Hệ Thống</button>
             </form>
         </section>
 
+        <!-- FORM PHỤ HUYNH -->
         <section id="form-phu-huynh" class="form-section">
             <h3 id="title-form-phuhuynh">🏡 PHIẾU YÊU CẦU TÌM BẢO MẪU TẠI GIA</h3>
             <form onsubmit="sendToDatabase(event, 'Phụ huynh')">
@@ -234,6 +190,18 @@
                 <div class="form-group"><label>Địa chỉ nhà cụ thể (Nơi làm việc) *</label><input type="text" id="ph-address" required></div>
                 <div class="form-group"><label>Độ tuổi hiện tại của bé (Ví dụ: 6 tháng, 3 tuổi) *</label><input type="text" id="ph-child-age" required></div>
                 <div class="form-group"><label>Yêu cầu độ tuổi bảo mẫu muốn thuê (Ví dụ: Từ 30 - 50 tuổi) *</label><input type="text" id="ph-bm-age-req" required></div>
+                
+                <!-- Chọn khung giờ cuộn con lăn cho phụ huynh -->
+                <div class="form-group">
+                    <label>Khung giờ cần bảo mẫu làm việc *</label>
+                    <div class="time-range-row">
+                        <span>Từ:</span>
+                        <select id="ph-time-start" required></select>
+                        <span>Đến:</span>
+                        <select id="ph-time-end" required></select>
+                    </div>
+                </div>
+
                 <div class="form-group"><label>Mức lương đề xuất (VNĐ) *</label><input type="text" id="ph-salary" required></div>
                 <div class="form-group"><label>Mô tả thêm công việc và yêu cầu chi tiết khác *</label><textarea id="ph-jobs-detail" rows="3" required></textarea></div>
                 <button type="submit" class="submit-btn" id="btn-submit-ph" style="background-color: var(--secondary-color);">Phát Tin Tìm Kiếm Ngay</button>
@@ -242,12 +210,34 @@
     </div>
 
     <footer>
-        <p>© BaomauConnect - Hệ thống xử lý dữ liệu nội bộ | <a href="admin.html" style="color: #bbb; text-decoration: none;">Quản lý</a></p>
+        <p>© BaomauConnect - Hệ thống xử lý dữ liệu nội bộ | <a href="admin_2.html" style="color: #bbb; text-decoration: none;">Quản lý</a></p>
     </footer>
 
     <script>
-        // Đồng bộ giữ nguyên link Apps Script cũ đang dùng ổn định của bạn
         const CLOUD_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxxDJxrCCky-oQpbH1ZgRznlSdkOALuJyN4aR4jnqQI3DDV2QbgIRvHSZHN7PR9nsdi/exec";
+
+        // Tự động tạo danh sách giờ từ 0h - 24h để cuộn con lăn chọn tiện lợi
+        function generateHoursOptions() {
+            const selects = ['bm-time-start', 'bm-time-end', 'ph-time-start', 'ph-time-end'];
+            selects.forEach(id => {
+                const selectEl = document.getElementById(id);
+                if(selectEl) {
+                    selectEl.innerHTML = "";
+                    for(let i = 0; i <= 24; i++) {
+                        let hourStr = i < 10 ? '0' + i : i;
+                        let option = document.createElement('option');
+                        option.value = hourStr + ':00';
+                        option.innerText = hourStr + ':00';
+                        // Đặt mặc định hợp lý cho người dùng dễ chọn
+                        if(id.includes('start') && i === 8) option.selected = true;
+                        if(id.includes('end') && i === 17) option.selected = true;
+                        selectEl.appendChild(option);
+                    }
+                }
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', generateHoursOptions);
 
         function matchUserNeed() {
             const selectBox = document.getElementById('needFilter');
@@ -288,7 +278,6 @@
                 category: globalDetailType
             };
 
-            // Gom và phân tách cấu trúc biến chuẩn để Apps Script bắt đúng
             if (role === 'Bảo mẫu') {
                 targetData.name = document.getElementById('bm-name').value;
                 targetData.phone = document.getElementById('bm-phone').value;
@@ -297,6 +286,9 @@
                 targetData.avatar = document.getElementById('bm-avatar').value || "Không có ảnh";
                 targetData.childAge = "";
                 targetData.bmAgeReq = "";
+                // Thu thập dữ liệu giờ làm việc và tích chọn sơ sinh
+                targetData.workTime = document.getElementById('bm-time-start').value + " - " + document.getElementById('bm-time-end').value;
+                targetData.careNeonatal = document.getElementById('bm-neonatal').checked ? "CÓ SƠ SINH" : "Không nhận sơ sinh";
                 targetData.detail = document.getElementById('bm-skills').value;
             } else {
                 targetData.name = document.getElementById('ph-name').value;
@@ -306,6 +298,9 @@
                 targetData.avatar = "";
                 targetData.childAge = document.getElementById('ph-child-age').value;
                 targetData.bmAgeReq = document.getElementById('ph-bm-age-req').value;
+                // Thu thập giờ thuê của phụ huynh
+                targetData.workTime = document.getElementById('ph-time-start').value + " - " + document.getElementById('ph-time-end').value;
+                targetData.careNeonatal = "";
                 targetData.detail = "Mức lương: " + document.getElementById('ph-salary').value + " | " + document.getElementById('ph-jobs-detail').value;
             }
 
@@ -320,11 +315,12 @@
                 document.getElementById('form-phu-huynh').style.display = 'none';
                 
                 const resBlock = document.getElementById('liveResponse');
-                document.getElementById('responseMessage').innerHTML = `Cảm ơn <b>${targetData.name}</b>. Hệ thống đã tiếp nhận dữ liệu thời gian thực của bạn để chuẩn bị ghép cặp lớp thích hợp.`;
+                document.getElementById('responseMessage').innerHTML = `Cảm ơn <b>${targetData.name}</b>. Hệ thống đã tiếp nhận dữ liệu thời gian thực của bạn thành công.`;
                 resBlock.style.display = 'block';
                 resBlock.scrollIntoView({ behavior: 'smooth' });
                 
                 event.target.reset();
+                generateHoursOptions(); // Thiết lập lại khung giờ mặc định
                 submitBtn.disabled = false;
                 submitBtn.innerText = originalBtnText;
             })
