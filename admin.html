@@ -63,7 +63,7 @@
     <div id="admin-main-content">
         <header>
             <h1>🛠️ Bảng Quản Trị Đám Mây (Live Data)</h1>
-            <a href="https://ten-mien-cua-ban.com/index.html" class="back-btn">🏠 Xem Trang Đăng Ký</a>
+            <a href="index.html" class="back-btn">🏠 Xem Trang Đăng Ký</a>
         </header>
 
         <div class="container">
@@ -98,3 +98,188 @@
                             <th>Chi tiết theo vai trò</th>
                             <th>Địa chỉ cụ thể</th>
                             <th>Mô tả / Yêu cầu chi tiết</th>
+                            <th style="text-align: center;">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="database-body"></tbody>
+                </table>
+                <div id="no-data-msg" class="no-data" style="display: none;">Hộp thư dữ liệu trống...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script>
+        const CLOUD_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxxDJxrCCky-oQpbH1ZgRznlSdkOALuJyN4aR4jnqQI3DDV2QbgIRvHSZHN7PR9nsdi/exec";
+        const TARGET_HASH = "79525d41efbf16d3363c138f713d2417"; 
+        
+        let globalData = [];
+        let currentFilter = 'all';
+
+        function initPage() {
+            localStorage.removeItem('is_admin_device');
+            document.getElementById('auth-overlay').style.display = 'flex';
+            document.getElementById('admin-main-content').style.display = 'none';
+        }
+
+        function verifyAdmin() {
+            const inputPass = document.getElementById('admin-password').value;
+            if (CryptoJS.MD5(inputPass).toString() === TARGET_HASH) {
+                document.getElementById('auth-overlay').style.display = 'none';
+                document.getElementById('admin-main-content').style.display = 'block';
+                loadDatabaseFromCloud();
+            } else {
+                alert("❌ Mật khẩu hệ thống không hợp lệ!");
+                window.location.href = "index.html";
+            }
+        }
+
+        function loadDatabaseFromCloud() {
+            document.getElementById('loading-msg').style.display = 'block';
+            document.getElementById('database-body').innerHTML = '';
+            document.getElementById('check-all').checked = false;
+            updateDeleteButtonVisibility();
+            
+            fetch(CLOUD_SCRIPT_URL)
+            .then(res => res.json())
+            .then(data => {
+                globalData = data.map((item, index) => ({...item, sheetRow: index + 2}));
+                document.getElementById('loading-msg').style.display = 'none';
+                renderData();
+            })
+            .catch(err => {
+                alert("Lỗi tải data đám mây: " + err);
+                document.getElementById('loading-msg').style.display = 'none';
+            });
+        }
+
+        function renderData() {
+            const tbody = document.getElementById('database-body');
+            const noDataMsg = document.getElementById('no-data-msg');
+            tbody.innerHTML = '';
+
+            document.getElementById('total-count').innerText = globalData.length;
+            document.getElementById('baomau-count').innerText = globalData.filter(item => item.role === 'Bảo mẫu').length;
+            document.getElementById('phuhuynh-count').innerText = globalData.filter(item => item.role === 'Phụ huynh').length;
+
+            const filteredData = currentFilter === 'all' ? globalData : globalData.filter(item => item.role === currentFilter);
+
+            if (filteredData.length === 0) {
+                noDataMsg.style.display = 'block';
+                return;
+            } else {
+                noDataMsg.style.display = 'none';
+            }
+
+            [...filteredData].reverse().forEach(item => {
+                const tr = document.createElement('tr');
+                const isBaoMau = item.role === 'Bảo mẫu';
+                const badgeClass = isBaoMau ? 'badge-baomau' : 'badge-phuhuynh';
+                
+                // Đọc đúng dữ liệu động phân tách theo 2 luồng
+                let roleSpecifcCol = "";
+                if(isBaoMau) {
+                    let avatarTag = (item.avatar && item.avatar.startsWith('http')) 
+                        ? `<br><img src="${item.avatar}" class="avatar-preview" onerror="this.style.display='none'">` 
+                        : `<span class="info-sub">${item.avatar || 'Không ảnh'}</span>`;
+                    
+                    let neoBadge = item.careNeonatal === "CÓ SƠ SINH" 
+                        ? `<br><span class="badge badge-neonatal">👶 Nhận sơ sinh</span>` 
+                        : `<span class="info-sub" style="color: #95a5a6;">❌ Không nhận sơ sinh</span>`;
+                        
+                    roleSpecifcCol = `<b>${item.age ? item.age + ' tuổi' : 'N/A'}</b>${neoBadge}${avatarTag}`;
+                } else {
+                    roleSpecifcCol = `<span class="info-sub">🍼 Tuổi bé: <b>${item.childAge || 'N/A'}</b></span>
+                                 <span class="info-sub">👵 Y/c bảo mẫu: <b>${item.bmAgeReq || 'N/A'}</b></span>`;
+                }
+
+                tr.innerHTML = `
+                    <td><input type="checkbox" class="row-checkbox" data-row="${item.sheetRow}" onclick="updateDeleteButtonVisibility()"></td>
+                    <td style="color:#666; font-size:0.8rem;">${item.time}</td>
+                    <td>
+                        <span class="badge ${badgeClass}">${item.role}</span>
+                    </td>
+                    <td>
+                        <b>${item.name}</b>
+                        <span class="info-sub" style="color:#2980b9; font-weight:600;">📞 ${item.phone}</span>
+                    </td>
+                    <td>
+                        <span style="font-weight:600; color:#16a085;">⏱️ ${item.workTime || 'Chưa chọn'}</span>
+                    </td>
+                    <td>${roleSpecifcCol}</td>
+                    <td>${item.address}</td>
+                    <td style="color:#555; max-width:250px; font-size:0.85rem;">${item.detail}</td>
+                    <td style="text-align:center;"><button class="btn-delete-single" onclick="deleteSingleRequest(${item.sheetRow})">🗑️ Xóa</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+            updateDeleteButtonVisibility();
+        }
+
+        function filterRole(role, btnElement) {
+            currentFilter = role;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+            document.getElementById('check-all').checked = false;
+            renderData();
+        }
+
+        function toggleSelectAll(masterCanvas) {
+            const checkboxes = document.querySelectorAll('.row-checkbox');
+            checkboxes.forEach(cb => cb.checked = masterCanvas.checked);
+            updateDeleteButtonVisibility();
+        }
+
+        function updateDeleteButtonVisibility() {
+            const selectedCheckboxes = document.querySelectorAll('.row-checkbox:checked');
+            const deleteBtn = document.getElementById('btn-delete-selected');
+            const selectedCountSpan = document.getElementById('selected-count');
+            
+            if(selectedCheckboxes.length > 0) {
+                deleteBtn.style.display = 'flex';
+                selectedCountSpan.innerText = selectedCheckboxes.length;
+            } else {
+                deleteBtn.style.display = 'none';
+            }
+        }
+
+        function sendDeleteRequestToCloud(rowsArray) {
+            document.getElementById('loading-msg').style.display = 'block';
+            fetch(CLOUD_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({
+                    'action': 'delete',
+                    'rows': JSON.stringify(rowsArray)
+                })
+            })
+            .then(() => {
+                alert("🎉 Đã thực hiện lệnh xóa thành công!");
+                setTimeout(loadDatabaseFromCloud, 1500);
+            })
+            .catch(err => {
+                alert("Lỗi khi kết nối xóa dữ liệu: " + err);
+                document.getElementById('loading-msg').style.display = 'none';
+            });
+        }
+
+        function deleteSingleRequest(sheetRow) {
+            if(confirm("Bạn có chắc chắn muốn xóa yêu cầu này vĩnh viễn không?")) {
+                sendDeleteRequestToCloud([sheetRow]);
+            }
+        }
+
+        function deleteSelectedRequests() {
+            const selectedCheckboxes = document.querySelectorAll('.row-checkbox:checked');
+            const rowsToDelete = Array.from(selectedCheckboxes).map(cb => parseInt(cb.getAttribute('data-row')));
+            
+            if(confirm(`Bạn có chắc chắn muốn xóa ${rowsToDelete.length} yêu cầu đã chọn không?`)) {
+                sendDeleteRequestToCloud(rowsToDelete);
+            }
+        }
+
+        window.onload = initPage;
+    </script>
+</body>
+</html>
