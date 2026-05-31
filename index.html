@@ -145,13 +145,13 @@
             <h3>📝 HỒ SƠ ỨNG TUYỂN BẢO MẪU</h3>
             <form onsubmit="sendToDatabase(event, 'Bảo mẫu')">
                 <div class="form-group">
-                    <label>Họ và Tên bảo mẫu * (Ít nhất 9 ký tự, gồm cả họ và tên)</label>
+                    <label>Họ và Tên bảo mẫu</label>
                     <input type="text" id="bm-name" required pattern=".*\s+.*" minlength="9" placeholder="Ví dụ: Nguyễn Thị Anh">
                 </div>
                 <div class="form-group"><label>Tuổi của bạn *</label><input type="number" id="bm-age" min="18" max="70" required placeholder="Ví dụ: 35"></div>
                 
                 <div class="form-group">
-                    <label>Số điện thoại / Zalo liên hệ * (Đúng 10 số, bắt đầu bằng số 0)</label>
+                    <label>Số điện thoại / Zalo liên hệ</label>
                     <input type="tel" id="bm-phone" required oninput="validatePhoneNumber(this)" placeholder="Ví dụ: 0912345678">
                 </div>
                 
