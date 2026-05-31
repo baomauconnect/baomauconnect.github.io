@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BaomauConnect - Bảng Điều Khiển Admin Đám Mây</title>
     
+    <!-- Google Fonts, FontAwesome & SweetAlert2 -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -80,7 +81,7 @@
     <div id="admin-main-content">
         <header>
             <h1><i class="fa-solid fa-server" style="color: var(--primary-color);"></i> Bảng Quản Trị Đám Mây (Live Data)</h1>
-            <a href="Trang%20Đăng%20Ký%20Đối%20Tác.html" class="back-btn"><i class="fa-solid fa-house"></i> Xem Trang Đăng Ký</a>
+            <a href="index.html" class="back-btn"><i class="fa-solid fa-house"></i> Xem Trang Đăng Ký</a>
         </header>
 
         <div class="container">
@@ -125,6 +126,7 @@
         </div>
     </div>
 
+    <!-- Thư viện CryptoJS và SweetAlert2 JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
@@ -154,8 +156,7 @@
                     confirmButtonText: 'Quay lại',
                     confirmButtonColor: '#e74c3c'
                 }).then(() => {
-                    // CHÚ Ý SỬA TẠI ĐÂY: Điều hướng về trang đăng ký mới khi sai pass
-                    window.location.href = "Trang%20Đăng%20Ký%20Đối%20Tác.html";
+                    window.location.href = "index.html";
                 });
             }
         }

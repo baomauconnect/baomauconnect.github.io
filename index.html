@@ -19,8 +19,10 @@
     <meta property="og:url" content="https://baomauconnect.asia">
     <meta property="og:image" content="logo_chuan.png">
 
+    <!-- Google Fonts & FontAwesome Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
     <style>
@@ -86,6 +88,7 @@
         
         .container { max-width: 900px; margin: -50px auto 0 auto; padding: 0 20px 60px 20px; position: relative; z-index: 10; }
         
+        /* Cải tiến khu vực chọn vai trò thành Thẻ Đồ Họa */
         .role-selection-wrapper { background: white; padding: 35px; border-radius: 20px; margin-bottom: 35px; box-shadow: var(--card-shadow); text-align: center; }
         .role-selection-wrapper h3 { margin-bottom: 25px; color: #1e293b; font-size: 1.4rem; font-weight: 700; }
         .role-cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
@@ -103,6 +106,7 @@
         .role-card.active.ph-card { border-color: var(--secondary-color); background: #fffbf5; }
         .role-card.active i { transform: scale(1.1); }
         
+        /* Tối ưu hóa các Form */
         .form-section { max-width: 1000px; margin: 30px auto; background: white; padding: 40px; border-radius: 20px; box-shadow: var(--card-shadow); display: none; animation: fadeInUp 0.4s ease forwards; }
         .form-section h3 { margin-bottom: 30px; text-align: center; color: #1e293b; font-size: 1.5rem; font-weight: 700; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; }
         
@@ -136,7 +140,7 @@
 <body>
 
     <header>
-        <a href="Bảng%20Điều%20Khiển%20Admin.html" class="admin-link"><i class="fa-solid fa-gear"></i> Quản trị viên</a>
+        <a href="admin.html" class="admin-link"><i class="fa-solid fa-gear"></i> Quản trị viên</a>
         <div class="brand-container">
             <img src="logo_chuan.png" alt="Logo BaomauConnect" class="site-logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4127/4127263.png'">
             <h1>Baomau<span style="color: var(--primary-color);">Connect</span></h1>
@@ -152,6 +156,7 @@
     </div>
 
     <div class="container">
+        <!-- Khu vực lựa chọn vai trò cao cấp dạng Thẻ đồ họa -->
         <section class="role-selection-wrapper">
             <h3><i class="fa-solid fa-circle-user" style="color: var(--primary-color);"></i> Bạn tham gia hệ thống với vai trò nào?</h3>
             <div class="role-cards-grid">
@@ -168,6 +173,7 @@
             </div>
         </section>
 
+        <!-- FORM BẢO MẪU -->
         <section id="form-bao-mau" class="form-section" style="border-top: 6px solid var(--primary-color);">
             <h3><i class="fa-solid fa-address-card" style="color: var(--primary-color);"></i> HỒ SƠ ỨNG TUYỂN BẢO MẪU</h3>
             <form onsubmit="sendToDatabase(event, 'Bảo mẫu')">
@@ -232,6 +238,7 @@
             </form>
         </section>
 
+        <!-- FORM PHỤ HUYNH -->
         <section id="form-phu-huynh" class="form-section" style="border-top: 6px solid var(--secondary-color);">
             <h3><i class="fa-solid fa-file-invoice" style="color: var(--secondary-color);"></i> PHIẾU YÊU CẦU TÌM BẢO MẪU TẠI GIA</h3>
             <form onsubmit="sendToDatabase(event, 'Phụ huynh')">
@@ -301,6 +308,7 @@
         <p>© BaomauConnect - Hệ thống xử lý dữ liệu nội bộ trực tuyến kết nối 24/7</p>
     </footer>
 
+    <!-- SweetAlert2 JavaScript Thư viện thông báo đẹp mắt -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         const CLOUD_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxxDJxrCCky-oQpbH1ZgRznlSdkOALuJyN4aR4jnqQI3DDV2QbgIRvHSZHN7PR9nsdi/exec";
@@ -426,6 +434,7 @@
             });
         }
 
+        // Xử lý điều phối chọn vai trò qua Card
         function selectRole(formId) {
             document.querySelectorAll('.role-card').forEach(c => c.classList.remove('active'));
             document.getElementById('form-bao-mau').style.display = 'none';
@@ -511,6 +520,7 @@
                 body: JSON.stringify(targetData)
             })
             .then(() => {
+                // Thay thế việc ẩn hiện thô sơ bằng SweetAlert2 cực kỳ gây ấn tượng
                 Swal.fire({
                     title: '🔒 Đăng Ký Thành Công!',
                     html: `Hồ sơ dữ liệu của đối tác <b>${targetData.name}</b> đã được lưu trữ an toàn theo thời gian thực vào hệ thống đám mây.`,
