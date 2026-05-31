@@ -62,7 +62,6 @@
         .admin-link { position: absolute; top: 15px; right: 20px; font-size: 0.85rem; color: #95a5a6; text-decoration: none; padding: 5px 10px; border: 1px solid #eee; border-radius: 20px; transition: all 0.2s; }
         .admin-link:hover { color: var(--primary-color); border-color: var(--primary-color); background: #f0f7ff; }
         
-        /* Đã cập nhật đường dẫn Banner sang link ảnh Pinterest của bạn */
         .hero-banner { 
             width: 100%; 
             height: 350px; 
@@ -89,6 +88,9 @@
         .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; }
         .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 8px rgba(74,144,226,0.2); }
         
+        .address-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+        
+        .time-range-block { display: none; animation: fadeIn 0.3s ease; }
         .time-range-row { display: flex; gap: 15px; align-items: center; }
         .time-range-row select { flex: 1; }
         .checkbox-group { display: flex; align-items: center; gap: 10px; margin-top: 15px; background: #e8f4fd; padding: 15px; border-radius: 8px; border: 1px dashed var(--primary-color); }
@@ -101,6 +103,7 @@
         .result-container { max-width: 750px; margin: 20px auto; padding: 25px; border-radius: 12px; background-color: #e8f8f5; border: 2px solid var(--success-color); display: none; text-align: center; }
         footer { text-align: center; padding: 20px; color: #bbb; font-size: 0.85rem; margin-top: 40px; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -141,18 +144,48 @@
         <section id="form-bao-mau" class="form-section" style="border-top: 6px solid var(--primary-color);">
             <h3>📝 HỒ SƠ ỨNG TUYỂN BẢO MẪU</h3>
             <form onsubmit="sendToDatabase(event, 'Bảo mẫu')">
-                <div class="form-group"><label>Họ và Tên bảo mẫu *</label><input type="text" id="bm-name" required placeholder="Ví dụ: Nguyễn Thị A"></div>
+                <div class="form-group">
+                    <label>Họ và Tên bảo mẫu * (Ít nhất 9 ký tự, gồm cả họ và tên)</label>
+                    <input type="text" id="bm-name" required pattern=".*\s+.*" minlength="9" placeholder="Ví dụ: Nguyễn Thị Anh">
+                </div>
                 <div class="form-group"><label>Tuổi của bạn *</label><input type="number" id="bm-age" min="18" max="70" required placeholder="Ví dụ: 35"></div>
-                <div class="form-group"><label>Số điện thoại / Zalo liên hệ *</label><input type="tel" id="bm-phone" required placeholder="Ví dụ: 0912345xxx"></div>
-                <div class="form-group"><label>Khu vực bạn đang sống (Địa chỉ cư trú) *</label><input type="text" id="bm-location" required placeholder="Ví dụ: Thị trấn Chúc Sơn, Chương Mỹ"></div>
                 
                 <div class="form-group">
-                    <label>Khung giờ bạn có thể làm việc nhận việc *</label>
+                    <label>Số điện thoại / Zalo liên hệ * (Đúng 10 số, bắt đầu bằng số 0)</label>
+                    <input type="tel" id="bm-phone" required oninput="validatePhoneNumber(this)" placeholder="Ví dụ: 0912345678">
+                </div>
+                
+                <div class="form-group">
+                    <label>Địa chỉ cư trú (Chọn khu vực làm việc) *</label>
+                    <div class="address-row">
+                        <select id="bm-province" required onchange="fetchDistricts('bm')">
+                            <option value="">-- Chọn Tỉnh/TP --</option>
+                        </select>
+                        <select id="bm-district" required onchange="fetchWards('bm')">
+                            <option value="">-- Chọn Quận/Huyện --</option>
+                        </select>
+                        <select id="bm-ward" required>
+                            <option value="">-- Chọn Xã/Phường/TT --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Hình thức thời gian làm việc mong muốn *</label>
+                    <select id="bm-work-type" required onchange="toggleTimeRange('bm')">
+                        <option value="">-- Chọn hình thức làm việc --</option>
+                        <option value="Toàn thời gian cố định">Toàn thời gian cố định</option>
+                        <option value="Bán thời gian">Bán thời gian</option>
+                    </select>
+                </div>
+                
+                <div class="form-group time-range-block" id="bm-time-block">
+                    <label>Khung giờ cụ thể bạn có thể nhận việc *</label>
                     <div class="time-range-row">
                         <span>Từ:</span>
-                        <select id="bm-time-start" required></select>
+                        <select id="bm-time-start"></select>
                         <span>Đến:</span>
-                        <select id="bm-time-end" required></select>
+                        <select id="bm-time-end"></select>
                     </div>
                 </div>
 
@@ -171,19 +204,50 @@
         <section id="form-phu-huynh" class="form-section" style="border-top: 6px solid var(--secondary-color);">
             <h3>🏡 PHIẾU YÊU CẦU TÌM BẢO MẪU TẠI GIA</h3>
             <form onsubmit="sendToDatabase(event, 'Phụ huynh')">
-                <div class="form-group"><label>Tên phụ huynh / Người đại diện liên hệ *</label><input type="text" id="ph-name" required placeholder="Ví dụ: Anh/Chị Nguyễn Văn B"></div>
-                <div class="form-group"><label>Số điện thoại kết nối liên lạc *</label><input type="tel" id="ph-phone" required placeholder="Ví dụ: 0987654xxx"></div>
-                <div class="form-group"><label>Địa chỉ cụ thể cần bảo mẫu đến làm việc *</label><input type="text" id="ph-address" required placeholder="Ví dụ: Thôn Quảng Yên, Yên Trường, Chương Mỹ"></div>
+                <div class="form-group">
+                    <label>Tên phụ huynh / Người đại diện liên hệ * (Ít nhất 9 ký tự, gồm cả họ và tên)</label>
+                    <input type="text" id="ph-name" required pattern=".*\s+.*" minlength="9" placeholder="Ví dụ: Nguyễn Văn Bình">
+                </div>
+                
+                <div class="form-group">
+                    <label>Số điện thoại kết nối liên lạc * (Đúng 10 số, bắt đầu bằng số 0)</label>
+                    <input type="tel" id="ph-phone" required oninput="validatePhoneNumber(this)" placeholder="Ví dụ: 0987654321">
+                </div>
+                
+                <div class="form-group">
+                    <label>Địa chỉ cần bảo mẫu đến làm việc *</label>
+                    <div class="address-row">
+                        <select id="ph-province" required onchange="fetchDistricts('ph')">
+                            <option value="">-- Chọn Tỉnh/TP --</option>
+                        </select>
+                        <select id="ph-district" required onchange="fetchWards('ph')">
+                            <option value="">-- Chọn Quận/Huyện --</option>
+                        </select>
+                        <select id="ph-ward" required>
+                            <option value="">-- Chọn Xã/Phường/TT --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Yêu cầu hình thức thời gian làm việc *</label>
+                    <select id="ph-work-type" required onchange="toggleTimeRange('ph')">
+                        <option value="">-- Chọn hình thức yêu cầu --</option>
+                        <option value="Toàn thời gian cố định">Toàn thời gian cố định</option>
+                        <option value="Bán thời gian">Bán thời gian</option>
+                    </select>
+                </div>
+
                 <div class="form-group"><label>Độ tuổi hiện tại của bé nhà mình *</label><input type="text" id="ph-child-age" required placeholder="Ví dụ: 3 tháng tuổi, hoặc 2 tuổi"></div>
                 <div class="form-group"><label>Yêu cầu mong muốn về độ tuổi bảo mẫu *</label><input type="text" id="ph-bm-age-req" required placeholder="Ví dụ: Thích bảo mẫu trung tuổi từ 35 - 50 tuổi"></div>
                 
-                <div class="form-group">
-                    <label>Khung giờ gia đình cần bảo mẫu trông bé *</label>
+                <div class="form-group time-range-block" id="ph-time-block">
+                    <label>Khung giờ cụ thể gia đình cần bảo mẫu trông bé *</label>
                     <div class="time-range-row">
                         <span>Từ:</span>
-                        <select id="ph-time-start" required></select>
+                        <select id="ph-time-start"></select>
                         <span>Đến:</span>
-                        <select id="ph-time-end" required></select>
+                        <select id="ph-time-end"></select>
                     </div>
                 </div>
 
@@ -201,6 +265,114 @@
 
     <script>
         const CLOUD_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxxDJxrCCky-oQpbH1ZgRznlSdkOALuJyN4aR4jnqQI3DDV2QbgIRvHSZHN7PR9nsdi/exec";
+        // Sử dụng API mở và ổn định nhất của VN để lấy thông tin địa chính công quyền công cộng
+        const API_PROVINCES = "https://provinces.open-api.vn/api/?depth=1";
+        const API_DISTRICTS = "https://provinces.open-api.vn/api/p/";
+        const API_WARDS = "https://provinces.open-api.vn/api/d/";
+
+        // Tải 63 Tỉnh/Thành phố của Việt Nam ngay khi trang web mở
+        function loadAllProvinces() {
+            fetch(API_PROVINCES)
+                .then(response => response.json())
+                .then(data => {
+                    ['bm', 'ph'].forEach(prefix => {
+                        const provSel = document.getElementById(`${prefix}-province`);
+                        provSel.innerHTML = '<option value="">-- Chọn Tỉnh/TP --</option>';
+                        data.forEach(prov => {
+                            let opt = document.createElement('option');
+                            opt.value = prov.code; // Lưu mã code để gọi tiếp Huyện
+                            opt.textContent = prov.name; // Tên hiển thị công khai
+                            provSel.appendChild(opt);
+                        });
+                    });
+                })
+                .catch(err => console.error("Lỗi đồng bộ dữ liệu Tỉnh thành VN: ", err));
+        }
+
+        // Tải Quận/Huyện tương ứng
+        function fetchDistricts(prefix) {
+            const provinceCode = document.getElementById(`${prefix}-province`).value;
+            const distSel = document.getElementById(`${prefix}-district`);
+            const wardSel = document.getElementById(`${prefix}-ward`);
+            
+            distSel.innerHTML = '<option value="">-- Đang nạp dữ liệu... --</option>';
+            wardSel.innerHTML = '<option value="">-- Chọn Xã/Phường/TT --</option>';
+
+            if (!provinceCode) {
+                distSel.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
+                return;
+            }
+
+            fetch(`${API_DISTRICTS}${provinceCode}?depth=2`)
+                .then(response => response.json())
+                .then(data => {
+                    distSel.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
+                    data.districts.forEach(dist => {
+                        let opt = document.createElement('option');
+                        opt.value = dist.code; // Lưu mã code để gọi tiếp Xã
+                        opt.textContent = dist.name;
+                        distSel.appendChild(opt);
+                    });
+                });
+        }
+
+        // Tải Xã/Phường/Thị trấn tương ứng
+        function fetchWards(prefix) {
+            const districtCode = document.getElementById(`${prefix}-district`).value;
+            const wardSel = document.getElementById(`${prefix}-ward`);
+            
+            wardSel.innerHTML = '<option value="">-- Đang nạp dữ liệu... --</option>';
+
+            if (!districtCode) {
+                wardSel.innerHTML = '<option value="">-- Chọn Xã/Phường/TT --</option>';
+                return;
+            }
+
+            fetch(`${API_WARDS}${districtCode}?depth=2`)
+                .then(response => response.json())
+                .then(data => {
+                    wardSel.innerHTML = '<option value="">-- Chọn Xã/Phường/TT --</option>';
+                    data.wards.forEach(ward => {
+                        let opt = document.createElement('option');
+                        opt.value = ward.name; // Lưu trực tiếp tên chữ để gửi database
+                        opt.textContent = ward.name;
+                        wardSel.appendChild(opt);
+                    });
+                });
+        }
+
+        // Kiểm soát số điện thoại bắt buộc 10 số đầu 0
+        function validatePhoneNumber(input) {
+            let val = input.value.replace(/\D/g, ''); 
+            if (val.length > 10) val = val.substring(0, 10);
+            input.value = val;
+
+            if (val.length !== 10 || val.charAt(0) !== '0') {
+                input.setCustomValidity("Số điện thoại bắt buộc phải có ĐÚNG 10 CHỮ SỐ và BẮT ĐẦU bằng số 0.");
+                input.style.borderColor = "#e74c3c";
+            } else {
+                input.setCustomValidity("");
+                input.style.borderColor = "#ccc";
+            }
+        }
+
+        // Điều phối ẩn hiện khung giờ
+        function toggleTimeRange(prefix) {
+            const workType = document.getElementById(`${prefix}-work-type`).value;
+            const timeBlock = document.getElementById(`${prefix}-time-block`);
+            const startSelect = document.getElementById(`${prefix}-time-start`);
+            const endSelect = document.getElementById(`${prefix}-time-end`);
+
+            if (workType === "Bán thời gian") {
+                timeBlock.style.display = "block";
+                startSelect.required = true;
+                endSelect.required = true;
+            } else {
+                timeBlock.style.display = "none";
+                startSelect.required = false;
+                endSelect.required = false;
+            }
+        }
 
         function generateHoursOptions() {
             const selects = ['bm-time-start', 'bm-time-end', 'ph-time-start', 'ph-time-end'];
@@ -213,7 +385,6 @@
                         let option = document.createElement('option');
                         option.value = hourStr + ':00';
                         option.innerText = hourStr + ':00';
-                        
                         if(id.includes('start') && i === 8) option.selected = true;
                         if(id.includes('end') && i === 17) option.selected = true;
                         selectEl.appendChild(option);
@@ -222,7 +393,10 @@
             });
         }
 
-        window.addEventListener('DOMContentLoaded', generateHoursOptions);
+        window.addEventListener('DOMContentLoaded', () => {
+            generateHoursOptions();
+            loadAllProvinces(); // Gọi nạp 63 tỉnh thành Việt Nam
+        });
 
         function switchRoleForm() {
             const selectBox = document.getElementById('roleFilter');
@@ -234,6 +408,8 @@
                 const activeForm = document.getElementById(selectBox.value);
                 activeForm.style.display = 'block';
                 activeForm.scrollIntoView({ behavior: 'smooth' });
+                toggleTimeRange('bm');
+                toggleTimeRange('ph');
             }
         }
 
@@ -245,31 +421,49 @@
             submitBtn.disabled = true;
             submitBtn.innerText = "⏳ Đang kết nối dữ liệu đám mây...";
 
+            // Lấy chuỗi chữ (Text) của Tỉnh và Huyện thay vì mã Code để lưu trữ dữ liệu rõ ràng hơn
+            const provText = document.getElementById(`${role === 'Bảo mẫu' ? 'bm' : 'ph'}-province`).options[document.getElementById(`${role === 'Bảo mẫu' ? 'bm' : 'ph'}-province`).selectedIndex].text;
+            const distText = document.getElementById(`${role === 'Bảo mẫu' ? 'bm' : 'ph'}-district`).options[document.getElementById(`${role === 'Bảo mẫu' ? 'bm' : 'ph'}-district`).selectedIndex].text;
+            const wardText = document.getElementById(`${role === 'Bảo mẫu' ? 'bm' : 'ph'}-ward`).value;
+
+            const fullAddress = `${wardText}, ${distText}, ${provText}`;
+
             let targetData = {
                 role: role, 
-                category: role === 'Bảo mẫu' ? "Ứng tuyển làm Bảo mẫu" : "Phụ huynh tìm bảo mẫu"
+                category: role === 'Bảo mẫu' ? "Ứng tuyển làm Bảo mẫu" : "Phụ huynh tìm bảo mẫu",
+                address: fullAddress
             };
 
             if (role === 'Bảo mẫu') {
+                const workType = document.getElementById('bm-work-type').value;
+                let timeStr = `[${workType}]`;
+                if (workType === "Bán thời gian") {
+                    timeStr += ` ${document.getElementById('bm-time-start').value} - ${document.getElementById('bm-time-end').value}`;
+                }
+
                 targetData.name = document.getElementById('bm-name').value;
                 targetData.phone = document.getElementById('bm-phone').value;
-                targetData.address = document.getElementById('bm-location').value;
                 targetData.age = document.getElementById('bm-age').value;
                 targetData.avatar = document.getElementById('bm-avatar').value || "Không có ảnh";
                 targetData.childAge = "";
                 targetData.bmAgeReq = "";
-                targetData.workTime = document.getElementById('bm-time-start').value + " - " + document.getElementById('bm-time-end').value;
+                targetData.workTime = timeStr;
                 targetData.careNeonatal = document.getElementById('bm-neonatal').checked ? "CÓ SƠ SINH" : "Không nhận sơ sinh";
                 targetData.detail = document.getElementById('bm-skills').value;
             } else {
+                const workType = document.getElementById('ph-work-type').value;
+                let timeStr = `[${workType}]`;
+                if (workType === "Bán thời gian") {
+                    timeStr += ` ${document.getElementById('ph-time-start').value} - ${document.getElementById('ph-time-end').value}`;
+                }
+
                 targetData.name = document.getElementById('ph-name').value;
                 targetData.phone = document.getElementById('ph-phone').value;
-                targetData.address = document.getElementById('ph-address').value;
                 targetData.age = "";
                 targetData.avatar = "";
                 targetData.childAge = document.getElementById('ph-child-age').value;
                 targetData.bmAgeReq = document.getElementById('ph-bm-age-req').value;
-                targetData.workTime = document.getElementById('ph-time-start').value + " - " + document.getElementById('ph-time-end').value;
+                targetData.workTime = timeStr;
                 targetData.careNeonatal = "";
                 targetData.detail = "Ngân sách lương: " + document.getElementById('ph-salary').value + " | Yêu cầu: " + document.getElementById('ph-jobs-detail').value;
             }
@@ -292,6 +486,7 @@
                 
                 event.target.reset();
                 generateHoursOptions();
+                loadAllProvinces();
                 submitBtn.disabled = false;
                 submitBtn.innerText = originalBtnText;
             })
