@@ -205,12 +205,12 @@
             <h3>🏡 PHIẾU YÊU CẦU TÌM BẢO MẪU TẠI GIA</h3>
             <form onsubmit="sendToDatabase(event, 'Phụ huynh')">
                 <div class="form-group">
-                    <label>Tên phụ huynh / Người đại diện liên hệ * (Ít nhất 9 ký tự, gồm cả họ và tên)</label>
+                    <label>Tên phụ huynh / Người đại diện liên hệ</label>
                     <input type="text" id="ph-name" required pattern=".*\s+.*" minlength="9" placeholder="Ví dụ: Nguyễn Văn Bình">
                 </div>
                 
                 <div class="form-group">
-                    <label>Số điện thoại kết nối liên lạc * (Đúng 10 số, bắt đầu bằng số 0)</label>
+                    <label>Số điện thoại kết nối liên lạc</label>
                     <input type="tel" id="ph-phone" required oninput="validatePhoneNumber(this)" placeholder="Ví dụ: 0987654321">
                 </div>
                 
