@@ -5,42 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tìm Bảo Mẫu Kết Nối Tại Gia Toàn Diện - BaomauConnect.asia</title>
 
+    <link rel="icon" type="image/png" href="logo_chuan.png">
+    <link rel="apple-touch-icon" href="logo_chuan.png">
+
     <meta name="description" content="BaomauConnect - Nền tảng công nghệ kết nối uy tín giữa người tìm việc bảo mẫu và phụ huynh cần thuê bảo mẫu chăm sóc bé sơ sinh, trẻ nhỏ theo giờ hoặc ở lại tại gia.">
-
     <meta name="keywords" content="tìm bảo mẫu, tim bao mau, bảo mẫu kết nối, bao mau ket noi, baomauconnect, baomauconnect.asia, thuê bảo mẫu tại gia, thue bao mau tai gia, tìm bảo mẫu sơ sinh, trông trẻ theo giờ, tim nguoi trong tre, tìm người giúp việc trông trẻ, bảo mẫu chương mỹ">
-
     <meta name="author" content="BaomauConnect Team">
     <meta name="robots" content="index, follow">
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="Tìm Bảo Mẫu Kết Nối Tại Gia Uy Tín - BaomauConnect">
-    <meta property="og:description" content="Cầu nối liên kết nhanh chóng giữa bảo mẫu tận tâm và phụ huynh có nhu cầu thuê chăm sóc bé. Đăng ký nhận việc và tìm bảo mẫu trực tuyến 24/7.">
+    <meta property="og:description" content="Cầu nối liên kết nhanh chóng giữa bảo mẫu tận tâm and phụ huynh có nhu cầu thuê chăm sóc bé. Đăng ký nhận việc và tìm bảo mẫu trực tuyến 24/7.">
     <meta property="og:url" content="https://baomauconnect.asia">
-    <meta property="og:image" content="https://i.pinimg.com/736x/b9/07/05/b907055121f3ff371e7ccce39688c773.jpg">
-    ```
+    <meta property="og:image" content="logo_chuan.png">
+
     <style>
         :root {
             --primary-color: #4A90E2; --secondary-color: #F5A623; --success-color: #2ecc71; --text-color: #333; --bg-light: #f4f7f6;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
         body { color: var(--text-color); background-color: var(--bg-light); line-height: 1.6; }
-        header { text-align: center; padding: 30px 20px; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: relative; }
-        header h1 { color: #2c3e50; font-size: 2.5rem; margin-bottom: 5px; }
         
-        /* Liên kết chuyển sang trang quản trị viên thực tế */
+        header { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 25px 20px; 
+            background: #fff; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            position: relative; 
+        }
+        .brand-container {
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            justify-content: center; 
+            margin-bottom: 5px;
+        }
+        .site-logo {
+            width: 55px; 
+            height: 55px; 
+            object-fit: contain;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        header h1 { 
+            color: #2c3e50; 
+            font-size: 2.5rem; 
+            margin: 0; 
+            font-weight: 700; 
+            letter-spacing: -0.5px; 
+        }
+        header p { color: #7f8c8d; font-size: 1rem; margin-top: 5px; text-align: center; }
+        
         .admin-link { position: absolute; top: 15px; right: 20px; font-size: 0.85rem; color: #95a5a6; text-decoration: none; padding: 5px 10px; border: 1px solid #eee; border-radius: 20px; transition: all 0.2s; }
         .admin-link:hover { color: var(--primary-color); border-color: var(--primary-color); background: #f0f7ff; }
         
-        .hero-banner { width: 100%; height: 350px; background-image: linear-gradient(to right, rgba(255,255,255,0.75) 40%, rgba(255,255,255,0.1)), url('https://i.pinimg.com/736x/b9/07/05/b907055121f3ff371e7ccce39688c773.jpg'); background-size: cover; background-position: center; display: flex; align-items: center; margin-bottom: 30px; }
+        /* Đã cập nhật đường dẫn Banner sang link ảnh Pinterest của bạn */
+        .hero-banner { 
+            width: 100%; 
+            height: 350px; 
+            background-image: linear-gradient(to right, rgba(255,255,255,0.85) 40%, rgba(255,255,255,0.2)), url('https://i.pinimg.com/736x/b9/07/05/b907055121f3ff371e7ccce39688c773.jpg'); 
+            background-size: cover; 
+            background-position: center; 
+            display: flex; 
+            align-items: center; 
+            margin-bottom: 30px; 
+        }
         .hero-content { max-width: 1000px; margin: 0 auto; width: 100%; padding: 0 40px; }
         .hero-content h2 { font-size: 2.2rem; color: #2c3e50; margin-bottom: 10px; max-width: 500px; }
         .hero-content p { font-size: 1.1rem; color: #555; max-width: 450px; font-weight: 500; }
+        
         .container { max-width: 1000px; margin: 0 auto; padding: 0 20px 40px 20px; }
         .filter-section { background: white; padding: 30px; border-radius: 16px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); text-align: center; }
         .filter-section h3 { margin-bottom: 15px; color: #2c3e50; font-size: 1.4rem; }
         .filter-select { padding: 14px 20px; font-size: 1.05rem; border-radius: 8px; border: 2px solid #ddd; width: 100%; max-width: 600px; outline: none; font-weight: 600; color: #444; }
         
-        /* Khung hiển thị mẫu Form */
         .form-section { max-width: 750px; margin: 30px auto; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); display: none; animation: fadeInUp 0.4s ease forwards; }
         .form-section h3 { margin-bottom: 25px; text-align: center; color: #2c3e50; font-size: 1.6rem; border-bottom: 2px solid #f4f7f6; padding-bottom: 15px; }
         .form-group { margin-bottom: 20px; }
@@ -65,10 +106,15 @@
 <body>
 
     <header>
-        <a href="admin.html" class="admin-link">⚙️ Quản trị viên</a>
-        <h1>🌟 BaomauConnect</h1>
-        <p>Hệ thống kết nối và phân luồng nhu cầu bảo mẫu trực tuyến</p>
-    </header>
+        <a href="https://baomauconnect.asia/admin.html" class="admin-link">⚙️ Quản trị viên</a>
+        
+        <div class="brand-container">
+            <img src="logo_chuan.png" alt="Logo BaomauConnect" class="site-logo">
+            <h1>Baomau<span style="color: var(--primary-color);">Connect</span></h1>
+        </div>
+        
+        <p>Hệ thống kết nối trực tuyến người tìm việc bảo mẫu và phụ huynh cần thuê bảo mẫu tại gia</p>
+    </header>   
 
     <div class="hero-banner">
         <div class="hero-content">
