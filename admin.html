@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BaomauConnect - Bảng Điều Khiển Admin Đám Mây</title>
     
-    <!-- Google Fonts, FontAwesome & SweetAlert2 -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -62,7 +61,6 @@
         .loading { font-weight: bold; color: var(--primary-color); text-align: center; padding: 30px; font-size: 1.05rem; }
         input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary-color); }
         
-        /* Chỉnh sửa layout nút hành động */
         .action-cell { display: flex; gap: 6px; justify-content: center; align-items: center; }
         .btn-action { padding: 6px 12px; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: all 0.2s; display: inline-flex; align-items: center; gap: 4px; }
         .btn-edit-single { color: var(--primary-color); border-color: #dbeafe; }
@@ -73,7 +71,6 @@
         .avatar-preview { width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #e2e8f0; margin-top: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .info-sub { font-size: 0.8rem; color: #64748b; display: block; margin-top: 4px; }
 
-        /* Style dành riêng cho Form chỉnh sửa trong modal */
         .swal-edit-form { text-align: left; display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
         .swal-edit-form label { font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: -4px; }
         .swal-edit-form input, .swal-edit-form textarea, .swal-edit-form select { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; outline: none; }
@@ -139,7 +136,6 @@
         </div>
     </div>
 
-    <!-- Thư viện CryptoJS và SweetAlert2 JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
@@ -288,14 +284,12 @@
             }
         }
 
-        /* TÍNH NĂNG MỚI: MỞ MODAL XEM VÀ SỬA HỒ SƠ CHI TIẾT */
         function openEditModal(sheetRow) {
             const item = globalData.find(d => d.sheetRow === sheetRow);
             if (!item) return;
 
             const isBaoMau = item.role === 'Bảo mẫu';
             
-            // Xây dựng các trường nhập liệu động theo vai trò của bản ghi
             let roleFields = '';
             if (isBaoMau) {
                 roleFields = `
@@ -321,7 +315,6 @@
                 `;
             }
 
-            // Tạo khung Form hoàn chỉnh
             const formHTML = `
                 <div class="swal-edit-form">
                     <label>Họ và Tên:</label>
@@ -353,7 +346,6 @@
                 cancelButtonText: 'Hủy',
                 focusConfirm: false,
                 preConfirm: () => {
-                    // Thu thập dữ liệu sau khi sửa từ các thẻ input công khai
                     const updatedData = {
                         action: 'update',
                         sheetRow: sheetRow,
@@ -382,7 +374,6 @@
             });
         }
 
-        /* TÍNH NĂNG MỚI: GỬI YÊU CẦU ĐỒNG BỘ UPDATE LÊN GOOGLE SHEETS */
         function sendUpdatePostToCloud(payload) {
             document.getElementById('loading-msg').style.display = 'block';
             
