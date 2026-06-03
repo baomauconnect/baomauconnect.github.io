@@ -112,6 +112,10 @@
         .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px 16px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 1rem; color: #334155; transition: all 0.2s ease; background-color: #fff; }
         .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 4px var(--input-focus); }
         
+        /* Cấu trúc dòng lương kết hợp số và đơn vị */
+        .salary-row { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; }
+        @media (max-width: 500px) { .salary-row { grid-template-columns: 1fr; } }
+
         .address-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
         @media (max-width: 500px) { .address-row { grid-template-columns: 1fr; } }
         
@@ -216,9 +220,16 @@
                     </div>
                 </div>
                 
+                <!-- SỬA ĐỔI: Ô CHỌN MỨC LƯƠNG CHO BẢO MẪU -->
                 <div class="form-group">
-                    <label><i class="fa-solid fa-money-bill-wave"></i> Mức lương mong muốn (VNĐ) *</label>
-                    <input type="text" id="bm-salary" required placeholder="Ví dụ: 7.500.000đ/tháng hoặc 60k/giờ">
+                    <label><i class="fa-solid fa-money-bill-wave"></i> Mức lương mong muốn *</label>
+                    <div class="salary-row">
+                        <input type="number" id="bm-salary-num" required min="1" placeholder="Ví dụ: 9000000 hoặc 60000">
+                        <select id="bm-salary-unit" required>
+                            <option value="đ/tháng">Theo tháng (đ/tháng)</option>
+                            <option value="đ/giờ">Theo giờ (đ/giờ)</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-group checkbox-group">
@@ -289,10 +300,19 @@
                         <select id="ph-time-end"></select>
                     </div>
                 </div>
+
+                <!-- SỬA ĐỔI: Ô CHỌN MỨC LƯƠNG CHO PHỤ HUYNH -->
                 <div class="form-group">
-                    <label><i class="fa-solid fa-money-bill-wave"></i> Mức lương dự kiến chi trả (VNĐ) *</label>
-                    <input type="text" id="ph-salary" required placeholder="Ví dụ: 7.000.000đ/tháng hoặc 50k/giờ">
+                    <label><i class="fa-solid fa-money-bill-wave"></i> Mức lương dự kiến chi trả *</label>
+                    <div class="salary-row">
+                        <input type="number" id="ph-salary-num" required min="1" placeholder="Ví dụ: 9000000 hoặc 60000">
+                        <select id="ph-salary-unit" required>
+                            <option value="đ/tháng">Theo tháng (đ/tháng)</option>
+                            <option value="đ/giờ">Theo giờ (đ/giờ)</option>
+                        </select>
+                    </div>
                 </div>
+
                 <div class="form-group">
                     <label><i class="fa-solid fa-comment-medical"></i> Mô tả chi tiết công việc và các lưu ý riêng biệt *</label>
                     <textarea id="ph-jobs-detail" rows="3" required placeholder="Ví dụ: Bé ngoan, chủ yếu trông nom, tắm rửa, cho ăn sữa đúng giờ. Không cần làm việc nhà..."></textarea>
@@ -458,6 +478,11 @@
             loadAllProvinces();
         });
 
+        // Hàm định dạng số thành chuỗi hiển thị có dấu chấm phân cách (Vd: 9000000 -> 9.000.000)
+        function formatNumber(num) {
+            return Number(num).toLocaleString('vi-VN');
+        }
+
         function sendToDatabase(event, role) {
             event.preventDefault();
             
@@ -493,8 +518,12 @@
                 targetData.workTime = timeStr;
                 targetData.careNeonatal = document.getElementById('bm-neonatal').checked ? "CÓ SƠ SINH" : "Không nhận sơ sinh";
                 
-                // CẬP NHẬT GÓI DỮ LIỆU ĐỂ BAO GỒM MỨC LƯƠNG MONG MUỐN
-                targetData.detail = "Lương mong muốn: " + document.getElementById('bm-salary').value + " | Kỹ năng: " + document.getElementById('bm-skills').value;
+                // XỬ LÝ LƯƠNG BẢO MẪU: Đọc giá trị số và đơn vị được chọn rồi định dạng lại
+                const salaryNum = document.getElementById('bm-salary-num').value;
+                const salaryUnit = document.getElementById('bm-salary-unit').value;
+                const formattedSalary = formatNumber(salaryNum) + salaryUnit;
+
+                targetData.detail = "Lương mong muốn: " + formattedSalary + " | Kỹ năng: " + document.getElementById('bm-skills').value;
             } else {
                 const workType = document.getElementById('ph-work-type').value;
                 let timeStr = `[${workType}]`;
@@ -510,7 +539,13 @@
                 targetData.bmAgeReq = document.getElementById('ph-bm-age-req').value;
                 targetData.workTime = timeStr;
                 targetData.careNeonatal = "";
-                targetData.detail = "Ngân sách lương: " + document.getElementById('ph-salary').value + " | Yêu cầu: " + document.getElementById('ph-jobs-detail').value;
+
+                // XỬ LÝ LƯƠNG PHỤ HUYNH: Đọc giá trị số và đơn vị được chọn rồi định dạng lại
+                const salaryNum = document.getElementById('ph-salary-num').value;
+                const salaryUnit = document.getElementById('ph-salary-unit').value;
+                const formattedSalary = formatNumber(salaryNum) + salaryUnit;
+
+                targetData.detail = "Ngân sách lương: " + formattedSalary + " | Yêu cầu: " + document.getElementById('ph-jobs-detail').value;
             }
 
             fetch(CLOUD_SCRIPT_URL, {
