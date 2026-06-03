@@ -65,3 +65,33 @@ function doPost(e) {
     return ContentService.createTextOutput(JSON.stringify({ status: "error", message: error.toString() })).setMimeType(ContentService.MimeType.JSON);
   }
 }
+
+function doPost(e) {
+  var p = e.parameter;
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0]; // Chọn sheet đầu tiên
+  
+  if (p.action === 'delete') {
+     // Mã xử lý lệnh xóa cũ của bạn...
+  } 
+  else if (p.action === 'update') {
+     var rowData = JSON.parse(p.rowData);
+     var row = parseInt(rowData.sheetRow);
+     
+     // Ví dụ ánh xạ các cột dữ liệu theo thứ tự cột trên Google Sheets của bạn:
+     // Giả định: Cột 3: Tên, Cột 4: Điện thoại, Cột 5: Khung giờ... vv
+     sheet.getRange(row, 3).setValue(rowData.name);
+     sheet.getRange(row, 4).setValue(rowData.phone);
+     sheet.getRange(row, 5).setValue(rowData.workTime);
+     sheet.getRange(row, 7).setValue(rowData.address);
+     sheet.getRange(row, 8).setValue(rowData.detail);
+     
+     if (rowData.age !== undefined) {
+         sheet.getRange(row, 6).setValue(rowData.age); // Ví dụ Cột 6 là Tuổi BM / Bé
+         // Cập nhật thêm các cột careNeonatal, avatar tùy kiến trúc bảng của bạn...
+     } else {
+         sheet.getRange(row, 6).setValue(rowData.childAge);
+     }
+     
+     return ContentService.createTextOutput("Update Success");
+  }
+}
