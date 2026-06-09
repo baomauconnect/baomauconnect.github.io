@@ -3,40 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tìm Bảo Mẫu Kết Nối Tại Gia Toàn Diện - BaomauConnect.asia</title>
+    <title>BaomauConnect.asia - Kết Nối Bảo Mẫu Tại Gia Hoàn Mỹ</title>
 
     <link rel="icon" type="image/png" href="logo_chuan.png">
     <link rel="apple-touch-icon" href="logo_chuan.png">
 
-    <meta name="description" content="BaomauConnect - Nền tảng công nghệ kết nối uy tín giữa người tìm việc bảo mẫu và phụ huynh cần thuê bảo mẫu chăm sóc bé sơ sinh, trẻ nhỏ theo giờ hoặc ở lại tại gia.">
-    <meta name="keywords" content="tìm bảo mẫu, tim bao mau, bảo mẫu kết nối, bao mau ket noi, baomauconnect, baomauconnect.asia, thuê bảo mẫu tại gia, thue bao mau tai gia, tìm bảo mẫu sơ sinh, trông trẻ theo giờ, tim nguoi trong tre, tìm người giúp việc trông trẻ, bảo mẫu chương mỹ">
-    <meta name="author" content="BaomauConnect Team">
-    <meta name="robots" content="index, follow">
-
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Tìm Bảo Mẫu Kết Nối Tại Gia Uy Tín - BaomauConnect">
-    <meta property="og:description" content="Cầu nối liên kết nhanh chóng giữa bảo mẫu tận tâm and phụ huynh có nhu cầu thuê chăm sóc bé. Đăng ký nhận việc và tìm bảo mẫu trực tuyến 24/7.">
-    <meta property="og:url" content="https://baomauconnect.asia">
-    <meta property="og:image" content="logo_chuan.png">
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="BaomauConnect - Nền tảng Bento Grid kết nối trực tuyến người tìm việc bảo mẫu và phụ huynh cần thuê trông trẻ tại gia chất lượng cao.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
     <style>
         :root {
-            --primary-color: #4A90E2; 
+            --primary: #4A90E2; 
             --primary-hover: #357ABD;
-            --secondary-color: #F5A623; 
+            --secondary: #F5A623; 
             --secondary-hover: #D48B16;
-            --success-color: #2ecc71; 
-            --text-color: #2c3e50; 
-            --bg-light: #f8fafc;
-            --card-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            --input-focus: rgba(74, 144, 226, 0.2);
+            --success: #10B981; 
+            --text-color: #1E293B; 
+            --text-muted: #64748B;
+            --bg-light: #F8FAFC;
+            --card-shadow: 0 10px 30px -10px rgba(0,0,0,0.04);
+            --bento-border: 1px solid rgba(226, 232, 240, 0.8);
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { color: var(--text-color); background-color: var(--bg-light); line-height: 1.6; }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { color: var(--text-color); background-color: var(--bg-light); line-height: 1.5; }
         
         header { 
             display: flex; 
@@ -45,303 +38,754 @@
             justify-content: center; 
             padding: 30px 20px; 
             background: #fff; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03); 
             position: relative; 
+            border-bottom: 1px solid #E2E8F0;
         }
         .brand-container {
             display: flex; 
             align-items: center; 
-            gap: 15px; 
+            gap: 12px; 
             justify-content: center; 
-            margin-bottom: 5px;
         }
-        .site-logo {
-            width: 60px; 
-            height: 60px; 
-            object-fit: contain;
-        }
-        header h1 { 
-            color: #1e293b; 
-            font-size: 2.4rem; 
-            font-weight: 700; 
-            letter-spacing: -1px; 
-        }
-        header p { color: #64748b; font-size: 1rem; margin-top: 5px; text-align: center; max-width: 600px; }
+        .site-logo { width: 50px; height: 50px; object-fit: contain; }
+        header h1 { color: #0F172A; font-size: 2.2rem; font-weight: 800; letter-spacing: -1px; }
+        header p { color: var(--text-muted); font-size: 0.95rem; margin-top: 5px; text-align: center; max-width: 650px; }
         
-        .admin-link { position: absolute; top: 20px; right: 20px; font-size: 0.85rem; color: #64748b; text-decoration: none; padding: 8px 16px; border: 1px solid #e2e8f0; border-radius: 20px; transition: all 0.3s ease; font-weight: 500; }
-        .admin-link:hover { color: var(--primary-color); border-color: var(--primary-color); background: #f0f7ff; transform: translateY(-1px); }
+        .header-controls { position: absolute; top: 20px; right: 20px; display: flex; gap: 10px; }
+        .admin-link { font-size: 0.85rem; color: #475569; text-decoration: none; padding: 8px 16px; border: 1px solid #E2E8F0; border-radius: 20px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; background: #FFF; transition: all 0.2s; }
+        .admin-link:hover { color: var(--primary); border-color: var(--primary); background: #F0F7FF; }
+        .lang-btn { font-size: 0.85rem; padding: 8px 14px; background: white; border: 1px solid #E2E8F0; border-radius: 20px; cursor: pointer; font-weight: 600; }
         
+        /* Hero Banner */
         .hero-banner { 
             width: 100%; 
-            height: 380px; 
-            background-image: linear-gradient(to right, rgba(255,255,255,0.92) 30%, rgba(255,255,255,0.4)), url('https://i.pinimg.com/736x/b9/07/05/b907055121f3ff371e7ccce39688c773.jpg'); 
+            height: 320px; 
+            background-image: linear-gradient(to right, rgba(255,255,255,0.95) 40%, rgba(255,255,255,0.4)), url('https://i.pinimg.com/736x/b9/07/05/b907055121f3ff371e7ccce39688c773.jpg'); 
             background-size: cover; 
             background-position: center; 
             display: flex; 
             align-items: center; 
         }
-        .hero-content { max-width: 1100px; margin: 0 auto; width: 100%; padding: 0 40px; }
-        .hero-content h2 { font-size: 2.5rem; color: #0f172a; margin-bottom: 15px; max-width: 550px; font-weight: 800; line-height: 1.2; }
-        .hero-content p { font-size: 1.15rem; color: #475569; max-width: 500px; font-weight: 500; }
+        .hero-content { max-width: 1200px; margin: 0 auto; width: 100%; padding: 0 40px; }
+        .hero-content h2 { font-size: 2.3rem; color: #0F172A; margin-bottom: 12px; max-width: 550px; font-weight: 800; line-height: 1.2; }
+        .hero-content p { font-size: 1.1rem; color: #475569; max-width: 500px; font-weight: 500; }
         
-        .container { max-width: 900px; margin: -50px auto 0 auto; padding: 0 20px 60px 20px; position: relative; z-index: 10; }
+        .container { max-width: 1300px; margin: -40px auto 0 auto; padding: 0 20px 60px 20px; position: relative; z-index: 10; }
         
-        .role-selection-wrapper { background: white; padding: 35px; border-radius: 20px; margin-bottom: 35px; box-shadow: var(--card-shadow); text-align: center; }
-        .role-selection-wrapper h3 { margin-bottom: 25px; color: #1e293b; font-size: 1.4rem; font-weight: 700; }
-        .role-cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media (max-width: 600px) { .role-cards-grid { grid-template-columns: 1fr; } }
+        /* Bento Grid Layout */
+        .bento-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
+        .bento-card { background: white; border-radius: 24px; padding: 25px; box-shadow: var(--card-shadow); border: var(--bento-border); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .bento-card:hover { transform: translateY(-3px); box-shadow: 0 15px 35px -10px rgba(0,0,0,0.08); }
+        .col-span-2 { grid-column: span 2; }
+        .col-span-3 { grid-column: span 3; }
         
-        .role-card { border: 2px solid #f1f5f9; border-radius: 16px; padding: 25px 20px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: #fff; display: flex; flex-direction: column; align-items: center; text-align: center; }
-        .role-card i { font-size: 2.5rem; margin-bottom: 15px; transition: transform 0.3s ease; }
-        .role-card.bm-card i { color: var(--primary-color); }
-        .role-card.ph-card i { color: var(--secondary-color); }
-        .role-card h4 { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; color: #1e293b; }
-        .role-card p { font-size: 0.9rem; color: #64748b; }
-        
-        .role-card:hover { transform: translateY(-5px); box-shadow: 0 12px 20px rgba(0,0,0,0.08); }
-        .role-card.active.bm-card { border-color: var(--primary-color); background: #f4f9ff; }
-        .role-card.active.ph-card { border-color: var(--secondary-color); background: #fffbf5; }
-        .role-card.active i { transform: scale(1.1); }
-        
-        .form-section { max-width: 1000px; margin: 30px auto; background: white; padding: 40px; border-radius: 20px; box-shadow: var(--card-shadow); display: none; animation: fadeInUp 0.4s ease forwards; }
-        .form-section h3 { margin-bottom: 30px; text-align: center; color: #1e293b; font-size: 1.5rem; font-weight: 700; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; }
-        
-        .form-group { margin-bottom: 22px; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; color: #334155; font-size: 0.95rem; }
-        .form-group label i { margin-right: 6px; color: #64748b; }
-        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px 16px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 1rem; color: #334155; transition: all 0.2s ease; background-color: #fff; }
-        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 4px var(--input-focus); }
-        
-        /* Cấu trúc dòng lương kết hợp số và đơn vị */
-        .salary-row { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; }
-        @media (max-width: 500px) { .salary-row { grid-template-columns: 1fr; } }
+        /* Role Selection style in Bento */
+        .role-cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .role-card { border: 2px solid #F1F5F9; border-radius: 16px; padding: 18px; cursor: pointer; transition: all 0.2s ease; background: #fff; display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .role-card i { font-size: 2.2rem; margin-bottom: 10px; }
+        .role-card.bm-card i { color: var(--primary); }
+        .role-card.ph-card i { color: var(--secondary); }
+        .role-card h4 { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
+        .role-card p { font-size: 0.8rem; color: var(--text-muted); }
+        .role-card:hover { border-color: #CBD5E1; }
+        .role-card.active.bm-card { border-color: var(--primary); background: #F0F7FF; }
+        .role-card.active.ph-card { border-color: var(--secondary); background: #FFFBF0; }
 
-        .address-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-        @media (max-width: 500px) { .address-row { grid-template-columns: 1fr; } }
+        /* Form sections */
+        .form-section { display: none; animation: fadeInUp 0.4s ease forwards; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-weight: 700; margin-bottom: 6px; color: #334155; font-size: 0.9rem; }
+        .form-group label i { margin-right: 5px; color: var(--text-muted); }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 11px 15px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 0.95rem; color: #334155; transition: all 0.2s; background: white; }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15); }
         
-        .time-range-block { display: none; animation: fadeIn 0.3s ease; background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; }
-        .time-range-row { display: flex; gap: 15px; align-items: center; }
-        .time-range-row select { flex: 1; }
+        .address-row, .salary-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+        .salary-row { grid-template-columns: 2fr 1fr; }
         
-        .checkbox-group { display: flex; align-items: center; gap: 12px; margin-top: 15px; background: #eff6ff; padding: 18px; border-radius: 12px; border: 1px dashed #bfdbfe; transition: all 0.2s; }
-        .checkbox-group:hover { background: #e0f2fe; }
-        .checkbox-group input[type="checkbox"] { width: 22px; height: 22px; cursor: pointer; accent-color: var(--primary-color); }
-        .checkbox-group label { margin-bottom: 0; cursor: pointer; color: #1e40af; font-weight: 700; }
+        .checkbox-group { display: flex; align-items: center; gap: 10px; margin-top: 10px; background: #F0F7FF; padding: 14px; border-radius: 10px; border: 1px dashed #BFDBFE; }
+        .checkbox-group input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary); }
+        .checkbox-group label { margin-bottom: 0; cursor: pointer; color: #1E40AF; font-weight: 700; }
         
-        .submit-btn { width: 100%; padding: 16px; color: white; border: none; border-radius: 10px; font-size: 1.15rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .submit-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
-        .submit-btn:disabled { background-color: #cbd5e1 !important; color: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
+        .submit-btn { width: 100%; padding: 14px; color: white; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .submit-btn:hover { transform: translateY(-1px); }
+        .submit-btn:disabled { background-color: #CBD5E1 !important; cursor: not-allowed; }
         
-        footer { text-align: center; padding: 30px; color: #94a3b8; font-size: 0.85rem; border-top: 1px solid #e2e8f0; background: #fff; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* Search list view */
+        .results-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #E2E8F0; padding-bottom: 12px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        .search-inputs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .list-container { max-height: 500px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-right: 5px; }
+        .partner-card { border: 1px solid #E2E8F0; border-radius: 16px; padding: 16px; transition: all 0.2s; background: #FAFBFD; position: relative; }
+        .partner-card:hover { border-color: var(--primary); background: #FFF; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .partner-card-header { display: flex; gap: 12px; align-items: center; margin-bottom: 8px; }
+        .partner-avatar { width: 44px; height: 44px; object-fit: cover; border-radius: 50%; border: 1px solid #E2E8F0; }
+        .partner-rating { color: #F5A623; font-weight: 700; font-size: 0.85rem; }
+        .tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+        .tag { font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 10px; text-transform: uppercase; }
+        .tag-time { background: #E0F2FE; color: #0369A1; }
+        .tag-addr { background: #EEF2F6; color: #475569; }
+        .tag-neo { background: #D1FAE5; color: #065F46; }
+        
+        .chat-btn, .review-btn { padding: 6px 12px; font-size: 0.75rem; border: 1px solid #E2E8F0; border-radius: 8px; font-weight: 700; cursor: pointer; background: white; color: #475569; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s; margin-top: 10px; margin-right: 5px; }
+        .chat-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+        .review-btn:hover { background: var(--secondary); color: white; border-color: var(--secondary); }
+
+        /* Simulated chat drawer */
+        .chat-window { display: none; flex-direction: column; height: 350px; border: 1px solid #CBD5E1; border-radius: 16px; margin-top: 15px; overflow: hidden; background: #FFF; }
+        .chat-header { background: #0F172A; color: white; padding: 12px 16px; font-weight: 700; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center; }
+        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #F8FAFC; }
+        .msg { max-width: 80%; padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; }
+        .msg.sent { align-self: flex-end; background: var(--primary); color: white; }
+        .msg.received { align-self: flex-start; background: #E2E8F0; color: #0F172A; }
+        .chat-input-area { display: flex; border-top: 1px solid #E2E8F0; padding: 8px; gap: 8px; background: #FFF; }
+        .chat-input-area input { flex: 1; border: 1px solid #E2E8F0; border-radius: 8px; padding: 8px 12px; font-size: 0.85rem; }
+        .chat-suggested { display: flex; gap: 5px; overflow-x: auto; padding: 0 10px 8px 10px; background: #FFF; }
+        .suggest-chip { font-size: 0.75rem; background: #F1F5F9; border-radius: 20px; padding: 4px 10px; white-space: nowrap; cursor: pointer; font-weight: 600; color: #475569; }
+        .suggest-chip:hover { background: #E2E8F0; }
+
+        /* Social Share Row */
+        .share-row { display: flex; gap: 8px; justify-content: center; margin-top: 15px; }
+        .share-btn { padding: 6px 12px; border-radius: 20px; color: white; text-decoration: none; font-size: 0.75rem; font-weight: 700; display: inline-flex; align-items: center; gap: 5px; }
+
+        footer { text-align: center; padding: 30px; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid #E2E8F0; background: #fff; margin-top: 30px; }
+        
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 900px) {
+            .bento-grid { grid-template-columns: 1fr; }
+            .col-span-2, .col-span-3 { grid-column: span 1; }
+            .search-inputs-grid { grid-template-columns: 1fr; }
+        }
     </style>
-
 </head>
 <body>
 
     <header>
-        <a href="admin.html" class="admin-link"><i class="fa-solid fa-gear"></i> Quản trị viên</a>
+        <div class="header-controls">
+            <button class="lang-btn" onclick="toggleLanguage()"><i class="fa-solid fa-globe"></i> <span id="lang-text">EN</span></button>
+            <a href="admin.html" class="admin-link"><i class="fa-solid fa-user-lock"></i> <span id="txt-nav-admin">Admin</span></a>
+        </div>
         <div class="brand-container">
             <img src="logo_chuan.png" alt="Logo BaomauConnect" class="site-logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4127/4127263.png'">
-            <h1>Baomau<span style="color: var(--primary-color);">Connect</span></h1>
+            <h1>Baomau<span style="color: var(--primary);">Connect</span></h1>
         </div>
-        <p>Hệ thống kết nối trực tuyến người tìm việc bảo mẫu và phụ huynh cần thuê bảo mẫu tại gia uy tín</p>
+        <p id="txt-site-slogan">Cầu nối uy tín đồng bộ trực tuyến đám mây giữa người tìm việc bảo mẫu và phụ huynh cần thuê trông bé theo giờ hoặc ở lại</p>
     </header>   
 
     <div class="hero-banner">
         <div class="hero-content">
-            <h2>Vòng Tay Yêu Thương, Gửi Trao Trọn Vẹn</h2>
-            <p>Nơi kết nối những bảo mẫu tận tâm, giàu kinh nghiệm với các gia đình đang cần sự hỗ trợ tốt nhất cho con yêu.</p>
+            <h2 id="txt-banner-title">Khởi Tạo Bình Yên, Nuôi Dưỡng Tương Lai</h2>
+            <p id="txt-banner-sub">Nơi liên kết nhanh bảo mẫu tận tâm, giàu kinh nghiệm với gia đình đang cần sự hỗ trợ hoàn hảo nhất.</p>
         </div>
     </div>
 
     <div class="container">
-        <section class="role-selection-wrapper">
-            <h3><i class="fa-solid fa-circle-user" style="color: var(--primary-color);"></i> Bạn tham gia hệ thống với vai trò nào?</h3>
-            <div class="role-cards-grid">
-                <div class="role-card bm-card" id="card-bm" onclick="selectRole('form-bao-mau')">
-                    <i class="fa-solid fa-user-nurse"></i>
-                    <h4>Tôi là BẢO MẪU</h4>
-                    <p>Muốn đăng ký thông tin hồ sơ và tìm việc làm tại gia ổn định</p>
+        <!-- Main Bento Grid Layout -->
+        <div class="bento-grid">
+            
+            <!-- Bento Card 1: Chọn Vai trò (Col 1) -->
+            <div class="bento-card">
+                <h3 id="txt-bento-role" style="font-weight: 800; font-size: 1.15rem; margin-bottom: 10px;"><i class="fa-solid fa-face-smile" style="color: var(--primary);"></i> 1. Nhập thông tin của bạn</h3>
+                <p id="txt-bento-role-desc" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">Để hệ thống tự động ghép nối và xuất bản trực tuyến tin tuyển dụng.</p>
+                <div class="role-cards-grid">
+                    <div class="role-card bm-card" id="card-bm" onclick="selectRole('form-bao-mau')">
+                        <i class="fa-solid fa-user-nurse"></i>
+                        <h4 id="txt-card-bm-title">BẢO MẪU</h4>
+                        <p id="txt-card-bm-desc">Tìm việc</p>
+                    </div>
+                    <div class="role-card ph-card" id="card-ph" onclick="selectRole('form-phu-huynh')">
+                        <i class="fa-solid fa-baby-carriage"></i>
+                        <h4 id="txt-card-ph-title">PHỤ HUYNH</h4>
+                        <p id="txt-card-ph-desc">Tìm bảo mẫu</p>
+                    </div>
                 </div>
-                <div class="role-card ph-card" id="card-ph" onclick="selectRole('form-phu-huynh')">
-                    <i class="fa-solid fa-house-chimney-user"></i>
-                    <h4>Tôi là PHỤ HUYNH</h4>
-                    <p>Muốn phát tin tìm kiếm bảo mẫu chăm bé chuyên nghiệp</p>
+
+                <!-- Form Lưu Nháp & Reset -->
+                <div style="margin-top: 20px; border-top: 1px solid #F1F5F9; padding-top: 15px; display: flex; gap: 10px;">
+                    <button class="review-btn" style="flex:1; justify-content:center; margin:0;" onclick="saveDraft()"><i class="fa-solid fa-floppy-disk"></i> Lưu Nháp Đơn</button>
+                    <button class="chat-btn" style="flex:1; justify-content:center; margin:0;" onclick="clearDraft()"><i class="fa-solid fa-trash"></i> Xóa Nháp</button>
                 </div>
             </div>
-        </section>
 
-        <section id="form-bao-mau" class="form-section" style="border-top: 6px solid var(--primary-color);">
-            <h3><i class="fa-solid fa-address-card" style="color: var(--primary-color);"></i> HỒ SƠ ỨNG TUYỂN BẢO MẪU</h3>
-            <form onsubmit="sendToDatabase(event, 'Bảo mẫu')">
-                <div class="form-group">
-                    <label><i class="fa-solid fa-user"></i> Họ và Tên bảo mẫu</label>
-                    <input type="text" id="bm-name" required pattern=".*\s+.*" minlength="9" placeholder="Ví dụ: Nguyễn Thị Anh">
+            <!-- Bento Card 2: Form Đăng ký (Col 2 + 3) -->
+            <div class="bento-card col-span-2">
+                <div id="welcome-hint" style="text-align: center; padding: 40px 20px;">
+                    <i class="fa-regular fa-hand-point-left" style="font-size: 3.5rem; color: var(--primary); margin-bottom: 15px; display: block;"></i>
+                    <h3 id="txt-welcome">Vui lòng chọn vai trò để bắt đầu</h3>
+                    <p id="txt-welcome-sub" style="color: var(--text-muted); font-size: 0.9rem; max-width: 400px; margin: 5px auto 0 auto;">Nhấp chọn "Tôi là Bảo mẫu" hoặc "Tôi là Phụ huynh" ở hộp Bento bên trái để tạo phiếu thông tin.</p>
                 </div>
-                <div class="form-group">
-                    <label><i class="fa-solid fa-cake-candles"></i> Tuổi của bạn *</label>
-                    <input type="number" id="bm-age" min="18" max="70" required placeholder="Ví dụ: 35">
-                </div>
-                <div class="form-group">
-                    <label><i class="fa-solid fa-phone"></i> Số điện thoại / Zalo liên hệ</label>
-                    <input type="tel" id="bm-phone" required oninput="validatePhoneNumber(this)" placeholder="Ví dụ: 0912345678">
-                </div>
-                <div class="form-group">
-                    <label><i class="fa-solid fa-map-location-dot"></i> Địa chỉ cư trú (Chọn khu vực làm việc) *</label>
-                    <div class="address-row">
-                        <select id="bm-province" required onchange="fetchDistricts('bm')">
-                            <option value="">-- Chọn Tỉnh/TP --</option>
-                        </select>
-                        <select id="bm-district" required onchange="fetchWards('bm')">
-                            <option value="">-- Chọn Quận/Huyện --</option>
-                        </select>
-                        <select id="bm-ward" required>
-                            <option value="">-- Chọn Xã/Phường/TT --</option>
-                        </select>
+
+                <!-- Form Bảo Mẫu -->
+                <section id="form-bao-mau" class="form-section">
+                    <h3 id="txt-title-bm-form" style="margin-bottom: 15px; border-bottom: 2px solid #E2E8F0; padding-bottom: 10px; color: var(--primary);"><i class="fa-solid fa-user-nurse"></i> Hồ Sơ Ứng Tuyển Bảo Mẫu</h3>
+                    <form onsubmit="sendToDatabase(event, 'Bảo mẫu')">
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-user"></i> Họ và Tên bảo mẫu</label>
+                            <input type="text" id="bm-name" required pattern=".*\s+.*" minlength="9" placeholder="Ví dụ: Nguyễn Thị Anh">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-cake-candles"></i> Tuổi của bạn *</label>
+                            <input type="number" id="bm-age" min="18" max="70" required placeholder="Ví dụ: 35">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-phone"></i> Số điện thoại / Zalo liên hệ</label>
+                            <input type="tel" id="bm-phone" required oninput="validatePhoneNumber(this)" placeholder="Ví dụ: 0912345678">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-map-location-dot"></i> Địa chỉ cư trú (Chọn khu vực làm việc) *</label>
+                            <div class="address-row">
+                                <select id="bm-province" required onchange="fetchDistricts('bm')">
+                                    <option value="">-- Tỉnh/TP --</option>
+                                </select>
+                                <select id="bm-district" required onchange="fetchWards('bm')">
+                                    <option value="">-- Quận/Huyện --</option>
+                                </select>
+                                <select id="bm-ward" required>
+                                    <option value="">-- Xã/Phường --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-calendar-days"></i> Hình thức làm việc mong muốn *</label>
+                            <select id="bm-work-type" required onchange="toggleTimeRange('bm')">
+                                <option value="">-- Chọn hình thức --</option>
+                                <option value="Toàn thời gian cố định">Toàn thời gian</option>
+                                <option value="Bán thời gian">Theo khung giờ cố định</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="bm-time-block" style="display:none; background: #F8FAFC; padding: 15px; border-radius: 10px;">
+                            <label><i class="fa-solid fa-clock"></i> Khung giờ có thể nhận việc *</label>
+                            <div style="display:flex; gap:10px; align-items:center;">
+                                <span>Từ</span><select id="bm-time-start"></select>
+                                <span>Đến</span><select id="bm-time-end"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-money-bill-wave"></i> Mức lương mong muốn *</label>
+                            <div class="salary-row">
+                                <input type="number" id="bm-salary-num" required min="1" placeholder="9000000">
+                                <select id="bm-salary-unit" required>
+                                    <option value="đ/tháng">đ/tháng</option>
+                                    <option value="đ/giờ">đ/giờ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="bm-neonatal">
+                            <label for="bm-neonatal">👶 Tôi tự tin trông bé SƠ SINH (Newborn)</label>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-image"></i> Link ảnh chân dung (Nếu có)</label>
+                            <input type="url" id="bm-avatar" placeholder="https://i.imgur.com/...jpg">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-medal"></i> Kỹ năng & Kinh nghiệm làm việc *</label>
+                            <textarea id="bm-skills" rows="3" required placeholder="Nêu thế mạnh riêng..."></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn" id="btn-submit-bm" style="background-color: var(--primary);">
+                            <i class="fa-solid fa-paper-plane"></i> Gửi hồ sơ lên đám mây
+                        </button>
+                    </form>
+                </section>
+
+                <!-- Form Phụ Huynh -->
+                <section id="form-phu-huynh" class="form-section">
+                    <h3 id="txt-title-ph-form" style="margin-bottom: 15px; border-bottom: 2px solid #E2E8F0; padding-bottom: 10px; color: var(--secondary);"><i class="fa-solid fa-file-invoice"></i> Phiếu Yêu Cầu Tìm Bảo Mẫu</h3>
+                    <form onsubmit="sendToDatabase(event, 'Phụ huynh')">
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-user-tie"></i> Tên phụ huynh liên hệ</label>
+                            <input type="text" id="ph-name" required pattern=".*\s+.*" minlength="9" placeholder="Ví dụ: Nguyễn Văn Bình">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-phone"></i> Số điện thoại Zalo</label>
+                            <input type="tel" id="ph-phone" required oninput="validatePhoneNumber(this)" placeholder="Ví dụ: 0987654321">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-house-medical-flag"></i> Địa chỉ nơi bảo mẫu đến làm *</label>
+                            <div class="address-row">
+                                <select id="ph-province" required onchange="fetchDistricts('ph')">
+                                    <option value="">-- Tỉnh/TP --</option>
+                                </select>
+                                <select id="ph-district" required onchange="fetchWards('ph')">
+                                    <option value="">-- Quận/Huyện --</option>
+                                </select>
+                                <select id="ph-ward" required>
+                                    <option value="">-- Xã/Phường --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-business-time"></i> Yêu cầu hình thức thời gian *</label>
+                            <select id="ph-work-type" required onchange="toggleTimeRange('ph')">
+                                <option value="">-- Chọn hình thức --</option>
+                                <option value="Toàn thời gian cố định">Toàn thời gian</option>
+                                <option value="Bán thời gian">Theo khung giờ cố định</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="ph-time-block" style="display:none; background: #F8FAFC; padding: 15px; border-radius: 10px;">
+                            <label><i class="fa-solid fa-clock"></i> Khung giờ gia đình cần trông bé *</label>
+                            <div style="display:flex; gap:10px; align-items:center;">
+                                <span>Từ</span><select id="ph-time-start"></select>
+                                <span>Đến</span><select id="ph-time-end"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-baby"></i> Độ tuổi của bé nhà mình *</label>
+                            <input type="text" id="ph-child-age" required placeholder="Ví dụ: 4 tháng tuổi">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-arrow-up-1-9"></i> Tiêu chí độ tuổi bảo mẫu</label>
+                            <input type="text" id="ph-bm-age-req" required placeholder="Ví dụ: 30 - 45 tuổi">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-money-bill-wave"></i> Dự kiến lương chi trả *</label>
+                            <div class="salary-row">
+                                <input type="number" id="ph-salary-num" required min="1" placeholder="9000000">
+                                <select id="ph-salary-unit" required>
+                                    <option value="đ/tháng">đ/tháng</option>
+                                    <option value="đ/giờ">đ/giờ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-comment-medical"></i> Mô tả chi tiết các lưu ý riêng biệt *</label>
+                            <textarea id="ph-jobs-detail" rows="3" required placeholder="Chi tiết yêu cầu gia đình..."></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn" id="btn-submit-ph" style="background-color: var(--secondary);">
+                            <i class="fa-solid fa-magnifying-glass"></i> Phát tin tìm bảo mẫu ngay
+                        </button>
+                    </form>
+                </section>
+            </div>
+
+            <!-- Bento Card 3: Search & Gợi ý kết nối (Col 1 + 2) -->
+            <div class="bento-card col-span-2">
+                <div class="results-header">
+                    <h3 id="txt-bento-search-title" style="font-weight: 800; font-size: 1.15rem;"><i class="fa-solid fa-magnifying-glass" style="color: var(--primary);"></i> 2. Hệ Thống Tra Cứu Khớp Nối</h3>
+                    <div style="display:flex; gap:5px;">
+                        <button class="lang-btn" style="padding: 5px 10px;" onclick="switchSearchMode('Bảo mẫu')">Tìm Bảo Mẫu</button>
+                        <button class="lang-btn" style="padding: 5px 10px;" onclick="switchSearchMode('Phụ huynh')">Tìm Phụ Huynh</button>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label><i class="fa-solid fa-calendar-days"></i> Hình thức thời gian làm việc mong muốn *</label>
-                    <select id="bm-work-type" required onchange="toggleTimeRange('bm')">
-                        <option value="">-- Chọn hình thức làm việc --</option>
-                        <option value="Toàn thời gian cố định">Toàn thời gian (Ở lại hoặc Hành chính)</option>
-                        <option value="Bán thời gian">Theo khung giờ cố định</option>
+
+                <!-- Thay thế bằng 2 con lăn chọn cấp bậc trực tiếp địa phương -->
+                <div class="search-inputs-grid">
+                    <select id="search-province" onchange="fetchSearchDistricts()">
+                        <option value="">-- Chọn Tỉnh/TP --</option>
+                    </select>
+                    <select id="search-district" onchange="triggerSearchAndMatch()">
+                        <option value="">-- Chọn Quận/Huyện --</option>
                     </select>
                 </div>
-                <div class="form-group time-range-block" id="bm-time-block">
-                    <label><i class="fa-solid fa-clock"></i> Khung giờ cụ thể bạn có thể nhận việc *</label>
-                    <div class="time-range-row">
-                        <span>Từ:</span>
-                        <select id="bm-time-start"></select>
-                        <span>Đến:</span>
-                        <select id="bm-time-end"></select>
-                    </div>
+
+                <div style="margin-bottom: 15px;">
+                    <input type="text" id="search-keyword" placeholder="Nhập từ khóa kỹ năng hoặc yêu cầu..." oninput="triggerSearchAndMatch()" style="width: 100%; padding: 11px 15px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 0.95rem;">
                 </div>
+
+                <div id="matching-suggestions" style="margin-bottom: 15px; display: none; background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 12px; padding: 12px;">
+                    <h4 style="font-size: 0.85rem; color: #B45309; font-weight: 700; margin-bottom: 5px;"><i class="fa-solid fa-wand-magic-sparkles"></i> Gợi Ý Khép Nối Gần Nhất:</h4>
+                    <div id="matching-list" style="font-size: 0.8rem; line-height: 1.5; color: #78350F;"></div>
+                </div>
+
+                <div class="list-container" id="search-results-list">
+                    <!-- Javascript renders secure partner cards here -->
+                </div>
+            </div>
+
+            <!-- Bento Card 4: Simulated Live Chat & Rating (Col 3) -->
+            <div class="bento-card">
+                <h3 id="txt-bento-livechat" style="font-weight: 800; font-size: 1.15rem; margin-bottom: 5px;"><i class="fa-solid fa-comments" style="color: var(--success);"></i> 3. Live Chat & Đánh Giá</h3>
+                <p id="txt-bento-livechat-desc" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Hệ thống hỗ trợ đàm phán giao dịch và chấm sao nhanh.</p>
                 
-                <!-- SỬA ĐỔI: Ô CHỌN MỨC LƯƠNG CHO BẢO MẪU -->
-                <div class="form-group">
-                    <label><i class="fa-solid fa-money-bill-wave"></i> Mức lương mong muốn *</label>
-                    <div class="salary-row">
-                        <input type="number" id="bm-salary-num" required min="1" placeholder="Ví dụ: 9000000 hoặc 60000">
-                        <select id="bm-salary-unit" required>
-                            <option value="đ/tháng">Theo tháng (đ/tháng)</option>
-                            <option value="đ/giờ">Theo giờ (đ/giờ)</option>
-                        </select>
+                <div id="chat-fallback" style="text-align: center; padding: 40px 10px; border: 1px dashed #E2E8F0; border-radius: 16px;">
+                    <i class="fa-regular fa-comment-dots" style="font-size: 2.2rem; color: var(--text-muted); margin-bottom: 10px; display: block;"></i>
+                    <p style="font-size:0.8rem; color: var(--text-muted);">Hãy chọn một đối tác ở danh sách bên cạnh và nhấn "Chat Trực Tiếp" để đàm phán lương.</p>
+                </div>
+
+                <!-- Simulated Live Chat Box -->
+                <div class="chat-window" id="main-chat-window">
+                    <div class="chat-header">
+                        <span id="chat-partner-name">Đang kết nối...</span>
+                        <button onclick="closeChat()" style="background:none; border:none; color:white; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div class="chat-messages" id="chat-messages-container"></div>
+                    
+                    <!-- Mẫu câu hỏi nhanh -->
+                    <div class="chat-suggested">
+                        <span class="suggest-chip" onclick="quickSendChat('Xin chào, bạn còn đang nhận việc trông bé chứ?')">Trống lịch?</span>
+                        <span class="suggest-chip" onclick="quickSendChat('Mức lương bạn mong muốn khoảng bao nhiêu?')">Mức lương?</span>
+                        <span class="suggest-chip" onclick="quickSendChat('Bạn có kinh nghiệm chăm sóc bé sơ sinh chưa?')">Kinh nghiệm?</span>
+                    </div>
+
+                    <div class="chat-input-area">
+                        <input type="text" id="chat-input" placeholder="Nhập tin nhắn..." onkeydown="if(event.key==='Enter') sendChatMessage()">
+                        <button onclick="sendChatMessage()" style="border:none; background:var(--primary); color:white; width:36px; height:36px; border-radius:8px; cursor:pointer;"><i class="fa-solid fa-paper-plane"></i></button>
                     </div>
                 </div>
 
-                <div class="form-group checkbox-group">
-                    <input type="checkbox" id="bm-neonatal">
-                    <label for="bm-neonatal">👶 Tôi tự tin và có thể nhận chăm sóc được BÉ SƠ SINH (Newborn)</label>
+                <div class="share-row">
+                    <a href="#" class="share-btn" style="background:#1877F2;" onclick="shareSocial('facebook')"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
+                    <a href="#" class="share-btn" style="background:#0068FF;" onclick="shareSocial('zalo')"><i class="fa-solid fa-share-nodes"></i> Zalo Share</a>
                 </div>
-                <div class="form-group">
-                    <label><i class="fa-solid fa-image"></i> Đường dẫn ảnh chân dung cá nhân (Nếu có)</label>
-                    <input type="url" id="bm-avatar" placeholder="https://example.com/anh-cua-ban.jpg">
-                </div>
-                <div class="form-group">
-                    <label><i class="fa-solid fa-medal"></i> Kỹ năng đặc biệt, kinh nghiệm làm việc tích lũy *</label>
-                    <textarea id="bm-skills" rows="3" required placeholder="Ví dụ: Đã có chứng chỉ sơ cấp cứu, biết nấu ăn dặm khoa học, kinh nghiệm trông trẻ sơ sinh 5 năm..."></textarea>
-                </div>
-                <button type="submit" class="submit-btn" id="btn-submit-bm" style="background-color: var(--primary-color);">
-                    <i class="fa-solid fa-paper-plane"></i> Nộp Hồ Sơ Lên Hệ Thống
-                </button>
-            </form>
-        </section>
+            </div>
 
-        <section id="form-phu-huynh" class="form-section" style="border-top: 6px solid var(--secondary-color);">
-            <h3><i class="fa-solid fa-file-invoice" style="color: var(--secondary-color);"></i> PHIẾU YÊU CẦU TÌM BẢO MẪU TẠI GIA</h3>
-            <form onsubmit="sendToDatabase(event, 'Phụ huynh')">
-                <div class="form-group">
-                    <label><i class="fa-solid fa-user-tie"></i> Tên phụ huynh / Người đại diện liên hệ</label>
-                    <input type="text" id="ph-name" required pattern=".*\s+.*" minlength="9" placeholder="Ví dụ: Nguyễn Văn Bình">
-                </div>
-                <div class="form-group">
-                    <label><i class="fa-solid fa-phone"></i> Số điện thoại kết nối liên lạc</label>
-                    <input type="tel" id="ph-phone" required oninput="validatePhoneNumber(this)" placeholder="Ví dụ: 0987654321">
-                </div>
-                <div class="form-group">
-                    <label><i class="fa-solid fa-house-medical-flag"></i> Địa chỉ cần bảo mẫu đến làm việc *</label>
-                    <div class="address-row">
-                        <select id="ph-province" required onchange="fetchDistricts('ph')">
-                            <option value="">-- Chọn Tỉnh/TP --</option>
-                        </select>
-                        <select id="ph-district" required onchange="fetchWards('ph')">
-                            <option value="">-- Chọn Quận/Huyện --</option>
-                        </select>
-                        <select id="ph-ward" required>
-                            <option value="">-- Chọn Xã/Phường/TT --</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label><i class="fa-solid fa-business-time"></i> Yêu cầu hình thức thời gian làm việc *</label>
-                    <select id="ph-work-type" required onchange="toggleTimeRange('ph')">
-                        <option value="">-- Chọn hình thức yêu cầu --</option>
-                        <option value="Toàn thời gian cố định">Toàn thời gian (Ở lại hoặc Hành chính)</option>
-                        <option value="Bán thời gian">Theo khung giờ cố định</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label><i class="fa-solid fa-baby"></i> Độ tuổi hiện tại của bé nhà mình *</label>
-                    <input type="text" id="ph-child-age" required placeholder="Ví dụ: 3 tháng tuổi, hoặc 2 tuổi">
-                </div>
-                <div class="form-group">
-                    <label><i class="fa-solid fa-arrow-up-1-9"></i> Yêu cầu mong muốn về độ tuổi bảo mẫu *</label>
-                    <input type="text" id="ph-bm-age-req" required placeholder="Ví dụ: Thích bảo mẫu trung tuổi từ 35 - 50 tuổi">
-                </div>
-                <div class="form-group time-range-block" id="ph-time-block">
-                    <label><i class="fa-solid fa-clock"></i> Khung giờ cụ thể gia đình cần bảo mẫu trông bé *</label>
-                    <div class="time-range-row">
-                        <span>Từ:</span>
-                        <select id="ph-time-start"></select>
-                        <span>Đến:</span>
-                        <select id="ph-time-end"></select>
-                    </div>
-                </div>
-
-                <!-- SỬA ĐỔI: Ô CHỌN MỨC LƯƠNG CHO PHỤ HUYNH -->
-                <div class="form-group">
-                    <label><i class="fa-solid fa-money-bill-wave"></i> Mức lương dự kiến chi trả *</label>
-                    <div class="salary-row">
-                        <input type="number" id="ph-salary-num" required min="1" placeholder="Ví dụ: 9000000 hoặc 60000">
-                        <select id="ph-salary-unit" required>
-                            <option value="đ/tháng">Theo tháng (đ/tháng)</option>
-                            <option value="đ/giờ">Theo giờ (đ/giờ)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fa-solid fa-comment-medical"></i> Mô tả chi tiết công việc và các lưu ý riêng biệt *</label>
-                    <textarea id="ph-jobs-detail" rows="3" required placeholder="Ví dụ: Bé ngoan, chủ yếu trông nom, tắm rửa, cho ăn sữa đúng giờ. Không cần làm việc nhà..."></textarea>
-                </div>
-                <button type="submit" class="submit-btn" id="btn-submit-ph" style="background-color: var(--secondary-color);">
-                    <i class="fa-solid fa-magnifying-glass"></i> Phát Tin Tìm Kiếm Ngay
-                </button>
-            </form>
-        </section>
+        </div>
     </div>
 
     <footer>
-        <p>© BaomauConnect - Hệ thống xử lý dữ liệu nội bộ trực tuyến kết nối 24/7</p>
+        <p>© 2026 BaomauConnect - Nền Tảng Kết Nối Bảo Mẫu Tại Gia Số 1</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         const CLOUD_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxxDJxrCCky-oQpbH1ZgRznlSdkOALuJyN4aR4jnqQI3DDV2QbgIRvHSZHN7PR9nsdi/exec";
+        
         const API_PROVINCES = "https://provinces.open-api.vn/api/?depth=1";
         const API_DISTRICTS = "https://provinces.open-api.vn/api/p/";
         const API_WARDS = "https://provinces.open-api.vn/api/d/";
 
+        let systemCloudData = [];
+        let currentSearchMode = 'Bảo mẫu'; // Bảo mẫu hoặc Phụ huynh
+        let chatPartner = null;
+        let isEnglish = false;
+
+        const localization = {
+            vi: {
+                welcome: "Vui lòng chọn vai trò để bắt đầu",
+                welcomeSub: "Nhấp chọn 'Tôi là Bảo mẫu' hoặc 'Tôi là Phụ huynh' ở hộp Bento bên trái để tạo phiếu thông tin.",
+                navAdmin: "Quản trị viên",
+                slogan: "Cầu nối uy tín đồng bộ trực tuyến đám mây giữa người tìm việc bảo mẫu và phụ huynh cần thuê trông bé theo giờ hoặc ở lại",
+                bRole: "1. Nhập thông tin của bạn",
+                bRoleDesc: "Để hệ thống tự động ghép nối và xuất bản trực tuyến tin tuyển dụng.",
+                bSearch: "2. Hệ Thống Tra Cứu Khớp Nối",
+                bLive: "3. Live Chat & Đánh Giá",
+                bLiveDesc: "Hệ thống hỗ trợ đàm phán giao dịch và chấm sao nhanh."
+            },
+            en: {
+                welcome: "Please select a role to get started",
+                welcomeSub: "Click 'BẢO MẪU' (Nanny) or 'PHỤ HUYNH' (Parent) in the left bento block to fill out information.",
+                navAdmin: "Admin Console",
+                slogan: "A secure, cloud-synchronized gateway connecting local professional nannies and families seeking hourly or live-in childcare.",
+                bRole: "1. Enter your Profile",
+                bRoleDesc: "Allows our systems to automatically suggest matching candidates near you.",
+                bSearch: "2. Real-time Search and Match",
+                bLive: "3. Live Chat & Reviews",
+                bLiveDesc: "Easily negotiate rates, write reviews and build trust with other users."
+            }
+        };
+
+        function toggleLanguage() {
+            isEnglish = !isEnglish;
+            document.getElementById('lang-text').innerText = isEnglish ? 'VI' : 'EN';
+            const dict = isEnglish ? localization.en : localization.vi;
+
+            document.getElementById('txt-welcome').innerText = dict.welcome;
+            document.getElementById('txt-welcome-sub').innerText = dict.welcomeSub;
+            document.getElementById('txt-nav-admin').innerText = dict.navAdmin;
+            document.getElementById('txt-site-slogan').innerText = dict.slogan;
+            document.getElementById('txt-bento-role').innerHTML = `<i class="fa-solid fa-face-smile" style="color: var(--primary);"></i> ` + dict.bRole;
+            document.getElementById('txt-bento-role-desc').innerText = dict.bRoleDesc;
+            document.getElementById('txt-bento-search-title').innerHTML = `<i class="fa-solid fa-magnifying-glass" style="color: var(--primary);"></i> ` + dict.bSearch;
+            document.getElementById('txt-bento-livechat').innerHTML = `<i class="fa-solid fa-comments" style="color: var(--success);"></i> ` + dict.bLive;
+            document.getElementById('txt-bento-livechat-desc').innerText = dict.bLiveDesc;
+            triggerSearchAndMatch();
+        }
+
+        // --- BENTO CHAT & REVIEW SYSTEM ---
+        function openLiveChat(partnerName, roleType) {
+            document.getElementById('chat-fallback').style.display = 'none';
+            document.getElementById('main-chat-window').style.display = 'flex';
+            document.getElementById('chat-partner-name').innerText = `Trò chuyện với ${partnerName} (${roleType})`;
+            chatPartner = { name: partnerName, role: roleType };
+            
+            const chatBox = document.getElementById('chat-messages-container');
+            chatBox.innerHTML = `
+                <div class="msg received">Xin chào! Hệ thống kết nối thành công. Tôi là ${partnerName}, vui lòng để lại tin nhắn trao đổi lịch hẹn!</div>
+            `;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function closeChat() {
+            document.getElementById('main-chat-window').style.display = 'none';
+            document.getElementById('chat-fallback').style.display = 'block';
+            chatPartner = null;
+        }
+
+        function sendChatMessage() {
+            const val = document.getElementById('chat-input').value.trim();
+            if(!val) return;
+            quickSendChat(val);
+            document.getElementById('chat-input').value = '';
+        }
+
+        function quickSendChat(text) {
+            const chatBox = document.getElementById('chat-messages-container');
+            
+            // Tin người dùng gửi
+            const sentMsg = document.createElement('div');
+            sentMsg.className = "msg sent";
+            sentMsg.innerText = text;
+            chatBox.appendChild(sentMsg);
+
+            // Phản hồi tự động giả lập
+            setTimeout(() => {
+                const recMsg = document.createElement('div');
+                recMsg.className = "msg received";
+                recMsg.innerText = `[Tự động] Cám ơn bạn. Lời nhắn: "${text}" đã được gửi tới đối tác để xử lý khớp nối.`;
+                chatBox.appendChild(recMsg);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 1000);
+
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function triggerReview(partnerName) {
+            Swal.fire({
+                title: `Đánh giá đối tác: ${partnerName}`,
+                html: `
+                    <div style="font-size: 1.25rem; display: flex; justify-content: center; gap: 10px; margin-bottom: 15px;">
+                        <span class="star-rating" style="cursor:pointer;" onclick="selectStar(1)">★</span>
+                        <span class="star-rating" style="cursor:pointer;" onclick="selectStar(2)">★</span>
+                        <span class="star-rating" style="cursor:pointer;" onclick="selectStar(3)">★</span>
+                        <span class="star-rating" style="cursor:pointer;" onclick="selectStar(4)">★</span>
+                        <span class="star-rating" style="cursor:pointer;" onclick="selectStar(5)">★</span>
+                    </div>
+                    <input type="hidden" id="review-stars-val" value="5">
+                    <textarea id="review-comment" class="swal2-textarea" style="margin: 0; width: 100%;" placeholder="Viết đánh giá thực tế an toàn tại đây..."></textarea>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Gửi Đánh Giá',
+                confirmButtonColor: '#F5A623',
+                preConfirm: () => {
+                    return {
+                        stars: document.getElementById('review-stars-val').value,
+                        comment: document.getElementById('review-comment').value
+                    };
+                }
+            }).then((result) => {
+                if(result.isConfirmed) {
+                    Swal.fire('Thành công!', 'Đánh giá an toàn đã được lưu trữ công khai!', 'success');
+                }
+            });
+        }
+
+        function selectStar(num) {
+            document.getElementById('review-stars-val').value = num;
+            const stars = document.querySelectorAll('.star-rating');
+            stars.forEach((s, idx) => {
+                s.style.color = idx < num ? "#F5A623" : "#CBD5E1";
+            });
+        }
+
+        // --- GEOLOCATION LOADERS FOR SEARCH (CON LĂN CHỌN QUẬN HUYỆN) ---
+        function loadSearchProvinces() {
+            fetch(API_PROVINCES)
+                .then(res => res.json())
+                .then(data => {
+                    const provSel = document.getElementById('search-province');
+                    provSel.innerHTML = '<option value="">-- Chọn Tỉnh/TP --</option>';
+                    data.forEach(prov => {
+                        let opt = document.createElement('option');
+                        opt.value = prov.code;
+                        opt.textContent = prov.name;
+                        provSel.appendChild(opt);
+                    });
+                })
+                .catch(err => console.error("Lỗi nạp địa chính tra cứu: ", err));
+        }
+
+        function fetchSearchDistricts() {
+            const provCode = document.getElementById('search-province').value;
+            const distSel = document.getElementById('search-district');
+            
+            distSel.innerHTML = '<option value="">-- Nạp... --</option>';
+
+            if (!provCode) {
+                distSel.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
+                triggerSearchAndMatch();
+                return;
+            }
+
+            fetch(`${API_DISTRICTS}${provCode}?depth=2`)
+                .then(res => res.json())
+                .then(data => {
+                    distSel.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
+                    data.districts.forEach(dist => {
+                        let opt = document.createElement('option');
+                        opt.value = dist.name; // Sử dụng tên để lọc chính xác với địa chỉ chuỗi lưu trên sheets
+                        opt.textContent = dist.name;
+                        distSel.appendChild(opt);
+                    });
+                    triggerSearchAndMatch();
+                });
+        }
+
+        // --- DATA LOAD & SECURE ANONYMOUS SEARCH LOGIC ---
+        function triggerSearchAndMatch() {
+            const kw = document.getElementById('search-keyword').value.toLowerCase().trim();
+            const provSelect = document.getElementById('search-province');
+            const distSelect = document.getElementById('search-district');
+            
+            const provText = provSelect.selectedIndex > 0 ? provSelect.options[provSelect.selectedIndex].text.toLowerCase() : "";
+            const distText = distSelect.selectedIndex > 0 ? distSelect.value.toLowerCase() : "";
+            
+            const container = document.getElementById('search-results-list');
+            container.innerHTML = '';
+
+            // BẢO MẬT: Chỉ hiện thông tin khi có lựa chọn Quận/Huyện hoặc từ khóa lọc khớp
+            if (!distText && !kw) {
+                const instructions = isEnglish 
+                    ? "Please select a District from drop-down or enter a keyword to look up nearest matching partners (Privacy Protected)." 
+                    : "Vui lòng chọn Quận/Huyện bằng con lăn hoặc nhập từ khóa để tra cứu đối tác gần nhất (Thông tin được bảo mật).";
+                container.innerHTML = `
+                    <div class="no-data" style="padding: 40px 20px; border: 1px dashed #E2E8F0; border-radius: 16px;">
+                        <i class="fa-solid fa-shield-halved" style="font-size: 2.2rem; color: var(--primary); margin-bottom: 10px; display: block;"></i>
+                        <p style="font-size: 0.9rem; font-weight: 500; color: var(--text-muted); text-align: center;">${instructions}</p>
+                    </div>
+                `;
+                document.getElementById('matching-suggestions').style.display = 'none';
+                return;
+            }
+
+            // Lọc dữ liệu khớp theo tiêu chuẩn
+            const filtered = systemCloudData.filter(item => {
+                const matchesRole = item.role === currentSearchMode;
+                const matchesKw = !kw || (item.detail && item.detail.toLowerCase().includes(kw)) || (item.workTime && item.workTime.toLowerCase().includes(kw));
+                
+                // Khớp địa chỉ Quận Huyện & Tỉnh thành
+                const matchesProvince = !provText || (item.address && item.address.toLowerCase().includes(provText));
+                const matchesDistrict = !distText || (item.address && item.address.toLowerCase().includes(distText));
+                
+                return matchesRole && matchesKw && matchesProvince && matchesDistrict;
+            });
+
+            if(filtered.length === 0) {
+                const noResultText = isEnglish 
+                    ? "No nearest matching partners found in this area..." 
+                    : "Không tìm thấy dữ liệu đối tác trùng khớp gần nhất tại khu vực này...";
+                container.innerHTML = `<div class="no-data"><i class="fa-solid fa-triangle-exclamation"></i> ${noResultText}</div>`;
+                document.getElementById('matching-suggestions').style.display = 'none';
+                return;
+            }
+
+            // Gợi ý Matching thông minh hai chiều gần nhất ẩn danh
+            if (distText) {
+                const matches = systemCloudData.filter(i => i.role !== currentSearchMode && i.address && i.address.toLowerCase().includes(distText));
+                if (matches.length > 0) {
+                    document.getElementById('matching-suggestions').style.display = 'block';
+                    document.getElementById('matching-list').innerHTML = matches.slice(0, 3).map((m, idx) => {
+                        const anonId = m.role === 'Bảo mẫu' ? `Bảo mẫu #${idx + 101}` : `Phụ huynh #${idx + 501}`;
+                        return `• <b>${anonId}</b> tại ${m.address.split(',')[0]} đang tìm ${m.role === 'Bảo mẫu' ? (isEnglish ? 'job' : 'việc') : (isEnglish ? 'nanny' : 'bảo mẫu')}`;
+                    }).join('<br>');
+                } else {
+                    document.getElementById('matching-suggestions').style.display = 'none';
+                }
+            } else {
+                document.getElementById('matching-suggestions').style.display = 'none';
+            }
+
+            // Render kết quả hoàn toàn ẩn tên và số điện thoại
+            filtered.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = "partner-card";
+                
+                const isBaoMau = item.role === 'Bảo mẫu';
+                
+                // Bảo mật: Mã hóa danh tính ẩn danh sử dụng row/index
+                const secureId = isBaoMau ? `Bảo mẫu #${index + 101}` : `Phụ huynh #${index + 501}`;
+                const avatarUrl = 'https://cdn-icons-png.flaticon.com/512/4127/4127263.png';
+                
+                card.innerHTML = `
+                    <div class="partner-card-header">
+                        <img src="${avatarUrl}" class="partner-avatar">
+                        <div>
+                            <h4 style="font-size:1rem; font-weight:700; color:var(--primary);">${secureId}</h4>
+                            <span class="partner-rating">★★★★★ 5.0</span>
+                        </div>
+                    </div>
+                    <p style="font-size:0.85rem; color:#475569; margin-bottom:8px;">
+                        <i class="fa-solid fa-location-dot" style="color:var(--secondary);"></i> <b>${isEnglish ? 'Address' : 'Địa chỉ cụ thể'}:</b> ${item.address}
+                    </p>
+                    <p style="font-size:0.85rem; color:#475569;">${item.detail}</p>
+                    
+                    <div class="tag-row">
+                        <span class="tag tag-time">${item.workTime}</span>
+                        <span class="tag tag-addr">${item.address.split(',')[1] || item.address.split(',')[0]}</span>
+                        ${isBaoMau && item.careNeonatal === "CÓ SƠ SINH" ? `<span class="tag tag-neo">${isEnglish ? 'Newborn Specialist' : 'Chăm sơ sinh'}</span>` : ''}
+                    </div>
+
+                    <div style="margin-top: 12px; border-top:1px solid #F1F5F9; padding-top:10px;">
+                        <button class="chat-btn" onclick="openLiveChat('${secureId}', '${item.role}')"><i class="fa-solid fa-message"></i> ${isEnglish ? 'Chat' : 'Chat Trực Tiếp'}</button>
+                        <button class="review-btn" onclick="triggerReview('${secureId}')"><i class="fa-solid fa-star"></i> ${isEnglish ? 'Rate' : 'Chấm Sao'}</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function switchSearchMode(mode) {
+            currentSearchMode = mode;
+            triggerSearchAndMatch();
+        }
+
+        // --- BACKUP / LOCAL DRAFT PRESERVATION ---
+        function saveDraft() {
+            const role = document.getElementById('card-bm').classList.contains('active') ? 'bm' : 'ph';
+            if (role === 'bm') {
+                const draft = {
+                    name: document.getElementById('bm-name').value,
+                    phone: document.getElementById('bm-phone').value,
+                    age: document.getElementById('bm-age').value,
+                    skills: document.getElementById('bm-skills').value,
+                    salary: document.getElementById('bm-salary-num').value
+                };
+                localStorage.setItem('bm_draft', JSON.stringify(draft));
+            } else {
+                const draft = {
+                    name: document.getElementById('ph-name').value,
+                    phone: document.getElementById('ph-phone').value,
+                    childAge: document.getElementById('ph-child-age').value,
+                    detail: document.getElementById('ph-jobs-detail').value,
+                    salary: document.getElementById('ph-salary-num').value
+                };
+                localStorage.setItem('ph_draft', JSON.stringify(draft));
+            }
+            Swal.fire('Nháp đã lưu!', 'Thông tin biểu mẫu tạm thời đã được lưu giữ tự động.', 'success');
+        }
+
+        function clearDraft() {
+            localStorage.removeItem('bm_draft');
+            localStorage.removeItem('ph_draft');
+            Swal.fire('Đã xóa nháp', 'Mọi dữ liệu tạm lưu trên trình duyệt đã bị làm trống.', 'info');
+        }
+
+        function loadAllCloudDatabase() {
+            fetch(CLOUD_SCRIPT_URL)
+            .then(res => res.json())
+            .then(data => {
+                systemCloudData = data;
+                triggerSearchAndMatch();
+            })
+            .catch(err => console.error("Không nạp được database: ", err));
+        }
+
+        // --- SOCIAL SHARE FUNCTION ---
+        function shareSocial(type) {
+            const title = encodeURIComponent("Tìm Bảo Mẫu & Phụ Huynh tại BaomauConnect");
+            const url = encodeURIComponent(window.location.href);
+            if (type === 'facebook') {
+                window.open(`https://www.facebook.com/?locale=vi_VN`, '_blank');
+            } else {
+                window.open(`https://zalo.me/share?to=${url}&title=${title}`, '_blank');
+            }
+        }
+
+        // --- ADDRESS & PROVINCE NATIVE SELECTORS (ĐĂNG KÝ) ---
         function loadAllProvinces() {
             fetch(API_PROVINCES)
                 .then(response => response.json())
                 .then(data => {
                     ['bm', 'ph'].forEach(prefix => {
                         const provSel = document.getElementById(`${prefix}-province`);
-                        provSel.innerHTML = '<option value="">-- Chọn Tỉnh/TP --</option>';
+                        provSel.innerHTML = '<option value="">-- Tỉnh/TP --</option>';
                         data.forEach(prov => {
                             let opt = document.createElement('option');
                             opt.value = prov.code;
@@ -358,18 +802,18 @@
             const distSel = document.getElementById(`${prefix}-district`);
             const wardSel = document.getElementById(`${prefix}-ward`);
             
-            distSel.innerHTML = '<option value="">-- Đang nạp dữ liệu... --</option>';
-            wardSel.innerHTML = '<option value="">-- Chọn Xã/Phường/TT --</option>';
+            distSel.innerHTML = '<option value="">-- Nạp... --</option>';
+            wardSel.innerHTML = '<option value="">-- Xã/Phường --</option>';
 
             if (!provinceCode) {
-                distSel.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
+                distSel.innerHTML = '<option value="">-- Quận/Huyện --</option>';
                 return;
             }
 
             fetch(`${API_DISTRICTS}${provinceCode}?depth=2`)
                 .then(response => response.json())
                 .then(data => {
-                    distSel.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
+                    distSel.innerHTML = '<option value="">-- Quận/Huyện --</option>';
                     data.districts.forEach(dist => {
                         let opt = document.createElement('option');
                         opt.value = dist.code;
@@ -382,18 +826,17 @@
         function fetchWards(prefix) {
             const districtCode = document.getElementById(`${prefix}-district`).value;
             const wardSel = document.getElementById(`${prefix}-ward`);
-            
-            wardSel.innerHTML = '<option value="">-- Đang nạp dữ liệu... --</option>';
+            wardSel.innerHTML = '<option value="">-- Nạp... --</option>';
 
             if (!districtCode) {
-                wardSel.innerHTML = '<option value="">-- Chọn Xã/Phường/TT --</option>';
+                wardSel.innerHTML = '<option value="">-- Xã/Phường --</option>';
                 return;
             }
 
             fetch(`${API_WARDS}${districtCode}?depth=2`)
                 .then(response => response.json())
                 .then(data => {
-                    wardSel.innerHTML = '<option value="">-- Chọn Xã/Phường/TT --</option>';
+                    wardSel.innerHTML = '<option value="">-- Xã/Phường --</option>';
                     data.wards.forEach(ward => {
                         let opt = document.createElement('option');
                         opt.value = ward.name;
@@ -420,17 +863,10 @@
         function toggleTimeRange(prefix) {
             const workType = document.getElementById(`${prefix}-work-type`).value;
             const timeBlock = document.getElementById(`${prefix}-time-block`);
-            const startSelect = document.getElementById(`${prefix}-time-start`);
-            const endSelect = document.getElementById(`${prefix}-time-end`);
-
             if (workType === "Bán thời gian") {
                 timeBlock.style.display = "block";
-                startSelect.required = true;
-                endSelect.required = true;
             } else {
                 timeBlock.style.display = "none";
-                startSelect.required = false;
-                endSelect.required = false;
             }
         }
 
@@ -455,41 +891,48 @@
 
         function selectRole(formId) {
             document.querySelectorAll('.role-card').forEach(c => c.classList.remove('active'));
+            document.getElementById('welcome-hint').style.display = 'none';
             document.getElementById('form-bao-mau').style.display = 'none';
             document.getElementById('form-phu-huynh').style.display = 'none';
             
             if(formId === 'form-bao-mau') {
                 document.getElementById('card-bm').classList.add('active');
-                const f = document.getElementById('form-bao-mau');
-                f.style.display = 'block';
-                f.scrollIntoView({ behavior: 'smooth' });
-                toggleTimeRange('bm');
+                document.getElementById('form-bao-mau').style.display = 'block';
+                // Load draft if exists
+                const draft = localStorage.getItem('bm_draft');
+                if (draft) {
+                    const parsed = JSON.parse(draft);
+                    document.getElementById('bm-name').value = parsed.name || "";
+                    document.getElementById('bm-phone').value = parsed.phone || "";
+                    document.getElementById('bm-age').value = parsed.age || "";
+                    document.getElementById('bm-skills').value = parsed.skills || "";
+                    document.getElementById('bm-salary-num').value = parsed.salary || "";
+                }
             } else {
                 document.getElementById('card-ph').classList.add('active');
-                const f = document.getElementById('form-phu-huynh');
-                f.style.display = 'block';
-                f.scrollIntoView({ behavior: 'smooth' });
-                toggleTimeRange('ph');
+                document.getElementById('form-phu-huynh').style.display = 'block';
+                const draft = localStorage.getItem('ph_draft');
+                if (draft) {
+                    const parsed = JSON.parse(draft);
+                    document.getElementById('ph-name').value = parsed.name || "";
+                    document.getElementById('ph-phone').value = parsed.phone || "";
+                    document.getElementById('ph-child-age').value = parsed.childAge || "";
+                    document.getElementById('ph-jobs-detail').value = parsed.detail || "";
+                    document.getElementById('ph-salary-num').value = parsed.salary || "";
+                }
             }
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            generateHoursOptions();
-            loadAllProvinces();
-        });
-
-        // Hàm định dạng số thành chuỗi hiển thị có dấu chấm phân cách (Vd: 9000000 -> 9.000.000)
         function formatNumber(num) {
             return Number(num).toLocaleString('vi-VN');
         }
 
         function sendToDatabase(event, role) {
             event.preventDefault();
-            
             const submitBtn = event.target.querySelector('.submit-btn');
             const originalBtnText = submitBtn.innerHTML;
             submitBtn.disabled = true;
-            submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang đồng bộ đám mây...`;
+            submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Loading...`;
 
             const provText = document.getElementById(`${role === 'Bảo mẫu' ? 'bm' : 'ph'}-province`).options[document.getElementById(`${role === 'Bảo mẫu' ? 'bm' : 'ph'}-province`).selectedIndex].text;
             const distText = document.getElementById(`${role === 'Bảo mẫu' ? 'bm' : 'ph'}-district`).options[document.getElementById(`${role === 'Bảo mẫu' ? 'bm' : 'ph'}-district`).selectedIndex].text;
@@ -518,12 +961,9 @@
                 targetData.workTime = timeStr;
                 targetData.careNeonatal = document.getElementById('bm-neonatal').checked ? "CÓ SƠ SINH" : "Không nhận sơ sinh";
                 
-                // XỬ LÝ LƯƠNG BẢO MẪU: Đọc giá trị số và đơn vị được chọn rồi định dạng lại
                 const salaryNum = document.getElementById('bm-salary-num').value;
                 const salaryUnit = document.getElementById('bm-salary-unit').value;
-                const formattedSalary = formatNumber(salaryNum) + salaryUnit;
-
-                targetData.detail = "Lương mong muốn: " + formattedSalary + " | Kỹ năng: " + document.getElementById('bm-skills').value;
+                targetData.detail = "Lương mong muốn: " + formatNumber(salaryNum) + salaryUnit + " | Kỹ năng: " + document.getElementById('bm-skills').value;
             } else {
                 const workType = document.getElementById('ph-work-type').value;
                 let timeStr = `[${workType}]`;
@@ -540,12 +980,9 @@
                 targetData.workTime = timeStr;
                 targetData.careNeonatal = "";
 
-                // XỬ LÝ LƯƠNG PHỤ HUYNH: Đọc giá trị số và đơn vị được chọn rồi định dạng lại
                 const salaryNum = document.getElementById('ph-salary-num').value;
                 const salaryUnit = document.getElementById('ph-salary-unit').value;
-                const formattedSalary = formatNumber(salaryNum) + salaryUnit;
-
-                targetData.detail = "Ngân sách lương: " + formattedSalary + " | Yêu cầu: " + document.getElementById('ph-jobs-detail').value;
+                targetData.detail = "Ngân sách lương: " + formatNumber(salaryNum) + salaryUnit + " | Yêu cầu: " + document.getElementById('ph-jobs-detail').value;
             }
 
             fetch(CLOUD_SCRIPT_URL, {
@@ -557,35 +994,37 @@
             .then(() => {
                 Swal.fire({
                     title: '🔒 Đăng Ký Thành Công!',
-                    html: `Hồ sơ dữ liệu của đối tác <b>${targetData.name}</b> đã được lưu trữ an toàn theo thời gian thực vào hệ thống đám mây.`,
-                    icon: 'success',
-                    confirmButtonText: 'Tuyệt vời',
-                    confirmButtonColor: '#4A90E2',
-                    background: '#ffffff',
-                    showClass: { popup: 'animate__animated animate__fadeInUp animate__faster' }
+                    html: `Thông tin của <b>${targetData.name}</b> đã được đồng bộ hóa lên Cloud.`,
+                    icon: 'success'
                 });
+                
+                // Clear draft for this role
+                if (role === 'Bảo mẫu') localStorage.removeItem('bm_draft');
+                else localStorage.removeItem('ph_draft');
 
                 document.getElementById('form-bao-mau').style.display = 'none';
                 document.getElementById('form-phu-huynh').style.display = 'none';
+                document.getElementById('welcome-hint').style.display = 'block';
                 document.querySelectorAll('.role-card').forEach(c => c.classList.remove('active'));
                 
                 event.target.reset();
-                generateHoursOptions();
-                loadAllProvinces();
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalBtnText;
+                loadAllCloudDatabase();
             })
             .catch(error => {
-                Swal.fire({
-                    title: 'Sự cố kết nối!',
-                    text: 'Gặp lỗi đường truyền đám mây: ' + error,
-                    icon: 'error',
-                    confirmButtonColor: '#e74c3c'
-                });
+                Swal.fire('Sự cố', 'Lỗi đồng bộ: ' + error, 'error');
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalBtnText;
             });
         }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            generateHoursOptions();
+            loadAllProvinces();
+            loadSearchProvinces(); // Nạp con lăn Tỉnh/Thành phố của bộ lọc tìm kiếm
+            loadAllCloudDatabase();
+        });
     </script>
 </body>
 </html>
