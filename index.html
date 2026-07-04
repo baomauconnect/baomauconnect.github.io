@@ -189,6 +189,10 @@
                     <input type="tel" id="bm-phone" required oninput="validatePhoneNumber(this)" placeholder="Ví dụ: 0912345678">
                 </div>
                 <div class="form-group">
+                    <label><i class="fa-solid fa-envelope"></i> Địa chỉ Gmail liên hệ *</label>
+                    <input type="email" id="bm-email" required placeholder="Ví dụ: emailcuaban@gmail.com">
+                </div>
+                <div class="form-group">
                     <label><i class="fa-solid fa-map-location-dot"></i> Địa chỉ cư trú (Chọn khu vực làm việc) *</label>
                     <div class="address-row">
                         <select id="bm-province" required onchange="fetchDistricts('bm')">
@@ -260,6 +264,10 @@
                 <div class="form-group">
                     <label><i class="fa-solid fa-phone"></i> Số điện thoại kết nối liên lạc</label>
                     <input type="tel" id="ph-phone" required oninput="validatePhoneNumber(this)" placeholder="Ví dụ: 0987654321">
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-solid fa-envelope"></i> Địa chỉ Gmail liên hệ *</label>
+                    <input type="email" id="ph-email" required placeholder="Ví dụ: emailcuaban@gmail.com">
                 </div>
                 <div class="form-group">
                     <label><i class="fa-solid fa-house-medical-flag"></i> Địa chỉ cần bảo mẫu đến làm việc *</label>
@@ -511,6 +519,7 @@
 
                 targetData.name = document.getElementById('bm-name').value;
                 targetData.phone = document.getElementById('bm-phone').value;
+                targetData.userEmail = document.getElementById('bm-email').value; // Dữ liệu Gmail Bảo mẫu
                 targetData.age = document.getElementById('bm-age').value;
                 targetData.avatar = document.getElementById('bm-avatar').value || "Không có ảnh";
                 targetData.childAge = "";
@@ -518,7 +527,6 @@
                 targetData.workTime = timeStr;
                 targetData.careNeonatal = document.getElementById('bm-neonatal').checked ? "CÓ SƠ SINH" : "Không nhận sơ sinh";
                 
-                // XỬ LÝ LƯƠNG BẢO MẪU: Đọc giá trị số và đơn vị được chọn rồi định dạng lại
                 const salaryNum = document.getElementById('bm-salary-num').value;
                 const salaryUnit = document.getElementById('bm-salary-unit').value;
                 const formattedSalary = formatNumber(salaryNum) + salaryUnit;
@@ -533,6 +541,7 @@
 
                 targetData.name = document.getElementById('ph-name').value;
                 targetData.phone = document.getElementById('ph-phone').value;
+                targetData.userEmail = document.getElementById('ph-email').value; // Dữ liệu Gmail Phụ huynh
                 targetData.age = "";
                 targetData.avatar = "";
                 targetData.childAge = document.getElementById('ph-child-age').value;
@@ -540,7 +549,6 @@
                 targetData.workTime = timeStr;
                 targetData.careNeonatal = "";
 
-                // XỬ LÝ LƯƠNG PHỤ HUYNH: Đọc giá trị số và đơn vị được chọn rồi định dạng lại
                 const salaryNum = document.getElementById('ph-salary-num').value;
                 const salaryUnit = document.getElementById('ph-salary-unit').value;
                 const formattedSalary = formatNumber(salaryNum) + salaryUnit;
