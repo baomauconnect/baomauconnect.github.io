@@ -19,7 +19,6 @@
     <meta property="og:url" content="https://baomauconnect.asia">
     <meta property="og:image" content="logo_chuan.png">
 
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -142,14 +141,6 @@
 <body>
 
     <header>
-        <div id="google-signin-btn" style="position:absolute; top:20px; right:170px;"></div>
-        <div id="user-info-badge" style="display:none; position:absolute; top:16px; right:170px; align-items:center; gap:8px; background:#f0f7ff; border:1px solid #bfdbfe; padding:5px 12px 5px 5px; border-radius:30px; font-size:0.85rem; color:#1e40af; font-weight:600; white-space:nowrap;">
-            <img id="user-avatar" src="" alt="avatar" style="width:28px; height:28px; border-radius:50%; object-fit:cover;">
-            <span id="user-name-label"></span>
-            <button type="button" onclick="handleLogout()" title="Đăng xuất" style="background:none; border:none; color:#94a3b8; cursor:pointer; font-size:0.95rem; padding:4px;">
-                <i class="fa-solid fa-right-from-bracket"></i>
-            </button>
-        </div>
         <a href="admin.html" class="admin-link"><i class="fa-solid fa-gear"></i> Quản trị viên</a>
         <div class="brand-container">
             <img src="logo_chuan.png" alt="Logo BaomauConnect" class="site-logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4127/4127263.png'">
@@ -344,72 +335,6 @@
         const API_DISTRICTS = "https://provinces.open-api.vn/api/p/";
         const API_WARDS = "https://provinces.open-api.vn/api/d/";
 
-        // ================== ĐĂNG NHẬP GOOGLE ==================
-        // ⚠️ Thay chuỗi bên dưới bằng Client ID thật lấy tại:
-        // Google Cloud Console > APIs & Services > Credentials
-        // > Create Credentials > OAuth client ID > Web application
-        // (nhớ khai báo domain của bạn vào "Authorized JavaScript origins")
-        const GOOGLE_CLIENT_ID = "256929398562-dbvad3isk5cbi0lrrrjpdjlolpos854u.apps.googleusercontent.com";
-
-        let loggedInUser = null; // { email, name, picture }
-
-        function parseJwt(token) {
-            const base64Url = token.split('.')[1];
-            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            const jsonPayload = decodeURIComponent(
-                atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')
-            );
-            return JSON.parse(jsonPayload);
-        }
-
-        function handleCredentialResponse(response) {
-            const profile = parseJwt(response.credential);
-            loggedInUser = { email: profile.email, name: profile.name, picture: profile.picture };
-            updateUserUI();
-        }
-
-        function updateUserUI() {
-            const badge = document.getElementById('user-info-badge');
-            const btnWrapper = document.getElementById('google-signin-btn');
-            if (loggedInUser) {
-                document.getElementById('user-avatar').src = loggedInUser.picture;
-                document.getElementById('user-name-label').textContent = loggedInUser.name;
-                badge.style.display = 'flex';
-                btnWrapper.style.display = 'none';
-            } else {
-                badge.style.display = 'none';
-                btnWrapper.style.display = 'block';
-            }
-        }
-
-        function handleLogout() {
-            loggedInUser = null;
-            if (window.google && google.accounts && google.accounts.id) {
-                google.accounts.id.disableAutoSelect();
-            }
-            updateUserUI();
-            Swal.fire({
-                title: 'Đã đăng xuất',
-                text: 'Bạn cần đăng nhập lại bằng Google để gửi hồ sơ đăng ký.',
-                icon: 'info',
-                confirmButtonColor: '#4A90E2'
-            });
-        }
-
-        window.addEventListener('load', () => {
-            if (window.google && google.accounts && google.accounts.id) {
-                google.accounts.id.initialize({
-                    client_id: GOOGLE_CLIENT_ID,
-                    callback: handleCredentialResponse,
-                    auto_select: false
-                });
-                google.accounts.id.renderButton(
-                    document.getElementById('google-signin-btn'),
-                    { theme: 'outline', size: 'medium', shape: 'pill', text: 'signin_with' }
-                );
-            }
-        });
-
         function loadAllProvinces() {
             fetch(API_PROVINCES)
                 .then(response => response.json())
@@ -560,17 +485,6 @@
 
         function sendToDatabase(event, role) {
             event.preventDefault();
-
-            if (!loggedInUser) {
-                Swal.fire({
-                    title: 'Vui lòng đăng nhập Google',
-                    text: 'Bạn cần đăng nhập bằng tài khoản Google ở góc trên bên phải trước khi nộp hồ sơ, để hệ thống gửi email xác nhận đăng ký thành công cho bạn.',
-                    icon: 'warning',
-                    confirmButtonText: 'Đã hiểu',
-                    confirmButtonColor: '#4A90E2'
-                });
-                return;
-            }
             
             const submitBtn = event.target.querySelector('.submit-btn');
             const originalBtnText = submitBtn.innerHTML;
@@ -585,9 +499,7 @@
             let targetData = {
                 role: role, 
                 category: role === 'Bảo mẫu' ? "Ứng tuyển làm Bảo mẫu" : "Phụ huynh tìm bảo mẫu",
-                address: fullAddress,
-                userEmail: loggedInUser.email,
-                userName: loggedInUser.name
+                address: fullAddress
             };
 
             if (role === 'Bảo mẫu') {
@@ -645,7 +557,7 @@
             .then(() => {
                 Swal.fire({
                     title: '🔒 Đăng Ký Thành Công!',
-                    html: `Hồ sơ dữ liệu của đối tác <b>${targetData.name}</b> đã được lưu trữ an toàn theo thời gian thực vào hệ thống đám mây.<br><br>📧 Email xác nhận đã được gửi tới <b>${targetData.userEmail}</b>.`,
+                    html: `Hồ sơ dữ liệu của đối tác <b>${targetData.name}</b> đã được lưu trữ an toàn theo thời gian thực vào hệ thống đám mây.`,
                     icon: 'success',
                     confirmButtonText: 'Tuyệt vời',
                     confirmButtonColor: '#4A90E2',
