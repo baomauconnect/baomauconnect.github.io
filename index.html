@@ -193,7 +193,10 @@
                     <input type="email" id="bm-email" required 
                         pattern="^[a-zA-Z0-9._%+-]+@gmail\.com$" 
                         title="Vui lòng nhập đúng địa chỉ email có đuôi @gmail.com" 
-                        placeholder="Ví dụ: emailcuaban@gmail.com">                
+                        placeholder="Ví dụ: emailcuaban@gmail.com"
+                        oninput="suggestGmail(this)"
+                        list="bm-email-suggest">
+                    <datalist id="bm-email-suggest"></datalist>
                 </div>
                 <div class="form-group">
                     <label><i class="fa-solid fa-map-location-dot"></i> Địa chỉ cư trú (Chọn khu vực làm việc) *</label>
@@ -271,9 +274,12 @@
                 <div class="form-group">
                     <label><i class="fa-solid fa-envelope"></i> Địa chỉ Gmail liên hệ *</label>
                     <input type="email" id="ph-email" required 
-                        pattern="^[a-zA-Z0-9._%+-]+@gmail\.com$"
+                        pattern="^[a-zA-Z0-9._%+-]+@gmail\.com$" 
                         title="Vui lòng nhập đúng địa chỉ email có đuôi @gmail.com" 
-                        placeholder="Ví dụ: emailcuaban@gmail.com">                
+                        placeholder="Ví dụ: emailcuaban@gmail.com"
+                        oninput="suggestGmail(this)"
+                        list="ph-email-suggest">
+                    <datalist id="ph-email-suggest"></datalist>
                 </div>
                 <div class="form-group">
                     <label><i class="fa-solid fa-house-medical-flag"></i> Địa chỉ cần bảo mẫu đến làm việc *</label>
@@ -428,6 +434,27 @@
             } else {
                 input.setCustomValidity("");
                 input.style.borderColor = "#cbd5e1";
+            }
+        }
+
+        // Gợi ý tự động hoàn thành đuôi @gmail.com khi người dùng gõ @g, @gm, @gma...
+        function suggestGmail(input) {
+            const val = input.value;
+            const datalist = document.getElementById(input.getAttribute('list'));
+            if (!datalist) return;
+            datalist.innerHTML = '';
+
+            const atIndex = val.indexOf('@');
+            if (atIndex === -1) return; // Chưa gõ tới @ thì chưa gợi ý
+
+            const localPart = val.substring(0, atIndex);
+            const domainPart = val.substring(atIndex + 1);
+
+            // Nếu phần đã gõ sau @ là tiền tố hợp lệ của "gmail.com" (vd: g, gm, gma, gmail, gmail.c...)
+            if (localPart.length > 0 && 'gmail.com'.startsWith(domainPart)) {
+                const option = document.createElement('option');
+                option.value = localPart + '@gmail.com';
+                datalist.appendChild(option);
             }
         }
 
