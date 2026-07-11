@@ -1,7 +1,8 @@
 # BaomauConnect
 
-![BaomauConnect banner](./Gemini_Generated_Image_jv56w9jv56w9jv56.png)
-
+<p align="center">
+  <img src="Gemini_Generated_Image_rqkwaerqkwaerqkw.png" alt="Baomauconnect Banner" width="100%" />
+</p>
 BaomauConnect là một ứng dụng web SPA nhẹ giúp kết nối giữa bảo mẫu và phụ huynh theo thời gian thực. Hệ thống thu thập thông tin từ cả hai phía, đồng bộ dữ liệu lên Google Sheets thông qua Google Apps Script và cung cấp giao diện quản trị để xem, chỉnh sửa và xóa hồ sơ.
 
 ## Tính năng
