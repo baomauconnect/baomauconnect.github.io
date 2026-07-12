@@ -21,29 +21,43 @@ function doGet(e) {
   try {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
     var data = sheet.getDataRange().getValues();
+    
+    // Nếu chỉ có header hoặc không có dữ liệu
     if (data.length <= 1) {
+      Logger.log("ℹ️ No data to retrieve - only header present");
       return ContentService.createTextOutput(JSON.stringify([])).setMimeType(ContentService.MimeType.JSON);
     }
 
     var headers = data[0];
     var jsonData = [];
+    
+    // Chuyển đổi dữ liệu từ Sheet sang JSON
     for (var i = 1; i < data.length; i++) {
       var row = data[i];
-      var item = { sheetRow: i + 1 }; // Số dòng thực tế trên Sheet, dùng để update/delete
+      var item = { sheetRow: i + 1 }; // Số dòng thực tế trên Sheet
       var hasData = false;
+      
       for (var j = 0; j < headers.length; j++) {
         if (row[j] !== "") hasData = true;
+        
+        // Xử lý đặc biệt cho cột thời gian
         if (headers[j] === "time" && row[j] instanceof Date) {
           item[headers[j]] = Utilities.formatDate(row[j], Session.getScriptTimeZone(), "yyyy-MM-dd HH:mm:ss");
         } else {
           item[headers[j]] = row[j];
         }
       }
+      
+      // Chỉ thêm dòng nếu có dữ liệu
       if (hasData) jsonData.push(item);
     }
+    
+    Logger.log("✅ Retrieved " + jsonData.length + " records from sheet");
     return ContentService.createTextOutput(JSON.stringify(jsonData)).setMimeType(ContentService.MimeType.JSON);
   } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.toString() })).setMimeType(ContentService.MimeType.JSON);
+    var errorMsg = err.toString();
+    Logger.log("❌ Error in doGet: " + errorMsg);
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: errorMsg })).setMimeType(ContentService.MimeType.JSON);
   }
 }
 
@@ -52,21 +66,34 @@ function doPost(e) {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
     var payload = {};
 
+    // Cố gắng phân tích dữ liệu từ các nguồn khác nhau
     if (e.postData && e.postData.contents) {
-      try { payload = JSON.parse(e.postData.contents); } catch (x) { payload = e.parameter; }
+      try { 
+        payload = JSON.parse(e.postData.contents); 
+      } catch (x) { 
+        payload = e.parameter; 
+      }
     } else {
       payload = e.parameter;
     }
 
+    Logger.log("📥 Incoming request - Action: " + (payload.action || 'unknown'));
+
+    // Định tuyến yêu cầu dựa trên action
     if (payload.action === "delete") {
+      Logger.log("🗑️ Processing DELETE request");
       return handleDelete(sheet, payload);
     } else if (payload.action === "update") {
+      Logger.log("✏️ Processing UPDATE request");
       return handleUpdate(sheet, payload);
     } else {
+      Logger.log("➕ Processing CREATE request");
       return handleCreate(sheet, payload);
     }
   } catch (error) {
-    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: error.toString() })).setMimeType(ContentService.MimeType.JSON);
+    var errorMsg = error.toString();
+    Logger.log("❌ Error in doPost: " + errorMsg);
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: errorMsg })).setMimeType(ContentService.MimeType.JSON);
   }
 }
 
@@ -118,36 +145,64 @@ function handleCreate(sheet, payload) {
  * XÓA CÁC DÒNG (dùng cho trang quản trị)
  */
 function handleDelete(sheet, payload) {
-  var rowsToDelete = typeof payload.rows === "string" ? JSON.parse(payload.rows) : payload.rows;
-  rowsToDelete.sort(function (a, b) { return b - a; });
-  for (var i = 0; i < rowsToDelete.length; i++) {
-    var r = parseInt(rowsToDelete[i]);
-    if (r > 1) sheet.deleteRow(r);
+  try {
+    var rowsToDelete = typeof payload.rows === "string" ? JSON.parse(payload.rows) : payload.rows;
+    
+    if (!Array.isArray(rowsToDelete) || rowsToDelete.length === 0) {
+      return ContentService.createTextOutput(JSON.stringify({ status: "error", message: "No rows to delete" })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // Sắp xếp theo thứ tự giảm dần để xóa từ dưới lên trên (tránh lỗi index)
+    rowsToDelete.sort(function (a, b) { return b - a; });
+    
+    var deletedRows = [];
+    for (var i = 0; i < rowsToDelete.length; i++) {
+      var r = parseInt(rowsToDelete[i]);
+      if (r > 1) { // Chỉ xóa dòng > 1 (tránh xóa header)
+        sheet.deleteRow(r);
+        deletedRows.push(r);
+      }
+    }
+    
+    Logger.log("✅ Deleted rows: " + deletedRows.join(", "));
+    return ContentService.createTextOutput(JSON.stringify({ status: "success", deletedCount: deletedRows.length, deletedRows: deletedRows })).setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    Logger.log("❌ Delete error: " + err.toString());
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.toString() })).setMimeType(ContentService.MimeType.JSON);
   }
-  return ContentService.createTextOutput(JSON.stringify({ status: "success" })).setMimeType(ContentService.MimeType.JSON);
 }
 
 /**
  * CẬP NHẬT 1 DÒNG (dùng cho trang quản trị)
  */
 function handleUpdate(sheet, payload) {
-  var rowData = typeof payload.rowData === "string" ? JSON.parse(payload.rowData) : payload.rowData;
-  var row = parseInt(rowData.sheetRow);
+  try {
+    var rowData = typeof payload.rowData === "string" ? JSON.parse(payload.rowData) : payload.rowData;
+    var row = parseInt(rowData.sheetRow);
 
-  if (rowData.role !== undefined)         sheet.getRange(row, 2).setValue(rowData.role);
-  if (rowData.category !== undefined)     sheet.getRange(row, 3).setValue(rowData.category);
-  if (rowData.name !== undefined)         sheet.getRange(row, 4).setValue(rowData.name);
-  if (rowData.phone !== undefined)        sheet.getRange(row, 5).setValue(rowData.phone);
-  if (rowData.address !== undefined)      sheet.getRange(row, 6).setValue(rowData.address);
-  if (rowData.age !== undefined)          sheet.getRange(row, 7).setValue(rowData.age);
-  if (rowData.avatar !== undefined)       sheet.getRange(row, 8).setValue(rowData.avatar);
-  if (rowData.childAge !== undefined)     sheet.getRange(row, 9).setValue(rowData.childAge);
-  if (rowData.bmAgeReq !== undefined)     sheet.getRange(row, 10).setValue(rowData.bmAgeReq);
-  if (rowData.workTime !== undefined)     sheet.getRange(row, 11).setValue(rowData.workTime);
-  if (rowData.careNeonatal !== undefined) sheet.getRange(row, 12).setValue(rowData.careNeonatal);
-  if (rowData.detail !== undefined)       sheet.getRange(row, 13).setValue(rowData.detail);
+    // Kiểm tra số dòng hợp lệ (phải > 1 để tránh xóa header)
+    if (row <= 1 || isNaN(row)) {
+      return ContentService.createTextOutput(JSON.stringify({ status: "error", message: "Invalid row number" })).setMimeType(ContentService.MimeType.JSON);
+    }
 
-  return ContentService.createTextOutput(JSON.stringify({ status: "success" })).setMimeType(ContentService.MimeType.JSON);
+    // Chuẩn hóa dữ liệu trước khi cập nhật
+    if (rowData.name !== undefined)         sheet.getRange(row, 4).setValue(String(rowData.name).trim());
+    if (rowData.phone !== undefined)        sheet.getRange(row, 5).setValue(String(rowData.phone).trim());
+    if (rowData.address !== undefined)      sheet.getRange(row, 6).setValue(String(rowData.address).trim());
+    if (rowData.age !== undefined)          sheet.getRange(row, 7).setValue(String(rowData.age).trim());
+    if (rowData.avatar !== undefined)       sheet.getRange(row, 8).setValue(String(rowData.avatar).trim());
+    if (rowData.childAge !== undefined)     sheet.getRange(row, 9).setValue(String(rowData.childAge).trim());
+    if (rowData.bmAgeReq !== undefined)     sheet.getRange(row, 10).setValue(String(rowData.bmAgeReq).trim());
+    if (rowData.workTime !== undefined)     sheet.getRange(row, 11).setValue(String(rowData.workTime).trim());
+    if (rowData.careNeonatal !== undefined) sheet.getRange(row, 12).setValue(String(rowData.careNeonatal).trim());
+    if (rowData.detail !== undefined)       sheet.getRange(row, 13).setValue(String(rowData.detail).trim());
+
+    Logger.log("✅ Update row " + row + " successfully");
+    return ContentService.createTextOutput(JSON.stringify({ status: "success", updatedRow: row })).setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    Logger.log("❌ Update error: " + err.toString());
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.toString() })).setMimeType(ContentService.MimeType.JSON);
+  }
 }
 
 /* =====================================================================

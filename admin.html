@@ -98,9 +98,23 @@
         .info-sub { font-size: 0.8rem; color: #64748b; display: block; margin-top: 4px; }
 
         .swal-edit-form { text-align: left; display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
-        .swal-edit-form label { font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: -4px; }
-        .swal-edit-form input, .swal-edit-form textarea, .swal-edit-form select { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; outline: none; }
-        .swal-edit-form input:focus, .swal-edit-form textarea:focus, .swal-edit-form select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15); }
+        .swal-edit-form label { font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 6px; display: block; }
+        .swal-edit-form h4 { margin: 0 0 10px 0; font-size: 0.95rem; }
+        .swal-edit-form input, .swal-edit-form textarea, .swal-edit-form select { 
+            width: 100%; 
+            padding: 10px 14px; 
+            border: 1px solid #cbd5e1; 
+            border-radius: 8px; 
+            font-size: 0.9rem; 
+            font-family: 'Inter', sans-serif;
+            outline: none; 
+            margin-bottom: 8px;
+            box-sizing: border-box;
+        }
+        .swal-edit-form input:focus, .swal-edit-form textarea:focus, .swal-edit-form select:focus { 
+            border-color: var(--primary-color); 
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15); 
+        }
         
         details { cursor: pointer; }
         details summary { font-weight: 600; color: var(--primary-color); user-select: none; }
@@ -255,22 +269,42 @@
         }
 
         function loadDatabaseFromCloud() {
-            document.getElementById('loading-msg').style.display = 'block';
-            document.getElementById('database-body').innerHTML = '';
-            document.getElementById('no-data-msg').style.display = 'none';
+            const loadingMsg = document.getElementById('loading-msg');
+            const tbody = document.getElementById('database-body');
+            const noDataMsg = document.getElementById('no-data-msg');
+            
+            loadingMsg.style.display = 'block';
+            loadingMsg.innerHTML = '<i class="fa-solid fa-satellite-dish fa-spin" aria-hidden="true"></i> Đang kết nối và cập nhật dữ liệu đám mây...';
+            tbody.innerHTML = '';
+            noDataMsg.style.display = 'none';
             document.getElementById('check-all').checked = false;
             updateDeleteButtonVisibility();
             
             fetch(CLOUD_SCRIPT_URL)
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                return res.json();
+            })
             .then(data => {
+                if (!Array.isArray(data)) {
+                    throw new Error('Invalid data format from server');
+                }
                 globalData = data.map((item, index) => ({...item, sheetRow: index + 2}));
-                document.getElementById('loading-msg').style.display = 'none';
+                loadingMsg.style.display = 'none';
                 renderData();
             })
             .catch(err => {
-                Swal.fire('Lỗi API!', 'Không thể lấy data đám mây: ' + err, 'error');
-                document.getElementById('loading-msg').style.display = 'none';
+                console.error('Database load error:', err);
+                loadingMsg.style.display = 'none';
+                noDataMsg.style.display = 'block';
+                noDataMsg.innerHTML = '<i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Không thể tải dữ liệu. Vui lòng kiểm tra kết nối hoặc thử lại sau.';
+                
+                Swal.fire({
+                    title: 'Lỗi API!',
+                    text: 'Không thể lấy data đám mây: ' + err.message,
+                    icon: 'error',
+                    confirmButtonColor: '#e74c3c'
+                });
             });
         }
 
@@ -382,8 +416,8 @@
             let roleFields = '';
             if (isBaoMau) {
                 roleFields = `
-                    <fieldset style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin: 8px 0;">
-                        <legend style="padding: 0 8px; font-weight: 600;">Thông tin Bảo mẫu</legend>
+                    <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin: 8px 0;">
+                        <h4 style="font-weight: 600; margin-bottom: 10px; color: #334155;">Thông tin Bảo mẫu</h4>
                         <label for="edit-age">Tuổi Bảo Mẫu:</label>
                         <input type="number" id="edit-age" value="${item.age || ''}" aria-label="Tuổi của bảo mẫu">
                         
@@ -395,46 +429,46 @@
                         
                         <label for="edit-avatar" style="margin-top: 12px;">Link ảnh đại diện (Avatar URL):</label>
                         <input type="url" id="edit-avatar" value="${item.avatar || ''}" placeholder="https://..." aria-label="Link ảnh đại diện">
-                    </fieldset>
+                    </div>
                 `;
             } else {
                 roleFields = `
-                    <fieldset style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin: 8px 0;">
-                        <legend style="padding: 0 8px; font-weight: 600;">Thông tin trẻ em và yêu cầu</legend>
+                    <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin: 8px 0;">
+                        <h4 style="font-weight: 600; margin-bottom: 10px; color: #334155;">Thông tin trẻ em và yêu cầu</h4>
                         <label for="edit-childAge">Tuổi của bé:</label>
                         <input type="text" id="edit-childAge" value="${item.childAge || ''}" aria-label="Tuổi của trẻ em">
                         
                         <label for="edit-bmAgeReq" style="margin-top: 12px;">Yêu cầu độ tuổi bảo mẫu:</label>
                         <input type="text" id="edit-bmAgeReq" value="${item.bmAgeReq || ''}" aria-label="Yêu cầu độ tuổi bảo mẫu">
-                    </fieldset>
+                    </div>
                 `;
             }
 
             const formHTML = `
-                <form class="swal-edit-form">
-                    <fieldset style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
-                        <legend style="padding: 0 8px; font-weight: 600;">Thông tin cơ bản</legend>
+                <div class="swal-edit-form">
+                    <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 8px;">
+                        <h4 style="font-weight: 600; margin-bottom: 10px; color: #334155;">Thông tin cơ bản</h4>
                         <label for="edit-name">Họ và Tên:</label>
-                        <input type="text" id="edit-name" value="${item.name || ''}" required aria-label="Họ và tên liên hệ">
+                        <input type="text" id="edit-name" value="${item.name || ''}" aria-label="Họ và tên liên hệ">
                         
                         <label for="edit-phone" style="margin-top: 12px;">Số điện thoại:</label>
-                        <input type="tel" id="edit-phone" value="${item.phone || ''}" pattern="[0-9+\\- ]*" required aria-label="Số điện thoại">
+                        <input type="text" id="edit-phone" value="${item.phone || ''}" aria-label="Số điện thoại">
                         
                         <label for="edit-workTime" style="margin-top: 12px;">Khung giờ đăng ký làm việc:</label>
                         <input type="text" id="edit-workTime" value="${item.workTime || ''}" aria-label="Khung giờ làm việc">
                         
                         <label for="edit-address" style="margin-top: 12px;">Địa chỉ chi tiết:</label>
-                        <input type="text" id="edit-address" value="${item.address || ''}" required aria-label="Địa chỉ">
-                    </fieldset>
+                        <input type="text" id="edit-address" value="${item.address || ''}" aria-label="Địa chỉ">
+                    </div>
                     
                     ${roleFields}
                     
-                    <fieldset style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
-                        <legend style="padding: 0 8px; font-weight: 600;">Thông tin bổ sung</legend>
+                    <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
+                        <h4 style="font-weight: 600; margin-bottom: 10px; color: #334155;">Thông tin bổ sung</h4>
                         <label for="edit-detail">Mô tả / Yêu cầu chi tiết khác:</label>
                         <textarea id="edit-detail" rows="3" aria-label="Mô tả hoặc yêu cầu chi tiết">${item.detail || ''}</textarea>
-                    </fieldset>
-                </form>
+                    </div>
+                </div>
             `;
 
             Swal.fire({
@@ -446,37 +480,53 @@
                 confirmButtonText: '<i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi',
                 cancelButtonText: 'Hủy',
                 focusConfirm: false,
+                didOpen: function() {
+                    // Đảm bảo các input được focus đúng cách
+                    const firstInput = document.getElementById('edit-name');
+                    if (firstInput) setTimeout(() => firstInput.focus(), 100);
+                },
                 preConfirm: () => {
+                    const nameVal = document.getElementById('edit-name')?.value?.trim();
+                    const phoneVal = document.getElementById('edit-phone')?.value?.trim();
+                    const addressVal = document.getElementById('edit-address')?.value?.trim();
+                    
+                    if (!nameVal || !phoneVal || !addressVal) {
+                        Swal.showValidationMessage('Vui lòng điền đủ thông tin bắt buộc: Tên, SĐT, Địa chỉ');
+                        return false;
+                    }
+                    
                     const updatedData = {
                         action: 'update',
                         sheetRow: sheetRow,
-                        name: document.getElementById('edit-name').value,
-                        phone: document.getElementById('edit-phone').value,
-                        workTime: document.getElementById('edit-workTime').value,
-                        address: document.getElementById('edit-address').value,
-                        detail: document.getElementById('edit-detail').value
+                        name: nameVal,
+                        phone: phoneVal,
+                        workTime: document.getElementById('edit-workTime')?.value?.trim() || '',
+                        address: addressVal,
+                        detail: document.getElementById('edit-detail')?.value?.trim() || ''
                     };
 
                     if (isBaoMau) {
-                        updatedData.age = document.getElementById('edit-age').value;
-                        updatedData.careNeonatal = document.getElementById('edit-careNeonatal').value;
-                        updatedData.avatar = document.getElementById('edit-avatar').value;
+                        updatedData.age = document.getElementById('edit-age')?.value?.trim() || '';
+                        updatedData.careNeonatal = document.getElementById('edit-careNeonatal')?.value || '';
+                        updatedData.avatar = document.getElementById('edit-avatar')?.value?.trim() || '';
                     } else {
-                        updatedData.childAge = document.getElementById('edit-childAge').value;
-                        updatedData.bmAgeReq = document.getElementById('edit-bmAgeReq').value;
+                        updatedData.childAge = document.getElementById('edit-childAge')?.value?.trim() || '';
+                        updatedData.bmAgeReq = document.getElementById('edit-bmAgeReq')?.value?.trim() || '';
                     }
 
                     return updatedData;
                 }
             }).then((result) => {
-                if (result.isConfirmed) {
+                if (result.isConfirmed && result.value) {
                     sendUpdatePostToCloud(result.value);
                 }
             });
         }
 
         function sendUpdatePostToCloud(payload) {
-            document.getElementById('loading-msg').style.display = 'block';
+            const loadingMsg = document.getElementById('loading-msg');
+            loadingMsg.style.display = 'block';
+            loadingMsg.innerHTML = '<i class="fa-solid fa-satellite-dish fa-spin" aria-hidden="true"></i> Đang cập nhật dữ liệu...';
             
             fetch(CLOUD_SCRIPT_URL, {
                 method: 'POST',
@@ -488,7 +538,10 @@
                 })
             })
             .then(() => {
-                const loadingMsg = document.getElementById('loading-msg');
+                // Delay để đảm bảo backend đã xử lý
+                return new Promise(resolve => setTimeout(resolve, 500));
+            })
+            .then(() => {
                 loadingMsg.setAttribute('aria-live', 'polite');
                 loadingMsg.setAttribute('role', 'status');
                 loadingMsg.innerHTML = '<i class="fa-solid fa-check-circle" style="color: var(--success-color);" aria-hidden="true"></i> Dữ liệu đã được cập nhật thành công!';
@@ -503,13 +556,22 @@
                 setTimeout(loadDatabaseFromCloud, 1500);
             })
             .catch(err => {
-                Swal.fire('Lỗi kết nối!', 'Không thể thực hiện lệnh sửa: ' + err, 'error');
-                document.getElementById('loading-msg').style.display = 'none';
+                console.error('Update error:', err);
+                loadingMsg.style.display = 'none';
+                Swal.fire({
+                    title: 'Lỗi kết nối!',
+                    text: 'Không thể thực hiện lệnh sửa. Vui lòng thử lại sau.',
+                    icon: 'error',
+                    confirmButtonColor: '#e74c3c'
+                });
             });
         }
 
         function sendDeleteRequestToCloud(rowsArray) {
-            document.getElementById('loading-msg').style.display = 'block';
+            const loadingMsg = document.getElementById('loading-msg');
+            loadingMsg.style.display = 'block';
+            loadingMsg.innerHTML = '<i class="fa-solid fa-satellite-dish fa-spin" aria-hidden="true"></i> Đang xóa dữ liệu...';
+            
             fetch(CLOUD_SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
@@ -520,6 +582,13 @@
                 })
             })
             .then(() => {
+                return new Promise(resolve => setTimeout(resolve, 500));
+            })
+            .then(() => {
+                loadingMsg.setAttribute('aria-live', 'polite');
+                loadingMsg.setAttribute('role', 'status');
+                loadingMsg.innerHTML = '<i class="fa-solid fa-check-circle" style="color: var(--success-color);" aria-hidden="true"></i> Dữ liệu đã được xóa thành công!';
+                
                 Swal.fire({
                     title: 'Thành công!',
                     text: 'Hệ thống đã thực thi lệnh xóa đám mây!',
@@ -530,8 +599,14 @@
                 setTimeout(loadDatabaseFromCloud, 1500);
             })
             .catch(err => {
-                Swal.fire('Lỗi kết nối!', 'Không thể thực hiện lệnh xóa: ' + err, 'error');
-                document.getElementById('loading-msg').style.display = 'none';
+                console.error('Delete error:', err);
+                loadingMsg.style.display = 'none';
+                Swal.fire({
+                    title: 'Lỗi kết nối!',
+                    text: 'Không thể thực hiện lệnh xóa. Vui lòng thử lại sau.',
+                    icon: 'error',
+                    confirmButtonColor: '#e74c3c'
+                });
             });
         }
 
