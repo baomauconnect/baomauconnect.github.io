@@ -3,11 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Bảng điều khiển quản trị hệ thống BaomauConnect - Quản lý hồ sơ bảo mẫu, yêu cầu phụ huynh, và dữ liệu đồng bộ đám mây">
+    <meta name="keywords" content="bảo mẫu, phụ huynh, quản lý hồ sơ, hệ thống đám mây, quản trị">
+    <meta name="author" content="BaomauConnect">
+    <meta property="og:title" content="BaomauConnect - Bảng Điều Khiển Admin Đám Mây">
+    <meta property="og:description" content="Quản lý hồ sơ bảo mẫu và yêu cầu phụ huynh trực tuyến">
+    <meta name="robots" content="noindex, nofollow">
+    
     <title>BaomauConnect - Bảng Điều Khiển Admin Đám Mây</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="canonical" href="https://baomauconnect.github.io/admin.html">
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "BaomauConnect Admin Dashboard",
+        "description": "Bảng điều khiển quản trị hệ thống BaomauConnect",
+        "url": "https://baomauconnect.github.io/admin.html",
+        "applicationCategory": "BusinessApplication"
+    }
+    </script>
 
     <style>
         :root {
@@ -18,17 +37,21 @@
         
         #auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 20px; }
         .auth-card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); text-align: center; max-width: 400px; width: 100%; }
-        .auth-card h2 { margin-bottom: 10px; color: #1e293b; font-weight: 700; }
+        .auth-card h1 { margin-bottom: 10px; color: #1e293b; font-weight: 700; font-size: 1.5rem; }
         .auth-card p { color: #64748b; font-size: 0.9rem; margin-bottom: 25px; }
-        .auth-card input { width: 100%; padding: 14px 20px; font-size: 1.2rem; border: 2px solid #e2e8f0; border-radius: 10px; outline: none; text-align: center; margin-bottom: 15px; letter-spacing: 5px; font-weight: bold; transition: all 0.2s; }
+        .auth-card form { display: flex; flex-direction: column; gap: 15px; }
+        .auth-card input { width: 100%; padding: 14px 20px; font-size: 1.2rem; border: 2px solid #e2e8f0; border-radius: 10px; outline: none; text-align: center; letter-spacing: 5px; font-weight: bold; transition: all 0.2s; }
         .auth-card input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.15); }
         .auth-btn { width: 100%; padding: 14px; background: var(--primary-color); color: white; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: background 0.2s; }
         .auth-btn:hover { background: #357ABD; }
         
         #admin-main-content { display: none; }
-        header { background: #fff; padding: 20px 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
-        header h1 { color: #0f172a; font-size: 1.6rem; font-weight: 700; }
-        .back-btn { text-decoration: none; padding: 10px 20px; background-color: #fff; border: 1px solid #cbd5e1; color: #475569; font-weight: 600; border-radius: 10px; transition: all 0.2s; }
+        main header { background: #fff; padding: 20px 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        main header hgroup { flex: 1; }
+        main header h1 { color: #0f172a; font-size: 1.6rem; font-weight: 700; margin-bottom: 4px; }
+        main header hgroup p { color: #64748b; font-size: 0.9rem; font-weight: 500; }
+        main header nav { display: flex; gap: 10px; }
+        .back-btn { text-decoration: none; padding: 10px 20px; background-color: #fff; border: 1px solid #cbd5e1; color: #475569; font-weight: 600; border-radius: 10px; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; }
         .back-btn:hover { background: #f1f5f9; }
         
         .container { max-width: 1500px; margin: 30px auto; padding: 0 20px; }
@@ -49,7 +72,10 @@
         
         .table-responsive { background: white; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); overflow-x: auto; border: 1px solid #e2e8f0; }
         table { width: 100%; border-collapse: collapse; text-align: left; min-width: 1100px; }
+        caption { font-weight: 600; color: #475569; padding: 12px 16px; text-align: left; font-size: 0.9rem; }
         th { background-color: #f8fafc; color: #475569; font-weight: 700; padding: 16px; border-bottom: 2px solid #e2e8f0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        th label { font-weight: 700; }
+        th input[type="checkbox"] { margin-left: 8px; }
         td { padding: 16px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; vertical-align: top; color: #334155; }
         tr:hover td { background-color: #f8fafc; }
         
@@ -75,66 +101,123 @@
         .swal-edit-form label { font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: -4px; }
         .swal-edit-form input, .swal-edit-form textarea, .swal-edit-form select { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; outline: none; }
         .swal-edit-form input:focus, .swal-edit-form textarea:focus, .swal-edit-form select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15); }
+        
+        details { cursor: pointer; }
+        details summary { font-weight: 600; color: var(--primary-color); user-select: none; }
+        details[open] summary { margin-bottom: 8px; }
+        details p { margin: 8px 0; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
-    <div id="auth-overlay">
-        <div class="auth-card">
-            <h2>🔑 Xác Thực Đám Mây</h2>
+    <section id="auth-overlay" role="alert" aria-label="Khu vực xác thực quản trị viên">
+        <section class="auth-card">
+            <h1>🔑 Xác Thực Đám Mây</h1>
             <p>Vui lòng nhập mật khẩu Quản Trị Viên để kết nối đồng bộ dữ liệu.</p>
-            <input type="password" id="admin-password" placeholder="******" onkeydown="if(event.key==='Enter') verifyAdmin()">
-            <button class="auth-btn" onclick="verifyAdmin()"><i class="fa-solid fa-bolt"></i> Kết Nối Hệ Thống</button>
-        </div>
-    </div>
+            <form onsubmit="verifyAdmin(); return false;">
+                <input 
+                    type="password" 
+                    id="admin-password" 
+                    placeholder="Nhập mật khẩu" 
+                    aria-label="Mật khẩu quản trị viên"
+                    required>
+                <button type="submit" class="auth-btn" aria-label="Nút kết nối hệ thống">
+                    <i class="fa-solid fa-bolt" aria-hidden="true"></i> Kết Nối Hệ Thống
+                </button>
+            </form>
+        </section>
+    </section>
 
-    <div id="admin-main-content">
-        <header>
-            <h1><i class="fa-solid fa-server" style="color: var(--primary-color);"></i> Bảng Quản Trị Đám Mây (Live Data)</h1>
-            <a href="index.html" class="back-btn"><i class="fa-solid fa-house"></i> Xem Trang Đăng Ký</a>
+    <main id="admin-main-content">
+        <header role="banner">
+            <hgroup>
+                <h1><i class="fa-solid fa-server" style="color: var(--primary-color);" aria-hidden="true"></i> Bảng Quản Trị Đám Mây</h1>
+                <p>Dữ liệu Trực Tiếp - Live Data</p>
+            </hgroup>
+            <nav aria-label="Điều hướng chính">
+                <a href="index.html" class="back-btn" aria-label="Quay lại trang đăng ký">
+                    <i class="fa-solid fa-house" aria-hidden="true"></i> Xem Trang Đăng Ký
+                </a>
+            </nav>
         </header>
 
         <div class="container">
-            <section class="stats-grid">
-                <div class="stat-card all"><p>Tổng số đơn</p><h2 id="total-count">...</h2></div>
-                <div class="stat-card baomau"><p>Hồ sơ Bảo mẫu</p><h2 id="baomau-count">...</h2></div>
-                <div class="stat-card phuhuynh"><p>Yêu cầu Phụ huynh</p><h2 id="phuhuynh-count">...</h2></div>
+            <section class="stats-grid" aria-label="Thống kê tổng quan">
+                <article class="stat-card all" aria-label="Tổng số đơn đăng ký">
+                    <p>Tổng số đơn</p>
+                    <h2 id="total-count" aria-live="polite">...</h2>
+                </article>
+                <article class="stat-card baomau" aria-label="Hồ sơ bảo mẫu">
+                    <p>Hồ sơ Bảo mẫu</p>
+                    <h2 id="baomau-count" aria-live="polite">...</h2>
+                </article>
+                <article class="stat-card phuhuynh" aria-label="Yêu cầu phụ huynh">
+                    <p>Yêu cầu Phụ huynh</p>
+                    <h2 id="phuhuynh-count" aria-live="polite">...</h2>
+                </article>
             </section>
 
-            <div class="toolbar">
-                <div class="filter-buttons">
-                    <button class="filter-btn active" onclick="filterRole('all', this)"><i class="fa-solid fa-list"></i> Tất cả đơn</button>
-                    <button class="filter-btn" onclick="filterRole('Bảo mẫu', this)"><i class="fa-solid fa-user-nurse"></i> Chỉ Bảo Mẫu</button>
-                    <button class="filter-btn" onclick="filterRole('Phụ huynh', this)"><i class="fa-solid fa-house-user"></i> Chỉ Phụ Huynh</button>
+            <section class="toolbar" aria-label="Thanh công cụ">
+                <nav class="filter-buttons" aria-label="Bộ lọc vai trò">
+                    <button class="filter-btn active" onclick="filterRole('all', this)" aria-pressed="true" aria-label="Lọc tất cả đơn">
+                        <i class="fa-solid fa-list" aria-hidden="true"></i> Tất cả đơn
+                    </button>
+                    <button class="filter-btn" onclick="filterRole('Bảo mẫu', this)" aria-pressed="false" aria-label="Lọc chỉ hồ sơ bảo mẫu">
+                        <i class="fa-solid fa-user-nurse" aria-hidden="true"></i> Chỉ Bảo Mẫu
+                    </button>
+                    <button class="filter-btn" onclick="filterRole('Phụ huynh', this)" aria-pressed="false" aria-label="Lọc chỉ yêu cầu phụ huynh">
+                        <i class="fa-solid fa-house-user" aria-hidden="true"></i> Chỉ Phụ Huynh
+                    </button>
+                </nav>
+                <div class="action-buttons" role="group" aria-label="Hành động">
+                    <button 
+                        id="btn-delete-selected" 
+                        class="filter-btn" 
+                        style="background: var(--danger-color); color: white; border-color: var(--danger-color); display: none;" 
+                        onclick="deleteSelectedRequests()"
+                        aria-label="Xóa các đơn đã chọn">
+                        <i class="fa-solid fa-trash-can" aria-hidden="true"></i> Xóa Đơn Đã Chọn (<span id="selected-count">0</span>)
+                    </button>
+                    <button 
+                        class="filter-btn" 
+                        style="background:var(--success-color); color:white; border-color: var(--success-color);"
+                        onclick="loadDatabaseFromCloud()"
+                        aria-label="Tải lại dữ liệu từ máy chủ đám mây">
+                        <i class="fa-solid fa-rotate" aria-hidden="true"></i> Tải Lại Dữ Liệu
+                    </button>
                 </div>
-                <div class="action-buttons">
-                    <button id="btn-delete-selected" class="filter-btn" style="background: var(--danger-color); color: white; border-color: var(--danger-color); display: none;" onclick="deleteSelectedRequests()"><i class="fa-solid fa-trash-can"></i> Xóa Đơn Đã Chọn (<span id="selected-count">0</span>)</button>
-                    <button class="filter-btn" style="background:var(--success-color); color:white; border-color: var(--success-color);" onclick="loadDatabaseFromCloud()"><i class="fa-solid fa-rotate"></i> Tải Lại Dữ Liệu</button>
-                </div>
-            </div>
+            </section>
 
-            <div class="table-responsive">
-                <div id="loading-msg" class="loading" style="display:none;"><i class="fa-solid fa-satellite-dish fa-spin"></i> Đang kết nối và cập nhật dữ liệu đám mây...</div>
-                <table>
+            <section class="table-responsive" aria-label="Bảng dữ liệu đơn đăng ký">
+                <div id="loading-msg" class="loading" role="status" aria-live="assertive" style="display:none;">
+                    <i class="fa-solid fa-satellite-dish fa-spin" aria-hidden="true"></i> Đang kết nối và cập nhật dữ liệu đám mây...
+                </div>
+                <table role="grid">
+                    <caption>Danh sách đơn đăng ký hồ sơ bảo mẫu và yêu cầu phụ huynh</caption>
                     <thead>
                         <tr>
-                            <th style="width: 50px;"><input type="checkbox" id="check-all" onclick="toggleSelectAll(this)"></th>
-                            <th>Thời gian nhận</th>
-                            <th>Vai trò đối tác</th>
-                            <th>Họ và Tên liên hệ</th>
-                            <th>Khung Giờ Đăng Ký</th>
-                            <th>Chi tiết theo vai trò</th>
-                            <th>Địa chỉ cụ thể</th>
-                            <th>Mô tả / Yêu cầu chi tiết</th>
-                            <th style="text-align: center; width: 160px;">Hành động</th>
+                            <th style="width: 50px;">
+                                <label for="check-all">Chọn tất cả</label>
+                                <input type="checkbox" id="check-all" onclick="toggleSelectAll(this)" aria-label="Chọn hoặc bỏ chọn tất cả hàng">
+                            </th>
+                            <th scope="col">Thời gian nhận</th>
+                            <th scope="col">Vai trò đối tác</th>
+                            <th scope="col">Họ và Tên liên hệ</th>
+                            <th scope="col">Khung Giờ Đăng Ký</th>
+                            <th scope="col">Chi tiết theo vai trò</th>
+                            <th scope="col">Địa chỉ cụ thể</th>
+                            <th scope="col">Mô tả / Yêu cầu chi tiết</th>
+                            <th scope="col" style="text-align: center; width: 160px;">Hành động</th>
                         </tr>
                     </thead>
                     <tbody id="database-body"></tbody>
                 </table>
-                <div id="no-data-msg" class="no-data"><i class="fa-solid fa-folder-open"></i> Hộp thư dữ liệu trống...</div>
-            </div>
+                <p id="no-data-msg" class="no-data" role="status">
+                    <i class="fa-solid fa-folder-open" aria-hidden="true"></i> Hộp thư dữ liệu trống...
+                </p>
+            </section>
         </div>
-    </div>
+    </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -156,6 +239,7 @@
             if (CryptoJS.MD5(inputPass).toString() === TARGET_HASH) {
                 document.getElementById('auth-overlay').style.display = 'none';
                 document.getElementById('admin-main-content').style.display = 'block';
+                document.querySelector('main').setAttribute('role', 'main');
                 loadDatabaseFromCloud();
             } else {
                 Swal.fire({
@@ -210,45 +294,46 @@
 
             [...filteredData].reverse().forEach(item => {
                 const tr = document.createElement('tr');
+                tr.setAttribute('role', 'row');
                 const isBaoMau = item.role === 'Bảo mẫu';
                 const badgeClass = isBaoMau ? 'badge-baomau' : 'badge-phuhuynh';
                 
                 let roleSpecifcCol = "";
                 if(isBaoMau) {
                     let avatarTag = (item.avatar && item.avatar.startsWith('http')) 
-                        ? `<br><img src="${item.avatar}" class="avatar-preview" onerror="this.style.display='none'">` 
+                        ? `<br><img src="${item.avatar}" class="avatar-preview" alt="Ảnh đại diện của ${item.name}" onerror="this.style.display='none'">` 
                         : `<span class="info-sub">${item.avatar || 'Không ảnh'}</span>`;
                     
                     let neoBadge = item.careNeonatal === "CÓ SƠ SINH" 
-                        ? `<br><span class="badge badge-neonatal"><i class="fa-solid fa-baby"></i> Nhận sơ sinh</span>` 
-                        : `<span class="info-sub"><i class="fa-solid fa-circle-xmark"></i> Không nhận sơ sinh</span>`;
+                        ? `<br><span class="badge badge-neonatal"><i class="fa-solid fa-baby" aria-hidden="true"></i> Nhận sơ sinh</span>` 
+                        : `<span class="info-sub"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Không nhận sơ sinh</span>`;
                         
                     roleSpecifcCol = `<b>${item.age ? item.age + ' tuổi' : 'N/A'}</b>${neoBadge}${avatarTag}`;
                 } else {
-                    roleSpecifcCol = `<span class="info-sub"><i class="fa-solid fa-baby-carriage"></i> Tuổi bé: <b>${item.childAge || 'N/A'}</b></span>
-                                 <span class="info-sub"><i class="fa-solid fa-user-check"></i> Y/c tuổi BM: <b>${item.bmAgeReq || 'N/A'}</b></span>`;
+                    roleSpecifcCol = `<span class="info-sub"><i class="fa-solid fa-baby-carriage" aria-hidden="true"></i> Tuổi bé: <b>${item.childAge || 'N/A'}</b></span>
+                                 <span class="info-sub"><i class="fa-solid fa-user-check" aria-hidden="true"></i> Y/c tuổi BM: <b>${item.bmAgeReq || 'N/A'}</b></span>`;
                 }
 
                 tr.innerHTML = `
-                    <td><input type="checkbox" class="row-checkbox" data-row="${item.sheetRow}" onclick="updateDeleteButtonVisibility()"></td>
-                    <td style="color:#64748b; font-size:0.8rem;"><i class="fa-regular fa-clock"></i> ${item.time}</td>
+                    <td><input type="checkbox" class="row-checkbox" data-row="${item.sheetRow}" onclick="updateDeleteButtonVisibility()" aria-label="Chọn hàng cho ${item.name}"></td>
+                    <td><time datetime="${item.time}"><i class="fa-regular fa-clock" aria-hidden="true"></i> ${item.time}</time></td>
                     <td>
                         <span class="badge ${badgeClass}">${item.role}</span>
                     </td>
                     <td>
                         <b style="color: #0f172a; font-size:0.95rem;">${item.name}</b>
-                        <span class="info-sub" style="color:#2563eb; font-weight:600;"><i class="fa-solid fa-phone-volume"></i> ${item.phone}</span>
+                        <span class="info-sub" style="color:#2563eb; font-weight:600;"><i class="fa-solid fa-phone-volume" aria-hidden="true"></i> ${item.phone}</span>
                     </td>
                     <td>
-                        <span style="font-weight:600; color:#0d9488;"><i class="fa-regular fa-calendar-check"></i> ${item.workTime || 'Chưa chọn'}</span>
+                        <span style="font-weight:600; color:#0d9488;"><i class="fa-regular fa-calendar-check" aria-hidden="true"></i> ${item.workTime || 'Chưa chọn'}</span>
                     </td>
                     <td>${roleSpecifcCol}</td>
-                    <td><i class="fa-solid fa-location-dot" style="color: #94a3b8;"></i> ${item.address}</td>
-                    <td style="color:#475569; max-width:260px; font-size:0.85rem;">${item.detail}</td>
+                    <td><address style="font-style: normal;"><i class="fa-solid fa-location-dot" style="color: #94a3b8;" aria-hidden="true"></i> ${item.address}</address></td>
+                    <td style="color:#475569; max-width:260px; font-size:0.85rem;"><details><summary>Xem chi tiết</summary><p>${item.detail}</p></details></td>
                     <td>
-                        <div class="action-cell">
-                            <button class="btn-action btn-edit-single" onclick="openEditModal(${item.sheetRow})"><i class="fa-regular fa-pen-to-square"></i> Sửa</button>
-                            <button class="btn-action btn-delete-single" onclick="deleteSingleRequest(${item.sheetRow})"><i class="fa-regular fa-trash-can"></i> Xóa</button>
+                        <div class="action-cell" role="group" aria-label="Hành động cho ${item.name}">
+                            <button class="btn-action btn-edit-single" onclick="openEditModal(${item.sheetRow})" aria-label="Sửa thông tin cho ${item.name}"><i class="fa-regular fa-pen-to-square" aria-hidden="true"></i> Sửa</button>
+                            <button class="btn-action btn-delete-single" onclick="deleteSingleRequest(${item.sheetRow})" aria-label="Xóa hồ sơ của ${item.name}"><i class="fa-regular fa-trash-can" aria-hidden="true"></i> Xóa</button>
                         </div>
                     </td>
                 `;
@@ -259,8 +344,12 @@
 
         function filterRole(role, btnElement) {
             currentFilter = role;
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.setAttribute('aria-pressed', 'false');
+            });
             btnElement.classList.add('active');
+            btnElement.setAttribute('aria-pressed', 'true');
             document.getElementById('check-all').checked = false;
             renderData();
         }
@@ -293,47 +382,59 @@
             let roleFields = '';
             if (isBaoMau) {
                 roleFields = `
-                    <label>Tuổi Bảo Mẫu:</label>
-                    <input type="number" id="edit-age" value="${item.age || ''}">
-                    
-                    <label>Khả năng nhận trẻ Sơ Sinh:</label>
-                    <select id="edit-careNeonatal">
-                        <option value="CÓ SƠ SINH" ${item.careNeonatal === 'CÓ SƠ SINH' ? 'selected' : ''}>CÓ SƠ SINH (Nhận)</option>
-                        <option value="KHÔNG" ${item.careNeonatal !== 'CÓ SƠ SINH' ? 'selected' : ''}>KHÔNG nhận sơ sinh</option>
-                    </select>
-                    
-                    <label>Link ảnh đại diện (Avatar URL):</label>
-                    <input type="text" id="edit-avatar" value="${item.avatar || ''}">
+                    <fieldset style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin: 8px 0;">
+                        <legend style="padding: 0 8px; font-weight: 600;">Thông tin Bảo mẫu</legend>
+                        <label for="edit-age">Tuổi Bảo Mẫu:</label>
+                        <input type="number" id="edit-age" value="${item.age || ''}" aria-label="Tuổi của bảo mẫu">
+                        
+                        <label for="edit-careNeonatal" style="margin-top: 12px;">Khả năng nhận trẻ Sơ Sinh:</label>
+                        <select id="edit-careNeonatal" aria-label="Khả năng nhận trẻ sơ sinh">
+                            <option value="CÓ SƠ SINH" ${item.careNeonatal === 'CÓ SƠ SINH' ? 'selected' : ''}>CÓ SƠ SINH (Nhận)</option>
+                            <option value="KHÔNG" ${item.careNeonatal !== 'CÓ SƠ SINH' ? 'selected' : ''}>KHÔNG nhận sơ sinh</option>
+                        </select>
+                        
+                        <label for="edit-avatar" style="margin-top: 12px;">Link ảnh đại diện (Avatar URL):</label>
+                        <input type="url" id="edit-avatar" value="${item.avatar || ''}" placeholder="https://..." aria-label="Link ảnh đại diện">
+                    </fieldset>
                 `;
             } else {
                 roleFields = `
-                    <label>Tuổi của bé:</label>
-                    <input type="text" id="edit-childAge" value="${item.childAge || ''}">
-                    
-                    <label>Yêu cầu độ tuổi bảo mẫu:</label>
-                    <input type="text" id="edit-bmAgeReq" value="${item.bmAgeReq || ''}">
+                    <fieldset style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin: 8px 0;">
+                        <legend style="padding: 0 8px; font-weight: 600;">Thông tin trẻ em và yêu cầu</legend>
+                        <label for="edit-childAge">Tuổi của bé:</label>
+                        <input type="text" id="edit-childAge" value="${item.childAge || ''}" aria-label="Tuổi của trẻ em">
+                        
+                        <label for="edit-bmAgeReq" style="margin-top: 12px;">Yêu cầu độ tuổi bảo mẫu:</label>
+                        <input type="text" id="edit-bmAgeReq" value="${item.bmAgeReq || ''}" aria-label="Yêu cầu độ tuổi bảo mẫu">
+                    </fieldset>
                 `;
             }
 
             const formHTML = `
-                <div class="swal-edit-form">
-                    <label>Họ và Tên:</label>
-                    <input type="text" id="edit-name" value="${item.name || ''}">
-                    
-                    <label>Số điện thoại:</label>
-                    <input type="text" id="edit-phone" value="${item.phone || ''}">
-                    
-                    <label>Khung giờ đăng ký làm việc:</label>
-                    <input type="text" id="edit-workTime" value="${item.workTime || ''}">
+                <form class="swal-edit-form">
+                    <fieldset style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
+                        <legend style="padding: 0 8px; font-weight: 600;">Thông tin cơ bản</legend>
+                        <label for="edit-name">Họ và Tên:</label>
+                        <input type="text" id="edit-name" value="${item.name || ''}" required aria-label="Họ và tên liên hệ">
+                        
+                        <label for="edit-phone" style="margin-top: 12px;">Số điện thoại:</label>
+                        <input type="tel" id="edit-phone" value="${item.phone || ''}" pattern="[0-9+\\- ]*" required aria-label="Số điện thoại">
+                        
+                        <label for="edit-workTime" style="margin-top: 12px;">Khung giờ đăng ký làm việc:</label>
+                        <input type="text" id="edit-workTime" value="${item.workTime || ''}" aria-label="Khung giờ làm việc">
+                        
+                        <label for="edit-address" style="margin-top: 12px;">Địa chỉ chi tiết:</label>
+                        <input type="text" id="edit-address" value="${item.address || ''}" required aria-label="Địa chỉ">
+                    </fieldset>
                     
                     ${roleFields}
                     
-                    <label>Địa chỉ chi tiết:</label>
-                    <input type="text" id="edit-address" value="${item.address || ''}">
-                    
-                    <label>Mô tả / Yêu cầu chi tiết khác:</label>
-                    <textarea id="edit-detail" rows="3">${item.detail || ''}</textarea>
-                </div>
+                    <fieldset style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
+                        <legend style="padding: 0 8px; font-weight: 600;">Thông tin bổ sung</legend>
+                        <label for="edit-detail">Mô tả / Yêu cầu chi tiết khác:</label>
+                        <textarea id="edit-detail" rows="3" aria-label="Mô tả hoặc yêu cầu chi tiết">${item.detail || ''}</textarea>
+                    </fieldset>
+                </form>
             `;
 
             Swal.fire({
@@ -387,6 +488,11 @@
                 })
             })
             .then(() => {
+                const loadingMsg = document.getElementById('loading-msg');
+                loadingMsg.setAttribute('aria-live', 'polite');
+                loadingMsg.setAttribute('role', 'status');
+                loadingMsg.innerHTML = '<i class="fa-solid fa-check-circle" style="color: var(--success-color);" aria-hidden="true"></i> Dữ liệu đã được cập nhật thành công!';
+                
                 Swal.fire({
                     title: 'Đã cập nhật!',
                     text: 'Dữ liệu hồ sơ mới đã được đồng bộ lên Cloud.',
