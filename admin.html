@@ -289,7 +289,10 @@
                 if (!Array.isArray(data)) {
                     throw new Error('Invalid data format from server');
                 }
-                globalData = data.map((item, index) => ({...item, sheetRow: index + 2}));
+                globalData = data.map((item, index) => ({
+                    ...item,
+                    sheetRow: Number(item.sheetRow) || index + 2
+                }));
                 loadingMsg.style.display = 'none';
                 renderData();
             })

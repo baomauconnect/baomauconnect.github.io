@@ -19,6 +19,7 @@ var MAX_MATCHES = 5;
 
 function doGet(e) {
   try {
+    createDailyBackupTrigger();
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
     var data = sheet.getDataRange().getValues();
     
@@ -97,6 +98,57 @@ function doPost(e) {
   }
 }
 
+function getBackupSheetName() {
+  return "Backup_" + Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyy-MM-dd");
+}
+
+function createDailyBackupIfNeeded() {
+  try {
+    var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+    var sourceSheet = spreadsheet.getActiveSheet();
+    var backupName = getBackupSheetName();
+    var existingBackup = spreadsheet.getSheetByName(backupName);
+
+    if (existingBackup) {
+      return { status: "exists", sheetName: backupName };
+    }
+
+    var backupSheet = spreadsheet.insertSheet(backupName, spreadsheet.getNumSheets());
+    var data = sourceSheet.getDataRange().getValues();
+    if (data.length > 0 && data[0].length > 0) {
+      backupSheet.getRange(1, 1, data.length, data[0].length).setValues(data);
+    }
+
+    Logger.log("✅ Created daily backup: " + backupName);
+    return { status: "created", sheetName: backupName };
+  } catch (err) {
+    Logger.log("⚠️ Backup creation failed: " + err.toString());
+    return { status: "error", message: err.toString() };
+  }
+}
+
+function createDailyBackupTrigger() {
+  var existingTriggers = ScriptApp.getProjectTriggers();
+  for (var i = 0; i < existingTriggers.length; i++) {
+    if (existingTriggers[i].getHandlerFunction() === "createDailyBackup") {
+      return { status: "exists" };
+    }
+  }
+
+  ScriptApp.newTrigger("createDailyBackup")
+    .timeBased()
+    .everyDays(1)
+    .atHour(23)
+    .nearMinute(0)
+    .create();
+
+  return { status: "created" };
+}
+
+function createDailyBackup() {
+  createDailyBackupIfNeeded();
+}
+
 /**
  * THÊM MỚI 1 ĐĂNG KÝ + LƯU EMAIL GOOGLE + GỬI EMAIL XÁC NHẬN
  * + TỰ ĐỘNG GHÉP NỐI & GỬI THÔNG TIN CHO ĐỐI PHƯƠNG CÙNG KHU VỰC
@@ -138,6 +190,7 @@ function handleCreate(sheet, payload) {
     Logger.log("Lỗi ghép nối / gửi email đối phương: " + matchErr.toString());
   }
 
+  createDailyBackupIfNeeded();
   return ContentService.createTextOutput(JSON.stringify({ status: "success" })).setMimeType(ContentService.MimeType.JSON);
 }
 
@@ -165,6 +218,7 @@ function handleDelete(sheet, payload) {
     }
     
     Logger.log("✅ Deleted rows: " + deletedRows.join(", "));
+    createDailyBackupIfNeeded();
     return ContentService.createTextOutput(JSON.stringify({ status: "success", deletedCount: deletedRows.length, deletedRows: deletedRows })).setMimeType(ContentService.MimeType.JSON);
   } catch (err) {
     Logger.log("❌ Delete error: " + err.toString());
@@ -198,6 +252,7 @@ function handleUpdate(sheet, payload) {
     if (rowData.detail !== undefined)       sheet.getRange(row, 13).setValue(String(rowData.detail).trim());
 
     Logger.log("✅ Update row " + row + " successfully");
+    createDailyBackupIfNeeded();
     return ContentService.createTextOutput(JSON.stringify({ status: "success", updatedRow: row })).setMimeType(ContentService.MimeType.JSON);
   } catch (err) {
     Logger.log("❌ Update error: " + err.toString());
