@@ -3,7 +3,7 @@
  *  BaomauConnect - Google Apps Script Backend (Code.gs)
  * ============================================================
  *  Cấu trúc cột trên Google Sheet (đúng theo thứ tự ghi dữ liệu):
- *  1.time | 2.role | 3.category | 4.name | 5.phone | 6.address
+ *  1.time | 2.role | 3.(giữ trống, không dùng category) | 4.name | 5.phone | 6.address
  *  7.age | 8.avatar | 9.childAge | 10.bmAgeReq | 11.workTime
  *  12.careNeonatal | 13.detail | 14.userEmail
  *
@@ -171,7 +171,7 @@ function handleCreate(sheet, payload) {
   sheet.appendRow([
     time,
     payload.role || "",
-    payload.category || "",
+    "",
     payload.name || "",
     payload.phone || "",
     payload.address || "",
@@ -343,7 +343,6 @@ function matchAndNotify(sheet, newEntry) {
 
     matches.push({
       role: rowRole,
-      category: row[colIndex["category"]],
       name: row[colIndex["name"]],
       phone: row[colIndex["phone"]],
       address: rowAddress,
@@ -475,11 +474,10 @@ function extractRegionDisplay(address) {
 
 function sendConfirmationEmail(data) {
   var isBaomau = (data.role || "").toString().trim() === "Bảo mẫu";
-  var subject = "BaomauConnect - Đăng ký thành công (" + (data.category || "") + ")";
+  var subject = "BaomauConnect - Đăng ký thành công";
 
   var rows = [];
   rows.push(["Vai trò", data.role]);
-  rows.push(["Loại đăng ký", data.category]);
   rows.push(["Họ và tên", data.name]);
   rows.push(["Số điện thoại", data.phone]);
   rows.push(["Địa chỉ", data.address]);
