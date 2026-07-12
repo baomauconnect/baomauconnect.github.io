@@ -87,6 +87,9 @@ function doPost(e) {
     } else if (payload.action === "update") {
       Logger.log("✏️ Processing UPDATE request");
       return handleUpdate(sheet, payload);
+    } else if (payload.action === "backup") {
+      Logger.log("💾 Processing BACKUP request");
+      return handleBackup(sheet, payload);
     } else {
       Logger.log("➕ Processing CREATE request");
       return handleCreate(sheet, payload);
@@ -147,6 +150,14 @@ function createDailyBackupTrigger() {
 
 function createDailyBackup() {
   createDailyBackupIfNeeded();
+}
+
+function handleBackup(sheet, payload) {
+  var backupResult = createDailyBackupIfNeeded();
+  return ContentService.createTextOutput(JSON.stringify({
+    status: "success",
+    backup: backupResult
+  })).setMimeType(ContentService.MimeType.JSON);
 }
 
 /**
