@@ -1,0 +1,43 @@
+# Environment / local config
+.env
+.env.*
+*.local
+config.local.*
+
+# Secrets and private keys
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.asc
+*.gpg
+secrets/
+private/
+credentials/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Backup files
+*.bak
+*.orig
+*.rej
+
+# Local build/cache folders
+node_modules/
+dist/
+build/
+.cache/
