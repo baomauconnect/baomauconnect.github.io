@@ -465,127 +465,138 @@
         }
 
         function openEditModal(sheetRow) {
-            const item = globalData.find(d => d.sheetRow === sheetRow);
-            if (!item) return;
+    const item = globalData.find(d => d.sheetRow === sheetRow);
+    if (!item) return;
 
-            const isBaoMau = item.role === 'Bảo mẫu';
+    const isBaoMau = item.role === 'Bảo mẫu';
+    
+    let roleFields = '';
+    if (isBaoMau) {
+        roleFields = `
+            <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin: 8px 0;">
+                <h4 style="font-weight: 600; margin-bottom: 10px; color: #334155;">Thông tin Bảo mẫu</h4>
+                <label for="edit-age">Tuổi Bảo Mẫu:</label>
+                <input type="number" id="edit-age" value="${item.age || ''}" aria-label="Tuổi của bảo mẫu">
+                
+                <label for="edit-careNeonatal" style="margin-top: 12px;">Khả năng nhận trẻ Sơ Sinh:</label>
+                <select id="edit-careNeonatal" aria-label="Khả năng nhận trẻ sơ sinh">
+                    <option value="CÓ SƠ SINH" ${item.careNeonatal === 'CÓ SƠ SINH' ? 'selected' : ''}>CÓ SƠ SINH (Nhận)</option>
+                    <option value="KHÔNG" ${item.careNeonatal !== 'CÓ SƠ SINH' ? 'selected' : ''}>KHÔNG nhận sơ sinh</option>
+                </select>
+                
+                <label for="edit-avatar" style="margin-top: 12px;">Link ảnh đại diện (Avatar URL):</label>
+                <input type="url" id="edit-avatar" value="${item.avatar || ''}" placeholder="https://..." aria-label="Link ảnh đại diện">
+            </div>
+        `;
+    } else {
+        roleFields = `
+            <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin: 8px 0;">
+                <h4 style="font-weight: 600; margin-bottom: 10px; color: #334155;">Thông tin trẻ em và yêu cầu</h4>
+                <label for="edit-childAge">Tuổi của bé:</label>
+                <input type="text" id="edit-childAge" value="${item.childAge || ''}" aria-label="Tuổi của trẻ em">
+                
+                <label for="edit-bmAgeReq" style="margin-top: 12px;">Yêu cầu độ tuổi bảo mẫu:</label>
+                <input type="text" id="edit-bmAgeReq" value="${item.bmAgeReq || ''}" aria-label="Yêu cầu độ tuổi bảo mẫu">
+            </div>
+        `;
+    }
+
+    const formHTML = `
+        <div class="swal-edit-form">
+            <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 8px;">
+                <h4 style="font-weight: 600; margin-bottom: 10px; color: #334155;">Thông tin cơ bản</h4>
+                <label for="edit-name">Họ và Tên:</label>
+                <input type="text" id="edit-name" value="${sanitizeHtml(item.name)}" aria-label="Họ và tên liên hệ">
+                
+                <label for="edit-phone" style="margin-top: 12px;">Số điện thoại:</label>
+                <input type="text" id="edit-phone" value="${sanitizeHtml(item.phone)}" aria-label="Số điện thoại">
+                
+                <label for="edit-workTime" style="margin-top: 12px;">Khung giờ đăng ký làm việc:</label>
+                <input type="text" id="edit-workTime" value="${sanitizeHtml(item.workTime)}" aria-label="Khung giờ làm việc">
+                
+                <label for="edit-address" style="margin-top: 12px;">Địa chỉ chi tiết:</label>
+                <input type="text" id="edit-address" value="${sanitizeHtml(item.address)}" aria-label="Địa chỉ">
+            </div>
             
-            let roleFields = '';
-            if (isBaoMau) {
-                roleFields = `
-                    <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin: 8px 0;">
-                        <h4 style="font-weight: 600; margin-bottom: 10px; color: #334155;">Thông tin Bảo mẫu</h4>
-                        <label for="edit-age">Tuổi Bảo Mẫu:</label>
-                        <input type="number" id="edit-age" value="${item.age || ''}" aria-label="Tuổi của bảo mẫu">
-                        
-                        <label for="edit-careNeonatal" style="margin-top: 12px;">Khả năng nhận trẻ Sơ Sinh:</label>
-                        <select id="edit-careNeonatal" aria-label="Khả năng nhận trẻ sơ sinh">
-                            <option value="CÓ SƠ SINH" ${item.careNeonatal === 'CÓ SƠ SINH' ? 'selected' : ''}>CÓ SƠ SINH (Nhận)</option>
-                            <option value="KHÔNG" ${item.careNeonatal !== 'CÓ SƠ SINH' ? 'selected' : ''}>KHÔNG nhận sơ sinh</option>
-                        </select>
-                        
-                        <label for="edit-avatar" style="margin-top: 12px;">Link ảnh đại diện (Avatar URL):</label>
-                        <input type="url" id="edit-avatar" value="${item.avatar || ''}" placeholder="https://..." aria-label="Link ảnh đại diện">
-                    </div>
-                `;
-            } else {
-                roleFields = `
-                    <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin: 8px 0;">
-                        <h4 style="font-weight: 600; margin-bottom: 10px; color: #334155;">Thông tin trẻ em và yêu cầu</h4>
-                        <label for="edit-childAge">Tuổi của bé:</label>
-                        <input type="text" id="edit-childAge" value="${item.childAge || ''}" aria-label="Tuổi của trẻ em">
-                        
-                        <label for="edit-bmAgeReq" style="margin-top: 12px;">Yêu cầu độ tuổi bảo mẫu:</label>
-                        <input type="text" id="edit-bmAgeReq" value="${item.bmAgeReq || ''}" aria-label="Yêu cầu độ tuổi bảo mẫu">
-                    </div>
-                `;
+            ${roleFields}
+            
+            <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
+                <h4 style="font-weight: 600; margin-bottom: 10px; color: #334155;">Thông tin bổ sung</h4>
+                <label for="edit-detail">Mô tả / Yêu cầu chi tiết khác:</label>
+                <textarea id="edit-detail" rows="3" aria-label="Mô tả hoặc yêu cầu chi tiết">${sanitizeHtml(item.detail)}</textarea>
+            </div>
+        </div>
+    `;
+
+    Swal.fire({
+        title: `✏️ Sửa Hồ Sơ [Dòng ${sheetRow}]`,
+        html: formHTML,
+        showCancelButton: true,
+        confirmButtonColor: '#4A90E2',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: '<i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi',
+        cancelButtonText: 'Hủy',
+        focusConfirm: false,
+        allowOutsideClick: false,
+        didOpen: function() {
+            // Đảm bảo các input được focus đúng cách
+            const firstInput = document.getElementById('edit-name');
+            if (firstInput) setTimeout(() => firstInput.focus(), 100);
+        },
+        preConfirm: () => {
+            const nameEl = document.getElementById('edit-name');
+            const phoneEl = document.getElementById('edit-phone');
+            const addressEl = document.getElementById('edit-address');
+            const workTimeEl = document.getElementById('edit-workTime');
+            const detailEl = document.getElementById('edit-detail');
+
+            const nameVal = nameEl?.value?.trim();
+            const phoneVal = phoneEl?.value?.trim();
+            const addressVal = addressEl?.value?.trim();
+
+            if (!nameEl || !phoneEl || !addressEl || !nameVal || !phoneVal || !addressVal) {
+                Swal.showValidationMessage('Vui lòng điền đủ thông tin bắt buộc: Tên, SĐT, Địa chỉ');
+                return false;
             }
 
-            const formHTML = `
-                <div class="swal-edit-form">
-                    <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 8px;">
-                        <h4 style="font-weight: 600; margin-bottom: 10px; color: #334155;">Thông tin cơ bản</h4>
-                        <label for="edit-name">Họ và Tên:</label>
-                        <input type="text" id="edit-name" value="${sanitizeHtml(item.name)}" aria-label="Họ và tên liên hệ">
-                        
-                        <label for="edit-phone" style="margin-top: 12px;">Số điện thoại:</label>
-                        <input type="text" id="edit-phone" value="${sanitizeHtml(item.phone)}" aria-label="Số điện thoại">
-                        
-                        <label for="edit-workTime" style="margin-top: 12px;">Khung giờ đăng ký làm việc:</label>
-                        <input type="text" id="edit-workTime" value="${sanitizeHtml(item.workTime)}" aria-label="Khung giờ làm việc">
-                        
-                        <label for="edit-address" style="margin-top: 12px;">Địa chỉ chi tiết:</label>
-                        <input type="text" id="edit-address" value="${sanitizeHtml(item.address)}" aria-label="Địa chỉ">
-                    </div>
-                    
-                    ${roleFields}
-                    
-                    <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
-                        <h4 style="font-weight: 600; margin-bottom: 10px; color: #334155;">Thông tin bổ sung</h4>
-                        <label for="edit-detail">Mô tả / Yêu cầu chi tiết khác:</label>
-                        <textarea id="edit-detail" rows="3" aria-label="Mô tả hoặc yêu cầu chi tiết">${sanitizeHtml(item.detail)}</textarea>
-                    </div>
-                </div>
-            `;
+            // Tạo payload gửi lên cloud đồng bộ chuẩn 14 cột
+            const updatedData = {
+                action: 'update',
+                row: sheetRow,              // ĐÃ ĐỔI: Sử dụng 'row' thay vì 'sheetRow' để khớp backend
+                time: item.time || '',       // Đồng bộ giữ nguyên thời gian tạo ban đầu
+                role: item.role || '',       // Đồng bộ vai trò cũ
+                userEmail: item.userEmail || '', // Đồng bộ email cũ nếu có
+                name: nameVal,
+                phone: phoneVal,
+                workTime: workTimeEl?.value?.trim() || '',
+                address: addressVal,
+                detail: detailEl?.value?.trim() || ''
+            };
 
-            Swal.fire({
-                title: `✏️ Sửa Hồ Sơ [Dòng ${sheetRow}]`,
-                html: formHTML,
-                showCancelButton: true,
-                confirmButtonColor: '#4A90E2',
-                cancelButtonColor: '#64748b',
-                confirmButtonText: '<i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi',
-                cancelButtonText: 'Hủy',
-                focusConfirm: false,
-                allowOutsideClick: false,
-                didOpen: function() {
-                    // Đảm bảo các input được focus đúng cách
-                    const firstInput = document.getElementById('edit-name');
-                    if (firstInput) setTimeout(() => firstInput.focus(), 100);
-                },
-                preConfirm: () => {
-                    const nameEl = document.getElementById('edit-name');
-                    const phoneEl = document.getElementById('edit-phone');
-                    const addressEl = document.getElementById('edit-address');
-                    const workTimeEl = document.getElementById('edit-workTime');
-                    const detailEl = document.getElementById('edit-detail');
+            if (isBaoMau) {
+                updatedData.age = document.getElementById('edit-age')?.value?.trim() || '';
+                updatedData.careNeonatal = document.getElementById('edit-careNeonatal')?.value || '';
+                updatedData.avatar = document.getElementById('edit-avatar')?.value?.trim() || '';
+                // Xóa trắng trường phụ huynh khi sửa dữ liệu bảo mẫu để tránh rác sheet
+                updatedData.childAge = '';
+                updatedData.bmAgeReq = '';
+            } else {
+                updatedData.childAge = document.getElementById('edit-childAge')?.value?.trim() || '';
+                updatedData.bmAgeReq = document.getElementById('edit-bmAgeReq')?.value?.trim() || '';
+                // Xóa trắng trường bảo mẫu khi sửa dữ liệu phụ huynh
+                updatedData.age = '';
+                updatedData.careNeonatal = '';
+                updatedData.avatar = '';
+            }
 
-                    const nameVal = nameEl?.value?.trim();
-                    const phoneVal = phoneEl?.value?.trim();
-                    const addressVal = addressEl?.value?.trim();
-
-                    if (!nameEl || !phoneEl || !addressEl || !nameVal || !phoneVal || !addressVal) {
-                        Swal.showValidationMessage('Vui lòng điền đủ thông tin bắt buộc: Tên, SĐT, Địa chỉ');
-                        return false;
-                    }
-
-                    const updatedData = {
-                        action: 'update',
-                        sheetRow: sheetRow,
-                        name: nameVal,
-                        phone: phoneVal,
-                        workTime: workTimeEl?.value?.trim() || '',
-                        address: addressVal,
-                        detail: detailEl?.value?.trim() || ''
-                    };
-
-                    if (isBaoMau) {
-                        updatedData.age = document.getElementById('edit-age')?.value?.trim() || '';
-                        updatedData.careNeonatal = document.getElementById('edit-careNeonatal')?.value || '';
-                        updatedData.avatar = document.getElementById('edit-avatar')?.value?.trim() || '';
-                    } else {
-                        updatedData.childAge = document.getElementById('edit-childAge')?.value?.trim() || '';
-                        updatedData.bmAgeReq = document.getElementById('edit-bmAgeReq')?.value?.trim() || '';
-                    }
-
-                    return updatedData;
-                }
-            }).then((result) => {
-                if (result.isConfirmed && result.value) {
-                    sendUpdatePostToCloud(result.value);
-                }
-            });
+            return updatedData;
         }
+    }).then((result) => {
+        if (result.isConfirmed && result.value) {
+            sendUpdatePostToCloud(result.value);
+        }
+    });
+}
 
         function sendUpdatePostToCloud(payload) {
             const loadingMsg = document.getElementById('loading-msg');
