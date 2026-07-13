@@ -562,10 +562,10 @@
             // Tạo payload gửi lên cloud đồng bộ chuẩn 14 cột
             const updatedData = {
                 action: 'update',
-                row: sheetRow,              // ĐÃ ĐỔI: Sử dụng 'row' thay vì 'sheetRow' để khớp backend
-                time: item.time || '',       // Đồng bộ giữ nguyên thời gian tạo ban đầu
-                role: item.role || '',       // Đồng bộ vai trò cũ
-                userEmail: item.userEmail || '', // Đồng bộ email cũ nếu có
+                sheetRow: sheetRow,          // ĐÃ SỬA: Đổi từ 'row' thành 'sheetRow' để khớp chính xác với backend
+                time: item.time || '',       
+                role: item.role || '',       
+                userEmail: item.userEmail || '', 
                 name: nameVal,
                 phone: phoneVal,
                 workTime: workTimeEl?.value?.trim() || '',
