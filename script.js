@@ -3,9 +3,9 @@
  *  BaomauConnect - Google Apps Script Backend (Code.gs)
  * ============================================================
  *  Cấu trúc cột trên Google Sheet (đúng theo thứ tự ghi dữ liệu):
- *  1.time | 2.role | 3.(giữ trống, không dùng category) | 4.name | 5.phone | 6.address
- *  7.age | 8.avatar | 9.childAge | 10.bmAgeReq | 11.workTime
- *  12.careNeonatal | 13.detail | 14.userEmail
+ *  1.time | 2.role | 3.name | 4.phone | 5.address
+ *  6.age | 7.avatar | 8.childAge | 9.bmAgeReq | 10.workTime
+ *  11.careNeonatal | 12.detail | 13.userEmail
  *
  *  LƯU Ý: Project Apps Script chỉ nên có DUY NHẤT 1 file code
  *  (file này). Nếu còn file "script.js" hay bất kỳ file .gs nào
@@ -171,7 +171,6 @@ function handleCreate(sheet, payload) {
   sheet.appendRow([
     time,
     payload.role || "",
-    "",
     payload.name || "",
     payload.phone || "",
     payload.address || "",
@@ -237,29 +236,30 @@ function handleDelete(sheet, payload) {
   }
 }
 
+/**
+ * CẬP NHẬT 1 DÒNG (dùng cho trang quản trị)
+ */
 function handleUpdate(sheet, payload) {
   try {
     var rowData = typeof payload.rowData === "string" ? JSON.parse(payload.rowData) : payload.rowData;
-    
-    // TỐI ƯU LOGIC: Chấp nhận cả sheetRow hoặc row để tránh lỗi bất đồng bộ client-server
-    var row = parseInt(rowData.sheetRow || rowData.row);
+    var row = parseInt(rowData.sheetRow);
 
-    // Kiểm tra số dòng hợp lệ (phải > 1 để tránh ghi đè header)
+    // Kiểm tra số dòng hợp lệ (phải > 1 để tránh xóa header)
     if (row <= 1 || isNaN(row)) {
-      return ContentService.createTextOutput(JSON.stringify({ status: "error", message: "Invalid row number: " + (rowData.sheetRow || rowData.row) })).setMimeType(ContentService.MimeType.JSON);
+      return ContentService.createTextOutput(JSON.stringify({ status: "error", message: "Invalid row number" })).setMimeType(ContentService.MimeType.JSON);
     }
 
-    // Chuẩn hóa dữ liệu trước khi cập nhật theo đúng cấu trúc 14 cột
-    if (rowData.name !== undefined)         sheet.getRange(row, 4).setValue(String(rowData.name).trim());
-    if (rowData.phone !== undefined)        sheet.getRange(row, 5).setValue(String(rowData.phone).trim());
-    if (rowData.address !== undefined)      sheet.getRange(row, 6).setValue(String(rowData.address).trim());
-    if (rowData.age !== undefined)          sheet.getRange(row, 7).setValue(String(rowData.age).trim());
-    if (rowData.avatar !== undefined)       sheet.getRange(row, 8).setValue(String(rowData.avatar).trim());
-    if (rowData.childAge !== undefined)     sheet.getRange(row, 9).setValue(String(rowData.childAge).trim());
-    if (rowData.bmAgeReq !== undefined)     sheet.getRange(row, 10).setValue(String(rowData.bmAgeReq).trim());
-    if (rowData.workTime !== undefined)     sheet.getRange(row, 11).setValue(String(rowData.workTime).trim());
-    if (rowData.careNeonatal !== undefined) sheet.getRange(row, 12).setValue(String(rowData.careNeonatal).trim());
-    if (rowData.detail !== undefined)       sheet.getRange(row, 13).setValue(String(rowData.detail).trim());
+    // Chuẩn hóa dữ liệu trước khi cập nhật
+    if (rowData.name !== undefined)         sheet.getRange(row, 3).setValue(String(rowData.name).trim());
+    if (rowData.phone !== undefined)        sheet.getRange(row, 4).setValue(String(rowData.phone).trim());
+    if (rowData.address !== undefined)      sheet.getRange(row, 5).setValue(String(rowData.address).trim());
+    if (rowData.age !== undefined)          sheet.getRange(row, 6).setValue(String(rowData.age).trim());
+    if (rowData.avatar !== undefined)       sheet.getRange(row, 7).setValue(String(rowData.avatar).trim());
+    if (rowData.childAge !== undefined)     sheet.getRange(row, 8).setValue(String(rowData.childAge).trim());
+    if (rowData.bmAgeReq !== undefined)     sheet.getRange(row, 9).setValue(String(rowData.bmAgeReq).trim());
+    if (rowData.workTime !== undefined)     sheet.getRange(row, 10).setValue(String(rowData.workTime).trim());
+    if (rowData.careNeonatal !== undefined) sheet.getRange(row, 11).setValue(String(rowData.careNeonatal).trim());
+    if (rowData.detail !== undefined)       sheet.getRange(row, 12).setValue(String(rowData.detail).trim());
 
     Logger.log("✅ Update row " + row + " successfully");
     createDailyBackupIfNeeded();
@@ -271,14 +271,25 @@ function handleUpdate(sheet, payload) {
 }
 
 /* =====================================================================
- *  KHU VỰC LOGIC GHÉP NỐI (MATCHING) THEO ĐỊA CHỈ & GỬI EMAIL THÔNG BÁO
+ *  KHU VỰC LOGIC GHÉP NỐI (MATCHING) THEO ĐỊA CHỈ
  * ===================================================================== */
 
+/**
+ * Chuẩn hóa chuỗi để so sánh: chỉ cần chuyển chữ thường + trim.
+ * (Không cần xử lý bỏ dấu vì địa chỉ được người dùng CHỌN từ dropdown
+ * tỉnh/thành có sẵn trên form, nên luôn đồng nhất chính tả.)
+ */
 function normalizeText(str) {
   if (!str) return "";
   return str.toString().toLowerCase().trim();
 }
 
+/**
+ * Trích "khu vực" (thường là Tỉnh/Thành phố) từ chuỗi địa chỉ đầy đủ.
+ * Địa chỉ được ghép dạng: "Số nhà, Phường/Xã, Quận/Huyện, Tỉnh/Thành phố"
+ * => lấy đoạn cuối cùng sau dấu phẩy làm khu vực để so khớp.
+ * Nếu địa chỉ không có dấu phẩy, dùng luôn toàn bộ chuỗi.
+ */
 function extractRegion(address) {
   if (!address) return "";
   var parts = address.toString().split(",");
@@ -286,6 +297,12 @@ function extractRegion(address) {
   return normalizeText(last);
 }
 
+/**
+ * Xác định vai trò đối lập để tìm ghép nối:
+ * "Bảo mẫu" <-> "Phụ huynh"
+ * (So khớp chính xác vì giá trị role là cố định trong code, không phải
+ * do người dùng gõ tự do, nên không cần xử lý sai lệch chính tả.)
+ */
 function getOppositeRole(role) {
   var r = normalizeText(role);
   if (r === "bảo mẫu") return "Phụ huynh";
@@ -293,11 +310,15 @@ function getOppositeRole(role) {
   return null;
 }
 
+/**
+ * Tìm các hồ sơ đối phương (vai trò ngược lại) có cùng khu vực địa chỉ
+ * với hồ sơ vừa đăng ký, rồi gửi email thông báo ghép nối cho cả 2 phía.
+ */
 function matchAndNotify(sheet, newEntry) {
   if (!newEntry.address) return;
 
   var oppositeRole = getOppositeRole(newEntry.role);
-  if (!oppositeRole) return; 
+  if (!oppositeRole) return; // Không xác định được vai trò thì bỏ qua
 
   var newRegion = extractRegion(newEntry.address);
   if (!newRegion) return;
@@ -317,7 +338,7 @@ function matchAndNotify(sheet, newEntry) {
     if (!rowRole || !rowAddress) continue;
     if (normalizeText(rowRole) !== normalizeText(oppositeRole)) continue;
     if (extractRegion(rowAddress) !== newRegion) continue;
-    if (rowEmail && newEntry.userEmail && rowEmail === newEntry.userEmail) continue; 
+    if (rowEmail && newEntry.userEmail && rowEmail === newEntry.userEmail) continue; // tránh tự ghép với chính mình
 
     matches.push({
       role: rowRole,
@@ -338,12 +359,12 @@ function matchAndNotify(sheet, newEntry) {
 
   if (matches.length === 0) return;
 
-  // Gửi cho người vừa đăng ký danh sách đối tác phù hợp
+  // (a) Gửi cho người VỪA đăng ký: danh sách đối phương phù hợp cùng khu vực
   if (newEntry.userEmail) {
     sendMatchListEmail(newEntry, matches);
   }
 
-  // Gửi thông tin của người mới cho từng đối tác cũ đã lưu trên hệ thống
+  // (b) Gửi cho TỪNG đối phương đã có sẵn: thông báo có người mới phù hợp
   matches.forEach(function (m) {
     if (m.userEmail) {
       sendMatchListEmail(m, [newEntry]);
@@ -352,84 +373,166 @@ function matchAndNotify(sheet, newEntry) {
 }
 
 /**
- * HOÀN THIỆN: Khôi phục đoạn mã HTML tạo bảng thông tin cấu trúc hồ sơ trong email
+ * Tạo bảng HTML hiển thị thông tin 1 hồ sơ (dùng chung cho email ghép nối)
  */
 function buildProfileRowsHtml(profile) {
   var isBaomau = normalizeText(profile.role) === "bảo mẫu";
   var rows = [];
-  rows.push(["Vai trò đối tác", profile.role]);
-  rows.push(["Họ và tên liên hệ", profile.name]);
-  rows.push(["Số điện thoại / Zalo", profile.phone]);
-  rows.push(["Địa chỉ khu vực", profile.address]);
+  rows.push(["Vai trò", profile.role]);
+  rows.push(["Họ và tên", profile.name]);
+  rows.push(["Số điện thoại", profile.phone]);
+  rows.push(["Địa chỉ", profile.address]);
 
   if (isBaomau) {
-    if (profile.age)          rows.push(["Tuổi bảo mẫu", profile.age]);
-    if (profile.workTime)     rows.push(["Khung giờ làm việc mong muốn", profile.workTime]);
-    if (profile.careNeonatal) rows.push(["Khả năng nhận trẻ sơ sinh", profile.careNeonatal]);
+    if (profile.age)          rows.push(["Tuổi", profile.age]);
+    if (profile.workTime)     rows.push(["Thời gian có thể làm việc", profile.workTime]);
+    if (profile.careNeonatal) rows.push(["Nhận chăm bé sơ sinh", profile.careNeonatal]);
   } else {
-    if (profile.childAge)     rows.push(["Độ tuổi hiện tại của bé", profile.childAge]);
+    if (profile.childAge)     rows.push(["Độ tuổi của bé", profile.childAge]);
     if (profile.bmAgeReq)     rows.push(["Yêu cầu độ tuổi bảo mẫu", profile.bmAgeReq]);
     if (profile.workTime)     rows.push(["Khung giờ cần bảo mẫu", profile.workTime]);
   }
-  if (profile.detail)         rows.push(["Mô tả / Yêu cầu chi tiết", profile.detail]);
+  if (profile.detail) rows.push(["Nội dung / Ghi chú thêm", profile.detail]);
 
-  var html = '<table border="1" style="border-collapse: collapse; width: 100%; max-width: 600px; margin-top: 10px;">';
-  rows.forEach(function(r) {
-    html += '<tr>' +
-              '<td style="padding: 10px; background-color: #f8fafc; font-weight: bold; width: 200px;">' + r[0] + '</td>' +
-              '<td style="padding: 10px;">' + r[1] + '</td>' +
-            '</tr>';
-  });
-  html += '</table>';
-  return html;
+  return rows
+    .filter(function (r) { return r[1] !== undefined && r[1] !== null && r[1] !== ""; })
+    .map(function (r) {
+      return '<tr>' +
+        '<td style="padding:8px 12px;border:1px solid #e2e8f0;background:#f8fafc;font-weight:600;color:#334155;width:40%;">' + r[0] + '</td>' +
+        '<td style="padding:8px 12px;border:1px solid #e2e8f0;color:#1e293b;">' + r[1] + '</td>' +
+        '</tr>';
+    })
+    .join('');
 }
 
 /**
- * HOÀN THIỆN: Gửi email xác nhận gửi đơn thành công cho đối tác
+ * Gửi email cho `recipient` (phải có userEmail), liệt kê danh sách
+ * `profiles` là các hồ sơ đối phương phù hợp cùng khu vực.
  */
-function sendConfirmationEmail(payload) {
-  var subject = "🎉 [BaomauConnect] Hồ sơ đăng ký kết nối trực tuyến thành công";
-  var htmlBody = '<div style="font-family: Arial, sans-serif; color: #1e293b; line-height: 1.6; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px;">' +
-                   '<h2 style="color: #4A90E2; margin-bottom: 6px;">Xin chào ' + payload.name + ',</h2>' +
-                   '<p>Hệ thống đám mây <b>BaomauConnect</b> đã lưu trữ thành công thông tin đăng ký của bạn vào cơ sở dữ liệu nội bộ trực tuyến theo thời gian thực.</p>' +
-                   '<p>Dưới đây là thông tin chi tiết hồ sơ của bạn:</p>' +
-                   buildProfileRowsHtml(payload) +
-                   '<p style="margin-top: 20px; font-size: 0.9rem; color: #64748b;">Hệ thống đang tiến hành rà soát dữ liệu khu vực để tự động ghép nối bạn với đối tác phù hợp nhất. Xin vui lòng kiểm tra email thường xuyên.</p>' +
-                 '</div>';
-                 
-  MailApp.sendEmail({
-    to: payload.userEmail,
-    subject: subject,
-    htmlBody: htmlBody
-  });
+function sendMatchListEmail(recipient, profiles) {
+  if (!recipient.userEmail) return;
+
+  var region = extractRegionDisplay(recipient.address);
+  var subject = "BaomauConnect - Có " + profiles.length + " hồ sơ phù hợp gần bạn (" + region + ")";
+
+  var blocksHtml = profiles.map(function (p) {
+    return '<div style="margin-bottom:18px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;">' +
+      '<table style="border-collapse:collapse;width:100%;font-size:14px;">' +
+        buildProfileRowsHtml(p) +
+      '</table>' +
+    '</div>';
+  }).join('');
+
+  var htmlBody =
+    '<div style="font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;background:#ffffff;">' +
+      '<div style="background:linear-gradient(135deg,#22c55e,#16a34a);padding:24px 30px;border-radius:10px 10px 0 0;">' +
+        '<h2 style="color:#ffffff;margin:0;font-size:20px;">Tìm thấy hồ sơ phù hợp!</h2>' +
+      '</div>' +
+      '<div style="padding:24px 30px;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 10px 10px;">' +
+        '<p style="color:#334155;font-size:15px;">Chào <b>' + (recipient.name || '') + '</b>,</p>' +
+        '<p style="color:#334155;font-size:15px;">Hệ thống BaomauConnect vừa tìm thấy <b>' + profiles.length + '</b> hồ sơ cùng khu vực <b>' + region + '</b> có thể phù hợp với bạn:</p>' +
+        blocksHtml +
+        '<p style="color:#334155;font-size:15px;">Bạn có thể chủ động liên hệ trực tiếp qua số điện thoại ở trên để trao đổi thêm chi tiết.</p>' +
+        '<p style="color:#94a3b8;font-size:13px;margin-top:24px;">Đây là email tự động, vui lòng không trả lời trực tiếp email này.</p>' +
+        '<p style="color:#334155;font-size:15px;">Trân trọng,<br><b>Đội ngũ BaomauConnect.asia</b></p>' +
+      '</div>' +
+    '</div>';
+
+  var plainBody = profiles.map(function (p, idx) {
+    return "Hồ sơ " + (idx + 1) + ":\n" +
+      "- Họ tên: " + (p.name || "") + "\n" +
+      "- SĐT: " + (p.phone || "") + "\n" +
+      "- Địa chỉ: " + (p.address || "") + "\n";
+  }).join("\n");
+
+  GmailApp.sendEmail(
+    recipient.userEmail,
+    subject,
+    "Chào " + (recipient.name || '') + ",\n\nHệ thống tìm thấy các hồ sơ phù hợp cùng khu vực " + region + ":\n\n" + plainBody +
+    "\nTrân trọng,\nĐội ngũ BaomauConnect.asia",
+    {
+      htmlBody: htmlBody,
+      name: "BaomauConnect"
+    }
+  );
 }
 
 /**
- * HOÀN THIỆN: Gửi danh sách ghép nối tự động
+ * Lấy tên khu vực để hiển thị (giữ nguyên chữ gốc, không bỏ dấu)
+ * dùng cho tiêu đề / nội dung email cho thân thiện.
  */
-function sendMatchListEmail(recipient, matches) {
-  var isRecipientBm = normalizeText(recipient.role) === "bảo mẫu";
-  var partnerType = isRecipientBm ? "PHỤ HUYNH" : "BẢO MẪU";
-  
-  var subject = "🔔 [BaomauConnect] Phát hiện đối tác (" + partnerType + ") phù hợp tại khu vực của bạn";
-  var htmlBody = '<div style="font-family: Arial, sans-serif; color: #1e293b; line-height: 1.6; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px;">' +
-                   '<h3 style="color: #2ecc71;">Xin chào ' + recipient.name + ',</h3>' +
-                   '<p>Dựa trên bộ lọc địa chính thời gian thực, hệ thống đã tìm thấy <b>' + matches.length + ' hồ sơ đối tác mới phù hợp</b> tại khu vực sinh sống/làm việc của bạn.</p>' +
-                   '<p>Bạn có thể chủ động liên hệ trao đổi công việc theo danh sách dưới đây:</p>';
+function extractRegionDisplay(address) {
+  if (!address) return "";
+  var parts = address.toString().split(",");
+  return (parts[parts.length - 1] || "").toString().trim();
+}
 
-  matches.forEach(function (m, idx) {
-    htmlBody += '<div style="margin-top: 25px; padding-top: 15px; border-top: 2px dashed #e2e8f0;">' +
-                  '<h4 style="color: #0f172a; margin-bottom: 8px;">🎯 Đối tác phù hợp #' + (idx + 1) + '</h4>' +
-                  buildProfileRowsHtml(m) +
-                '</div>';
-  });
+/* =====================================================================
+ *  EMAIL XÁC NHẬN ĐĂNG KÝ THÀNH CÔNG (gửi cho chính người đăng ký)
+ * ===================================================================== */
 
-  htmlBody += '<p style="margin-top: 25px; font-size: 0.85rem; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 10px;">Trân trọng cảm ơn bạn đã đồng hành cùng BaomauConnect - Hệ thống kết nối tự động 24/7.</p>' +
-              '</div>';
+function sendConfirmationEmail(data) {
+  var isBaomau = (data.role || "").toString().trim() === "Bảo mẫu";
+  var subject = "BaomauConnect - Đăng ký thành công";
 
-  MailApp.sendEmail({
-    to: recipient.userEmail,
-    subject: subject,
-    htmlBody: htmlBody
-  });
+  var rows = [];
+  rows.push(["Vai trò", data.role]);
+  rows.push(["Họ và tên", data.name]);
+  rows.push(["Số điện thoại", data.phone]);
+  rows.push(["Địa chỉ", data.address]);
+
+  if (isBaomau) {
+    if (data.age)           rows.push(["Tuổi", data.age]);
+    if (data.workTime)      rows.push(["Thời gian có thể làm việc", data.workTime]);
+    if (data.careNeonatal)  rows.push(["Nhận chăm bé sơ sinh", data.careNeonatal]);
+  } else {
+    if (data.childAge)      rows.push(["Độ tuổi của bé", data.childAge]);
+    if (data.bmAgeReq)      rows.push(["Yêu cầu độ tuổi bảo mẫu", data.bmAgeReq]);
+    if (data.workTime)      rows.push(["Khung giờ cần bảo mẫu", data.workTime]);
+  }
+
+  if (data.detail) rows.push(["Nội dung / Ghi chú thêm", data.detail]);
+  rows.push(["Thời gian đăng ký", data.time]);
+
+  var tableRowsHtml = rows
+    .filter(function (r) { return r[1] !== undefined && r[1] !== null && r[1] !== ""; })
+    .map(function (r) {
+      return '<tr>' +
+        '<td style="padding:10px 14px;border:1px solid #e2e8f0;background:#f8fafc;font-weight:600;color:#334155;width:40%;">' + r[0] + '</td>' +
+        '<td style="padding:10px 14px;border:1px solid #e2e8f0;color:#1e293b;">' + r[1] + '</td>' +
+        '</tr>';
+    })
+    .join('');
+
+  var htmlBody =
+    '<div style="font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;background:#ffffff;">' +
+      '<div style="background:linear-gradient(135deg,#4A90E2,#357ABD);padding:24px 30px;border-radius:10px 10px 0 0;">' +
+        '<h2 style="color:#ffffff;margin:0;font-size:20px;">Đăng ký thành công!</h2>' +
+      '</div>' +
+      '<div style="padding:24px 30px;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 10px 10px;">' +
+        '<p style="color:#334155;font-size:15px;">Chào <b>' + (data.name || '') + '</b>,</p>' +
+        '<p style="color:#334155;font-size:15px;">Hệ thống <b>BaomauConnect</b> đã nhận được hồ sơ đăng ký của bạn với thông tin chi tiết như sau:</p>' +
+        '<table style="border-collapse:collapse;width:100%;margin:16px 0;font-size:14px;">' +
+          tableRowsHtml +
+        '</table>' +
+        '<p style="color:#334155;font-size:15px;">Đội ngũ BaomauConnect sẽ kiểm tra và liên hệ lại với bạn trong thời gian sớm nhất qua số điện thoại đã đăng ký.</p>' +
+        '<p style="color:#94a3b8;font-size:13px;margin-top:24px;">Đây là email tự động, vui lòng không trả lời trực tiếp email này.</p>' +
+        '<p style="color:#334155;font-size:15px;">Trân trọng,<br><b>Đội ngũ BaomauConnect.asia</b></p>' +
+      '</div>' +
+    '</div>';
+
+  var plainBody = rows
+    .filter(function (r) { return r[1] !== undefined && r[1] !== null && r[1] !== ""; })
+    .map(function (r) { return "- " + r[0] + ": " + r[1]; })
+    .join("\n");
+
+  GmailApp.sendEmail(data.userEmail, subject,
+    "Chào " + (data.name || '') + ",\n\nHệ thống BaomauConnect đã nhận được hồ sơ đăng ký của bạn:\n\n" +
+    plainBody +
+    "\n\nĐội ngũ BaomauConnect sẽ liên hệ lại sớm nhất.\n\nTrân trọng,\nĐội ngũ BaomauConnect.asia",
+    {
+      htmlBody: htmlBody,
+      name: "BaomauConnect"
+    }
+  );
 }

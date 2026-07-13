@@ -379,43 +379,52 @@
                 tr.setAttribute('role', 'row');
                 const isBaoMau = item.role === 'Bảo mẫu';
                 const badgeClass = isBaoMau ? 'badge-baomau' : 'badge-phuhuynh';
+                const safeAvatar = String(item.avatar || '').trim();
+                const safeName = sanitizeHtml(item.name);
+                const safePhone = sanitizeHtml(item.phone);
+                const safeWorkTime = sanitizeHtml(item.workTime);
+                const safeAddress = sanitizeHtml(item.address);
+                const safeDetail = sanitizeHtml(item.detail);
+                const safeRole = sanitizeHtml(item.role);
                 
                 let roleSpecifcCol = "";
-                if(isBaoMau) {
-                    let avatarTag = (item.avatar && item.avatar.startsWith('http')) 
-                        ? `<br><img src="${item.avatar}" class="avatar-preview" alt="Ảnh đại diện của ${item.name}" onerror="this.style.display='none'">` 
-                        : `<span class="info-sub">${item.avatar || 'Không ảnh'}</span>`;
+                if (isBaoMau) {
+                    const hasAvatarLink = safeAvatar.toLowerCase().startsWith('http');
+                    let avatarTag = hasAvatarLink
+                        ? `<br><img src="${safeAvatar}" class="avatar-preview" alt="Ảnh đại diện của ${safeName}" onerror="this.style.display='none'">`
+                        : `<span class="info-sub">${safeAvatar || 'Không ảnh'}</span>`;
                     
-                    let neoBadge = item.careNeonatal === "CÓ SƠ SINH" 
-                        ? `<br><span class="badge badge-neonatal"><i class="fa-solid fa-baby" aria-hidden="true"></i> Nhận sơ sinh</span>` 
+                    const careNeonatalText = String(item.careNeonatal || '').toUpperCase();
+                    let neoBadge = careNeonatalText.includes('SƠ SINH')
+                        ? `<br><span class="badge badge-neonatal"><i class="fa-solid fa-baby" aria-hidden="true"></i> Nhận sơ sinh</span>`
                         : `<span class="info-sub"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Không nhận sơ sinh</span>`;
                         
-                    roleSpecifcCol = `<b>${item.age ? item.age + ' tuổi' : 'N/A'}</b>${neoBadge}${avatarTag}`;
+                    roleSpecifcCol = `<b>${sanitizeHtml(item.age) ? sanitizeHtml(item.age) + ' tuổi' : 'N/A'}</b>${neoBadge}${avatarTag}`;
                 } else {
-                    roleSpecifcCol = `<span class="info-sub"><i class="fa-solid fa-baby-carriage" aria-hidden="true"></i> Tuổi bé: <b>${item.childAge || 'N/A'}</b></span>
-                                 <span class="info-sub"><i class="fa-solid fa-user-check" aria-hidden="true"></i> Y/c tuổi BM: <b>${item.bmAgeReq || 'N/A'}</b></span>`;
+                    roleSpecifcCol = `<span class="info-sub"><i class="fa-solid fa-baby-carriage" aria-hidden="true"></i> Tuổi bé: <b>${sanitizeHtml(item.childAge) || 'N/A'}</b></span>
+                                 <span class="info-sub"><i class="fa-solid fa-user-check" aria-hidden="true"></i> Y/c tuổi BM: <b>${sanitizeHtml(item.bmAgeReq) || 'N/A'}</b></span>`;
                 }
 
                 tr.innerHTML = `
-                    <td><input type="checkbox" class="row-checkbox" data-row="${item.sheetRow}" onclick="updateDeleteButtonVisibility()" aria-label="Chọn hàng cho ${item.name}"></td>
-                    <td><time datetime="${item.time}"><i class="fa-regular fa-clock" aria-hidden="true"></i> ${item.time}</time></td>
+                    <td><input type="checkbox" class="row-checkbox" data-row="${item.sheetRow}" onclick="updateDeleteButtonVisibility()" aria-label="Chọn hàng cho ${safeName}"></td>
+                    <td><time datetime="${sanitizeHtml(item.time)}"><i class="fa-regular fa-clock" aria-hidden="true"></i> ${sanitizeHtml(item.time)}</time></td>
                     <td>
-                        <span class="badge ${badgeClass}">${item.role}</span>
+                        <span class="badge ${badgeClass}">${safeRole}</span>
                     </td>
                     <td>
-                        <b style="color: #0f172a; font-size:0.95rem;">${item.name}</b>
-                        <span class="info-sub" style="color:#2563eb; font-weight:600;"><i class="fa-solid fa-phone-volume" aria-hidden="true"></i> ${item.phone}</span>
+                        <b style="color: #0f172a; font-size:0.95rem;">${safeName}</b>
+                        <span class="info-sub" style="color:#2563eb; font-weight:600;"><i class="fa-solid fa-phone-volume" aria-hidden="true"></i> ${safePhone}</span>
                     </td>
                     <td>
-                        <span style="font-weight:600; color:#0d9488;"><i class="fa-regular fa-calendar-check" aria-hidden="true"></i> ${item.workTime || 'Chưa chọn'}</span>
+                        <span style="font-weight:600; color:#0d9488;"><i class="fa-regular fa-calendar-check" aria-hidden="true"></i> ${safeWorkTime || 'Chưa chọn'}</span>
                     </td>
                     <td>${roleSpecifcCol}</td>
-                    <td><address style="font-style: normal;"><i class="fa-solid fa-location-dot" style="color: #94a3b8;" aria-hidden="true"></i> ${item.address}</address></td>
-                    <td style="color:#475569; max-width:260px; font-size:0.85rem;"><details><summary>Xem chi tiết</summary><p>${item.detail}</p></details></td>
+                    <td><address style="font-style: normal;"><i class="fa-solid fa-location-dot" style="color: #94a3b8;" aria-hidden="true"></i> ${safeAddress}</address></td>
+                    <td style="color:#475569; max-width:260px; font-size:0.85rem;"><details><summary>Xem chi tiết</summary><p>${safeDetail}</p></details></td>
                     <td>
-                        <div class="action-cell" role="group" aria-label="Hành động cho ${item.name}">
-                            <button class="btn-action btn-edit-single" onclick="openEditModal(${item.sheetRow})" aria-label="Sửa thông tin cho ${item.name}"><i class="fa-regular fa-pen-to-square" aria-hidden="true"></i> Sửa</button>
-                            <button class="btn-action btn-delete-single" onclick="deleteSingleRequest(${item.sheetRow})" aria-label="Xóa hồ sơ của ${item.name}"><i class="fa-regular fa-trash-can" aria-hidden="true"></i> Xóa</button>
+                        <div class="action-cell" role="group" aria-label="Hành động cho ${safeName}">
+                            <button class="btn-action btn-edit-single" onclick="openEditModal(${item.sheetRow})" aria-label="Sửa thông tin cho ${safeName}"><i class="fa-regular fa-pen-to-square" aria-hidden="true"></i> Sửa</button>
+                            <button class="btn-action btn-delete-single" onclick="deleteSingleRequest(${item.sheetRow})" aria-label="Xóa hồ sơ của ${safeName}"><i class="fa-regular fa-trash-can" aria-hidden="true"></i> Xóa</button>
                         </div>
                     </td>
                 `;
@@ -468,6 +477,11 @@
     const item = globalData.find(d => d.sheetRow === sheetRow);
     if (!item) return;
 
+    const safeAge = sanitizeHtml(item.age);
+    const safeAvatar = sanitizeHtml(item.avatar);
+    const safeCareNeonatal = sanitizeHtml(item.careNeonatal);
+    const safeChildAge = sanitizeHtml(item.childAge);
+    const safeBmAgeReq = sanitizeHtml(item.bmAgeReq);
     const isBaoMau = item.role === 'Bảo mẫu';
     
     let roleFields = '';
@@ -476,16 +490,16 @@
             <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin: 8px 0;">
                 <h4 style="font-weight: 600; margin-bottom: 10px; color: #334155;">Thông tin Bảo mẫu</h4>
                 <label for="edit-age">Tuổi Bảo Mẫu:</label>
-                <input type="number" id="edit-age" value="${item.age || ''}" aria-label="Tuổi của bảo mẫu">
+                <input type="number" id="edit-age" value="${safeAge || ''}" aria-label="Tuổi của bảo mẫu">
                 
                 <label for="edit-careNeonatal" style="margin-top: 12px;">Khả năng nhận trẻ Sơ Sinh:</label>
                 <select id="edit-careNeonatal" aria-label="Khả năng nhận trẻ sơ sinh">
-                    <option value="CÓ SƠ SINH" ${item.careNeonatal === 'CÓ SƠ SINH' ? 'selected' : ''}>CÓ SƠ SINH (Nhận)</option>
-                    <option value="KHÔNG" ${item.careNeonatal !== 'CÓ SƠ SINH' ? 'selected' : ''}>KHÔNG nhận sơ sinh</option>
+                    <option value="CÓ SƠ SINH" ${safeCareNeonatal === 'CÓ SƠ SINH' ? 'selected' : ''}>CÓ SƠ SINH (Nhận)</option>
+                    <option value="KHÔNG" ${safeCareNeonatal !== 'CÓ SƠ SINH' ? 'selected' : ''}>KHÔNG nhận sơ sinh</option>
                 </select>
                 
                 <label for="edit-avatar" style="margin-top: 12px;">Link ảnh đại diện (Avatar URL):</label>
-                <input type="url" id="edit-avatar" value="${item.avatar || ''}" placeholder="https://..." aria-label="Link ảnh đại diện">
+                <input type="url" id="edit-avatar" value="${safeAvatar || ''}" placeholder="https://..." aria-label="Link ảnh đại diện">
             </div>
         `;
     } else {
@@ -493,10 +507,10 @@
             <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin: 8px 0;">
                 <h4 style="font-weight: 600; margin-bottom: 10px; color: #334155;">Thông tin trẻ em và yêu cầu</h4>
                 <label for="edit-childAge">Tuổi của bé:</label>
-                <input type="text" id="edit-childAge" value="${item.childAge || ''}" aria-label="Tuổi của trẻ em">
+                <input type="text" id="edit-childAge" value="${safeChildAge || ''}" aria-label="Tuổi của trẻ em">
                 
                 <label for="edit-bmAgeReq" style="margin-top: 12px;">Yêu cầu độ tuổi bảo mẫu:</label>
-                <input type="text" id="edit-bmAgeReq" value="${item.bmAgeReq || ''}" aria-label="Yêu cầu độ tuổi bảo mẫu">
+                <input type="text" id="edit-bmAgeReq" value="${safeBmAgeReq || ''}" aria-label="Yêu cầu độ tuổi bảo mẫu">
             </div>
         `;
     }
